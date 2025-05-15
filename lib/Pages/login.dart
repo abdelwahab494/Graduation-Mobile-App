@@ -1,43 +1,80 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:grad_project/Pages/Home/base.dart';
 import 'package:grad_project/Pages/signup.dart';
 import 'package:grad_project/Tools/colors.dart';
 import 'package:grad_project/Tools/customtextfield.dart';
+import 'package:grad_project/Tools/functions.dart';
+import 'package:grad_project/auth/auth_gate.dart';
+import 'package:grad_project/auth/auth_service.dart';
 
-class Login extends StatelessWidget {
+class Login extends StatefulWidget {
   const Login({super.key});
 
   @override
+  State<Login> createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
+  // get auth service
+  final authService = AuthService();
+
+  // text controllers
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  // login button pressed
+  void login() async {
+    // prepare data
+    final email = _emailController.text;
+    final password = _passwordController.text;
+
+    // attempt login
+    try {
+      await authService.signInWithEmailPassword(email, password);
+      if (mounted) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const AuthGate()),
+          (route) => false,
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: const Color.fromARGB(220, 255, 17, 0),
+          content: Text(
+            "Error: \nEmail or Password are incorrect! \nPlease try again.",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      );
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    TextEditingController username = TextEditingController();
-    TextEditingController password = TextEditingController();
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        centerTitle: true,
-        title: Text(
-          "Login",
-          style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-      ),
+      appBar: appBar("Login"),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 36),
-        child: Column(
+        child: ListView(
           children: [
             Gap(30),
-            CustomTextField(
-              controller: username,
+            OnlyEmailTextField(
+              controller: _emailController,
               hint: "Enter your email",
               icon: Icons.mail_outline_outlined,
             ),
             SizedBox(height: 20),
-            CustomTextField(
-              controller: password,
+            PasswordTextField(
+              controller: _passwordController,
               hint: "Enter your password",
               icon: Icons.lock_outlined,
             ),
@@ -57,12 +94,7 @@ class Login extends StatelessWidget {
             ),
             SizedBox(height: 50),
             GestureDetector(
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (c) => Base()),
-                );
-              },
+              onTap: () => login(),
               child: Container(
                 padding: EdgeInsets.all(15),
                 width: 350,
@@ -81,7 +113,7 @@ class Login extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 10),
+            Gap(10),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

@@ -13,14 +13,15 @@ class Base extends StatefulWidget {
 }
 
 class _BaseState extends State<Base> {
-  int _selectedIndex = 1;
+  int _selectedIndex = 0;
+  late List<Widget> _pages;
 
-  static const List<Widget> _pages = <Widget>[
-    Home(),
-    Reports(),
-    Notifications(),
-    Profile(),
-  ];
+  @override
+  void initState() {
+    super.initState();
+
+    _pages = [Home(), Reports(), Notifications(), Profile()];
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -44,6 +45,7 @@ class _BaseState extends State<Base> {
           ],
         ),
         child: BottomNavigationBar(
+          backgroundColor: Colors.white,
           type: BottomNavigationBarType.fixed,
           currentIndex: _selectedIndex,
           onTap: _onItemTapped,

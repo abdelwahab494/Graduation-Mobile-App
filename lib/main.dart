@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:grad_project/Pages/splash.dart';
+import 'package:flutter_gemini/flutter_gemini.dart';
+import 'package:grad_project/auth/auth_gate.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-void main() {
+Future<void> main() async {
+  Gemini.init(apiKey: "");
+  await Supabase.initialize(
+    anonKey:
+        "",
+    url: "",
+  );
   runApp(const MyApp());
 }
 
@@ -10,6 +18,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(debugShowCheckedModeBanner: false, home: SplashScreen());
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(scaffoldBackgroundColor: Colors.white),
+      home: AuthGate(),
+    );
   }
 }

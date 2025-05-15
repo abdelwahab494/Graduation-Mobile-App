@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:grad_project/Pages/login.dart';
 import 'package:grad_project/Pages/signup.dart';
 import 'package:grad_project/Tools/colors.dart';
+import 'package:grad_project/Tools/functions.dart';
 
 class Start extends StatelessWidget {
   const Start({super.key});
@@ -43,31 +44,12 @@ class Start extends StatelessWidget {
               ),
             ),
             Gap(40),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (c) => Login()),
-                );
-              },
-              child: Container(
-                padding: EdgeInsets.all(15),
-                width: 250,
-                decoration: BoxDecoration(
-                  color: AppColors.primary,
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: Text(
-                  "Login",
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.inter(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
+            botton("Login", () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (c) => Login()),
+              );
+            }),
             Gap(15),
             GestureDetector(
               onTap: () {

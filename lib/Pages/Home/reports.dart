@@ -86,6 +86,7 @@ class Reports extends StatelessWidget {
           ],
         ),
       ),
+      floatingActionButton: ChatBotton(),
     );
   }
 }

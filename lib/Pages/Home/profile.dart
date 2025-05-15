@@ -1,11 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:grad_project/Pages/login.dart';
+import 'package:grad_project/Pages/issues.dart';
 import 'package:grad_project/Tools/functions.dart';
+import 'package:grad_project/auth/auth_service.dart';
 
-class Profile extends StatelessWidget {
+class Profile extends StatefulWidget {
   const Profile({super.key});
+
+  @override
+  State<Profile> createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> {
+  // get auth service
+  final authService = AuthService();
+
+  void logout() async {
+    await authService.signOut();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +35,8 @@ class Profile extends StatelessWidget {
             ),
             Gap(8),
             Text(
-              "Abdelwahab",
+              maxLines: 1,
+              authService.getCurrentItem("name"),
               style: GoogleFonts.poppins(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
@@ -51,17 +65,20 @@ class Profile extends StatelessWidget {
                 Gap(5),
                 cards("Appointment", "assets/icons/calender.svg"),
                 Gap(5),
-                cards("Patment Method", "assets/icons/wallet.svg"),
-                Gap(5),
-                cards("FAQs", "assets/icons/message.svg"),
+                cards("Payment Method", "assets/icons/wallet.svg"),
                 Gap(5),
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushReplacement(
+                    Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (c) => Login()),
+                      MaterialPageRoute(builder: (c) => Issues()),
                     );
                   },
+                  child: cards("Common Issues", "assets/icons/message.svg"),
+                ),
+                Gap(5),
+                GestureDetector(
+                  onTap: () => logout(),
                   child: cards("Logout", "assets/icons/logout.svg"),
                 ),
               ],
