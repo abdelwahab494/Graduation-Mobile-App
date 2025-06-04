@@ -20,20 +20,18 @@ class Notifications extends StatelessWidget {
             Gap(50),
             SizedBox(
               width: double.infinity,
-              child: Wrap(
-                alignment: WrapAlignment.spaceAround,
-                spacing: 10,
-                runSpacing: 10,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Card(
                     color: Colors.white,
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(8),
                       child: Column(
                         children: [
                           SvgPicture.asset(
                             "assets/images/food.svg",
-                            width: 130,
+                            width: 120,
                           ),
                           Gap(15),
                           Text(
@@ -57,12 +55,12 @@ class Notifications extends StatelessWidget {
                     child: Card(
                       color: Colors.white,
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(8),
                         child: Column(
                           children: [
                             SvgPicture.asset(
                               "assets/images/doctors.svg",
-                              width: 130,
+                              width: 120,
                             ),
                             Gap(15),
                             Text(
@@ -121,6 +119,7 @@ class Notifications extends StatelessWidget {
           ],
         ),
       ),
+      floatingActionButton: ChatBotton(),
     );
   }
 }

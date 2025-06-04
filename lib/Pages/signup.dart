@@ -4,8 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:grad_project/Pages/login.dart';
 import 'package:grad_project/Tools/colors.dart';
 import 'package:grad_project/Tools/customtextfield.dart';
-import 'package:grad_project/auth/auth_gate.dart';
-import 'package:grad_project/auth/auth_service.dart';
+import 'package:grad_project/Auth/auth_gate.dart';
+import 'package:grad_project/Auth/auth_service.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -87,25 +87,25 @@ class _SignupState extends State<Signup> {
             Gap(30),
             CustomTextField(
               controller: _usernamecontroller,
-              hint: "Enter your name",
+              hint: "Name",
               icon: Icons.person_outline_outlined,
             ),
             Gap(20),
             OnlyEmailTextField(
               controller: _emailController,
-              hint: "Enter your email",
+              hint: "Email",
               icon: Icons.mail_outline_outlined,
             ),
             Gap(20),
             PasswordTextField(
               controller: _passwordController,
-              hint: "Enter your password",
+              hint: "Password",
               icon: Icons.lock_outlined,
             ),
             Gap(20),
             PasswordTextField(
               controller: _confirmPasswordController,
-              hint: "Confirm your password",
+              hint: "Confirm password",
               icon: Icons.lock_outlined,
             ),
             Spacer(),

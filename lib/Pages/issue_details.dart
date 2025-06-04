@@ -52,8 +52,17 @@ class _IssueDatailsState extends State<IssueDatails> {
             Container(
               padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
               decoration: BoxDecoration(
-                color: Color(0xffF2F2F2),
+                color: Colors.white,
+                border: Border.all(color: Colors.grey.shade300, width: 1.5),
                 borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.1),
+                    spreadRadius: 1,
+                    blurRadius: 4,
+                    offset: Offset(3, 3),
+                  ),
+                ],
               ),
               child: ListTile(
                 title: Text(
@@ -99,8 +108,17 @@ class _IssueDatailsState extends State<IssueDatails> {
             Container(
               padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
               decoration: BoxDecoration(
-                color: Color(0xffF2F2F2),
+                color: Colors.white,
+                border: Border.all(color: Colors.grey.shade300, width: 1.5),
                 borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.1),
+                    spreadRadius: 1,
+                    blurRadius: 4,
+                    offset: Offset(3, 3),
+                  ),
+                ],
               ),
               child: ListTile(
                 title: Text(
@@ -146,8 +164,17 @@ class _IssueDatailsState extends State<IssueDatails> {
             Container(
               padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
               decoration: BoxDecoration(
-                color: Color(0xffF2F2F2),
+                color: Colors.white,
+                border: Border.all(color: Colors.grey.shade300, width: 1.5),
                 borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.1),
+                    spreadRadius: 1,
+                    blurRadius: 4,
+                    offset: Offset(3, 3),
+                  ),
+                ],
               ),
               child: ListTile(
                 title: Text(

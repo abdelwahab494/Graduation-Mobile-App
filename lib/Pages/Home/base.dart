@@ -14,14 +14,6 @@ class Base extends StatefulWidget {
 
 class _BaseState extends State<Base> {
   int _selectedIndex = 0;
-  late List<Widget> _pages;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _pages = [Home(), Reports(), Notifications(), Profile()];
-  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -31,6 +23,13 @@ class _BaseState extends State<Base> {
 
   @override
   Widget build(BuildContext context) {
+    final List<Widget> _pages = [
+      Home(onNavigate: _onItemTapped),
+      Reports(),
+      Notifications(),
+      Profile(),
+    ];
+
     return Scaffold(
       body: _pages[_selectedIndex],
       bottomNavigationBar: Container(

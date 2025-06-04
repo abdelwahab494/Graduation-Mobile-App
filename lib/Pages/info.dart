@@ -68,13 +68,15 @@ class _InfoState extends State<Info> {
                 return Column(
                   children: [
                     Gap(50),
-                    Center(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 50),
-                        child: Image.asset(
-                          info[index].image,
-                          fit: BoxFit.contain,
-                          width: 296,
+                    Expanded(
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 50),
+                          child: Image.asset(
+                            info[index].image,
+                            fit: BoxFit.contain,
+                            width: 296,
+                          ),
                         ),
                       ),
                     ),

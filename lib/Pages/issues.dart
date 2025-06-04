@@ -27,14 +27,14 @@ class _IssuesState extends State<Issues> {
                 context,
                 MaterialPageRoute(
                   builder:
-                      (c) => IssueDatails(
-                        title: item.title,
-                        subTitle: item.subTitle,
-                        discription: item.discription,
-                        subDiscription: item.subDiscription,
-                        subTreatment: item.subTreatment,
-                        treatment: item.treatment,
-                      ),
+                    (c) => IssueDatails(
+                      title: item.title,
+                      subTitle: item.subTitle,
+                      discription: item.discription,
+                      subDiscription: item.subDiscription,
+                      subTreatment: item.subTreatment,
+                      treatment: item.treatment,
+                    ),
                 ),
               );
             },

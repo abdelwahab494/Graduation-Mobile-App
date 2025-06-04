@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
-import 'package:grad_project/auth/auth_gate.dart';
+import 'package:grad_project/Auth/auth_gate.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<void> main() async {
-  Gemini.init(apiKey: "");
+  Gemini.init(apiKey: "AIzaSyD9k7u5umJGhZr0CIQ_1pNWn-oOqOsls3Y");
   await Supabase.initialize(
     anonKey:
         "",
@@ -25,3 +25,4 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:grad_project/Tools/colors.dart';
 
 class CustomTextField extends StatelessWidget {
   const CustomTextField({
@@ -33,6 +34,36 @@ class CustomTextField extends StatelessWidget {
         ),
       ),
       style: TextStyle(color: Colors.black),
+    );
+  }
+}
+
+class Customtextfield2 extends StatelessWidget {
+  const Customtextfield2({
+    super.key,
+    required this.controller,
+    required this.label,
+  });
+  final TextEditingController controller;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      cursorColor: AppColors.primary,
+      controller: controller,
+      decoration: InputDecoration(
+        label: Text(label),
+        labelStyle: TextStyle(color: Colors.grey.shade600, fontSize: 14),
+        filled: true,
+        fillColor: Colors.grey.shade100,
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.black),
+        ),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: AppColors.primary, width: 2.0),
+        ),
+      ),
     );
   }
 }

@@ -31,6 +31,7 @@ class _ChatbotState extends State<Chatbot> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        foregroundColor: Colors.white,
         leadingWidth: 30,
         backgroundColor: Color(0xff407CE2),
         title: Row(

@@ -142,8 +142,21 @@ class CommonIssue extends StatelessWidget {
       onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 2),
-        child: Card(
-          color: Color(0xffF2F2F2),
+        child: Container(
+          margin: EdgeInsets.symmetric(vertical: 3),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(color: Colors.grey.shade300, width: 1.5),
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                spreadRadius: 2,
+                blurRadius: 6,
+                offset: Offset(0, 3),
+              ),
+            ],
+          ),
           child: ListTile(
             title: Text(
               title,
@@ -176,12 +189,19 @@ class ChatBotton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FloatingActionButton(
+    return SizedBox(
+      width: 50,
+      height: 50,
+      child: FloatingActionButton(
         backgroundColor: AppColors.primary,
-        child: SvgPicture.asset("assets/icons/chat.svg", width: 30),
+        child: Padding(
+          padding: const EdgeInsets.all(11),
+          child: SvgPicture.asset("assets/icons/chat.svg"),
+        ),
         onPressed: () {
           Navigator.push(context, MaterialPageRoute(builder: (c) => Chatbot()));
         },
-      );
+      ),
+    );
   }
 }

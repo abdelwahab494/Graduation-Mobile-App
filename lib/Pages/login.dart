@@ -6,8 +6,8 @@ import 'package:grad_project/Pages/signup.dart';
 import 'package:grad_project/Tools/colors.dart';
 import 'package:grad_project/Tools/customtextfield.dart';
 import 'package:grad_project/Tools/functions.dart';
-import 'package:grad_project/auth/auth_gate.dart';
-import 'package:grad_project/auth/auth_service.dart';
+import 'package:grad_project/Auth/auth_gate.dart';
+import 'package:grad_project/Auth/auth_service.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -144,7 +144,7 @@ class _LoginState extends State<Login> {
             ),
             Gap(100),
             SvgPicture.asset("assets/icons/hr.svg"),
-            Gap(30),
+            Gap(20),
             Container(
               alignment: Alignment.center,
               decoration: BoxDecoration(
