@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -7,6 +9,9 @@ import 'package:grad_project/Tools/colors.dart';
 import 'package:grad_project/Auth/auth_service.dart';
 import 'package:grad_project/Tools/functions.dart';
 import 'package:grad_project/models.dart';
+import 'package:grad_project/Pages/chatbot/chatbot.dart';
+import 'package:grad_project/providers/profile_image_provider.dart';
+import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
   final Function(int) onNavigate;
@@ -22,6 +27,8 @@ class _HomeState extends State<Home> {
 
   // search controller
   final searchController = TextEditingController();
+  bool _isLoadingTips = false;
+  List<String> _healthTips = [];
 
   // articles list
   List<ArticalesModel> articales = [
@@ -59,9 +66,211 @@ class _HomeState extends State<Home> {
   ];
 
   @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _showHealthTips() async {
+    setState(() => _isLoadingTips = true);
+
+    try {
+      final tips = await Chatbot.getHealthTips(
+        age: "35", // These should come from user profile
+        gender: "Male",
+        medicalCondition: "Type 2 Diabetes",
+        lifestyle: "Sedentary, works in office",
+      );
+
+      if (mounted) {
+        setState(() {
+          _healthTips = tips;
+          _isLoadingTips = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isLoadingTips = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to load health tips. Please try again.'),
+          ),
+        );
+      }
+    }
+  }
+
+  Widget _buildHealthTipsSection() {
+    if (_isLoadingTips) {
+      return Center(
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          margin: EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey.shade300, width: 1),
+            borderRadius: BorderRadius.circular(5),
+          ),
+          child: CircularProgressIndicator(color: AppColors.primary),
+        ),
+      );
+    }
+
+    if (_healthTips.isEmpty) {
+      return Container(
+        padding: EdgeInsets.all(16),
+        margin: EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey.shade300, width: 1),
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Your Today's Health Tips",
+              style: GoogleFonts.poppins(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            Gap(8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    "Tap to get your today's personalized health tips",
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      color: Colors.grey[600],
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                IconButton(
+                  onPressed: _showHealthTips,
+                  icon: Container(
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(
+                      Icons.health_and_safety,
+                      color: Colors.white,
+                      size: 23,
+                    ),
+                  ),
+                  tooltip: 'Get Health Tips',
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Container(
+      height: 400,
+      padding: EdgeInsets.all(16),
+      margin: EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey.shade300, width: 1),
+        borderRadius: BorderRadius.circular(5),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Your Today's Health Tips",
+                style: GoogleFonts.poppins(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              IconButton(
+                icon: Icon(Icons.refresh, color: AppColors.primary),
+                onPressed: _showHealthTips,
+                tooltip: 'Refresh Tips',
+              ),
+            ],
+          ),
+          Gap(8),
+          SizedBox(
+            height: 300,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Column(
+                children: [
+                  ...List.generate(
+                    _healthTips.length,
+                    (index) => Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 5),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                  color: AppColors.primary.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: Text(
+                                  '${index + 1}',
+                                  style: GoogleFonts.poppins(
+                                    color: AppColors.primary,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                              Gap(8),
+                              Expanded(
+                                child: Text(
+                                  _healthTips[index],
+                                  style: GoogleFonts.poppins(fontSize: 14),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        index == 4
+                            ? SizedBox.shrink()
+                            : Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 40,
+                              ),
+                              child: Divider(
+                                thickness: 1,
+                                color: Colors.grey.shade300,
+                              ),
+                            ),
+                        Gap(5),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     // get current username
     final currentusername = authService.getCurrentItem("name");
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ProfileImageProvider>(context, listen: false).loadImage();
+    });
 
     return Scaffold(
       backgroundColor: Colors.lightBlue.shade100,
@@ -69,24 +278,32 @@ class _HomeState extends State<Home> {
         scrollDirection: Axis.vertical,
         child: Column(
           children: [
-            Gap(50),
+            Gap(50), // Reduced gap since we now have AppBar
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25),
               child: Row(
                 children: [
-                  GestureDetector(
-                    onTap: () => widget.onNavigate(3),
-                    child: AvatarGlow(
-                      glowRadiusFactor: 0.25,
-                      glowColor: AppColors.primary,
-                      duration: Duration(milliseconds: 2000),
-                      child: CircleAvatar(
-                        radius: 25,
-                        backgroundImage: AssetImage(
-                          "assets/images/3bwhab2.jpg",
+                  Consumer<ProfileImageProvider>(
+                    builder: (context, imageProvider, child) {
+                      return GestureDetector(
+                        onTap: () => widget.onNavigate(3),
+                        child: AvatarGlow(
+                          glowRadiusFactor: 0.25,
+                          glowColor: AppColors.primary,
+                          duration: Duration(milliseconds: 2000),
+                          child: CircleAvatar(
+                            radius: 25,
+                            backgroundColor: Colors.white,
+                            backgroundImage:
+                                imageProvider.selectedImage == null
+                                    ? AssetImage("assets/images/user.png")
+                                    : FileImage(
+                                      File(imageProvider.selectedImage!.path),
+                                    ),
+                          ),
                         ),
-                      ),
-                    ),
+                      );
+                    },
                   ),
                   Gap(15),
                   Column(
@@ -241,7 +458,9 @@ class _HomeState extends State<Home> {
                       ),
                     ],
                   ),
-                  Gap(25),
+                  Gap(15),
+                  _buildHealthTipsSection(),
+                  Gap(15),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

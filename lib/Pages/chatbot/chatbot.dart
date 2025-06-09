@@ -7,6 +7,66 @@ import 'package:google_fonts/google_fonts.dart';
 class Chatbot extends StatefulWidget {
   const Chatbot({super.key});
 
+  static Future<List<String>> getHealthTips({
+    required String age,
+    required String gender,
+    required String medicalCondition,
+    required String lifestyle,
+  }) async {
+    final gemini = Gemini.instance;
+    final prompt = '''
+Based on the following patient information, provide 5 specific and actionable health tips:
+Age: $age
+Gender: $gender
+Medical Condition: $medicalCondition
+Lifestyle: $lifestyle
+
+Please provide exactly 5 tips, each starting with a number (1-5) and a brief explanation.
+Format each tip as: "1. [Tip text]"
+''';
+
+    try {
+      final response = await gemini.textAndImage(
+        text: prompt,
+        images: [],
+      );
+
+      String responseText =
+          response?.content?.parts
+              ?.whereType<TextPart>()
+              .map((part) => part.text)
+              .join(" ") ??
+          '';
+
+      responseText = _cleanMarkdown(responseText);
+
+      
+      List<String> tips =
+          responseText
+              .split(RegExp(r'\d+\.'))
+              .where((tip) => tip.trim().isNotEmpty)
+              .map((tip) => tip.trim())
+              .take(5)
+              .toList();
+
+      return tips;
+    } catch (e) {
+      print("Error getting health tips: $e");
+      return [];
+    }
+  }
+
+  static String _cleanMarkdown(String text) {
+    return text
+        .replaceAll(RegExp(r'\*{1,2}'), '')
+        .replaceAll(RegExp(r'`'), '')
+        .replaceAll(RegExp(r'_'), '')
+        .replaceAll(RegExp(r'\#'), '')
+        .replaceAll(RegExp(r'>'), '')
+        .replaceAll(RegExp(r'-'), '')
+        .trim();
+  }
+
   @override
   State<Chatbot> createState() => _ChatbotState();
 }
@@ -15,6 +75,7 @@ class _ChatbotState extends State<Chatbot> {
   final Gemini gemini = Gemini.instance;
 
   List<ChatMessage> messages = [];
+  List<String> healthTips = [];
 
   ChatUser currentUser = ChatUser(
     id: "0",
@@ -118,7 +179,7 @@ class _ChatbotState extends State<Chatbot> {
                 .trim() ??
             "";
 
-        response = _cleanMarkdown(response);
+        response = Chatbot._cleanMarkdown(response);
 
         if (response.isEmpty) return;
 
@@ -148,14 +209,46 @@ class _ChatbotState extends State<Chatbot> {
     }
   }
 
-  String _cleanMarkdown(String text) {
-    return text
-        .replaceAll(RegExp(r'\*{1,2}'), '')
-        .replaceAll(RegExp(r'`'), '')
-        .replaceAll(RegExp(r'_'), '')
-        .replaceAll(RegExp(r'\#'), '')
-        .replaceAll(RegExp(r'>'), '')
-        .replaceAll(RegExp(r'-'), '')
-        .trim();
+  void displayHealthTips(List<String> tips) {
+    if (tips.isEmpty) {
+      _sendMessage(
+        ChatMessage(
+          user: currentUser,
+          createdAt: DateTime.now(),
+          text:
+              "I couldn't generate health tips at this time. Please try again later.",
+        ),
+      );
+      return;
+    }
+
+    String formattedTips = tips
+        .asMap()
+        .entries
+        .map((entry) {
+          return "${entry.key + 1}. ${entry.value}";
+        })
+        .join("\n\n");
+
+    ChatMessage tipsMessage = ChatMessage(
+      user: geminiUser,
+      createdAt: DateTime.now(),
+      text: "Here are your personalized health tips:\n\n$formattedTips",
+    );
+
+    setState(() {
+      messages = [tipsMessage, ...messages];
+    });
+  }
+
+  Future<void> requestHealthTips() async {
+    final tips = await Chatbot.getHealthTips(
+      age: "35",
+      gender: "Male",
+      medicalCondition: "Type 2 Diabetes",
+      lifestyle: "Sedentary, works in office",
+    );
+
+    displayHealthTips(tips);
   }
 }

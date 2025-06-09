@@ -195,8 +195,8 @@ class ChatBotton extends StatelessWidget {
       child: FloatingActionButton(
         backgroundColor: AppColors.primary,
         child: Padding(
-          padding: const EdgeInsets.all(11),
-          child: SvgPicture.asset("assets/icons/chat.svg"),
+          padding: const EdgeInsets.all(8),
+          child: Image.asset("assets/images/chat_image.png"),
         ),
         onPressed: () {
           Navigator.push(context, MaterialPageRoute(builder: (c) => Chatbot()));
