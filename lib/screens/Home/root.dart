@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:grad_project/Pages/Home/home.dart';
-import 'package:grad_project/Pages/Home/notifications.dart';
-import 'package:grad_project/Pages/Home/profile.dart';
-import 'package:grad_project/Pages/Home/reports.dart';
+import 'package:grad_project/screens/Home/home.dart';
+import 'package:grad_project/screens/Home/notifications.dart';
+import 'package:grad_project/screens/Home/profile.dart';
+import 'package:grad_project/screens/Home/reports.dart';
 import 'package:grad_project/Tools/colors.dart';
 
 class Base extends StatefulWidget {
@@ -34,7 +34,7 @@ class _BaseState extends State<Base> {
       body: _pages[_selectedIndex],
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.backGround,
           boxShadow: [
             BoxShadow(
               color: Colors.black12,
@@ -44,23 +44,41 @@ class _BaseState extends State<Base> {
           ],
         ),
         child: BottomNavigationBar(
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.backGround,
           type: BottomNavigationBarType.fixed,
           currentIndex: _selectedIndex,
           onTap: _onItemTapped,
           selectedItemColor: AppColors.primary,
           unselectedItemColor: Colors.grey,
           items: <BottomNavigationBarItem>[
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
             BottomNavigationBarItem(
-              icon: Icon(Icons.assignment),
+              icon:
+                  _selectedIndex == 0
+                      ? Icon(Icons.home)
+                      : Icon(Icons.home_outlined),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon:
+                  _selectedIndex == 1
+                      ? Icon(Icons.assignment)
+                      : Icon(Icons.assignment_outlined),
               label: 'Reports',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.notifications),
+              icon:
+                  _selectedIndex == 2
+                      ? Icon(Icons.notifications)
+                      : Icon(Icons.notifications_outlined),
               label: 'Notification',
             ),
-            BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+            BottomNavigationBarItem(
+              icon:
+                  _selectedIndex == 3
+                      ? Icon(Icons.person)
+                      : Icon(Icons.person_outline),
+              label: 'Profile',
+            ),
           ],
         ),
       ),

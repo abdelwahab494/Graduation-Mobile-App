@@ -30,7 +30,10 @@ class MedicineDatabase {
         .from("medicines")
         .stream(primaryKey: ["id"])
         .eq('user_id', userId)
-        .map((data) => data.map((medicineMap) => Medicine.fromMap(medicineMap)).toList());
+        .map(
+          (data) =>
+              data.map((medicineMap) => Medicine.fromMap(medicineMap)).toList(),
+        );
   }
 
   // Update
@@ -47,9 +50,6 @@ class MedicineDatabase {
   Future deleteMedicine(Medicine medicine) async {
     final userId = Supabase.instance.client.auth.currentUser?.id;
     if (userId == null) throw Exception('No user logged in');
-    await database
-        .delete()
-        .eq("id", medicine.id!)
-        .eq('user_id', userId);
+    await database.delete().eq("id", medicine.id!).eq('user_id', userId);
   }
 }

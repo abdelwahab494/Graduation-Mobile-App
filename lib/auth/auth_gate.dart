@@ -4,8 +4,8 @@ authenticated   => Profile Page
  */
 
 import 'package:flutter/material.dart';
-import 'package:grad_project/Pages/Home/base.dart';
-import 'package:grad_project/Pages/splash.dart';
+import 'package:grad_project/screens/Home/root.dart';
+import 'package:grad_project/screens/splash.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthGate extends StatelessWidget {

@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:grad_project/Pages/signup.dart';
 import 'package:grad_project/Tools/colors.dart';
-import 'package:grad_project/Tools/customtextfield.dart';
+import 'package:grad_project/components/customtextfield.dart';
 import 'package:grad_project/Tools/functions.dart';
 import 'package:grad_project/Auth/auth_gate.dart';
 import 'package:grad_project/Auth/auth_service.dart';
+import 'package:grad_project/screens/signup_root.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -58,10 +58,17 @@ class _LoginState extends State<Login> {
   }
 
   @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: appBar("Login"),
+      backgroundColor: AppColors.backGround,
+      appBar: appBar("Login", context),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 36),
         child: ListView(
@@ -122,13 +129,14 @@ class _LoginState extends State<Login> {
                   style: GoogleFonts.poppins(
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
+                    color: AppColors.text,
                   ),
                 ),
                 GestureDetector(
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Signup()),
+                      MaterialPageRoute(builder: (context) => SignupRoot()),
                     );
                   },
                   child: Text(
@@ -142,57 +150,64 @@ class _LoginState extends State<Login> {
                 ),
               ],
             ),
-            Gap(100),
-            SvgPicture.asset("assets/icons/hr.svg"),
-            Gap(20),
-            Container(
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                border: Border.all(width: 1, color: Colors.grey.shade300),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(18),
-                child: Row(
-                  children: [
-                    Gap(10),
-                    SvgPicture.asset("assets/icons/Google.svg"),
-                    Gap(30),
-                    Text(
-                      "Sign in with Google",
-                      style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
+            Gap(120),
+            Column(
+              children: [
+                SvgPicture.asset("assets/icons/hr.svg"),
+                Gap(20),
+                Container(
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 1, color: Colors.grey.shade300),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(18),
+                    child: Row(
+                      children: [
+                        Gap(10),
+                        SvgPicture.asset("assets/icons/Google.svg"),
+                        Gap(30),
+                        Text(
+                          "Sign in with Google",
+                          style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.text,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-            Gap(20),
-            Container(
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                border: Border.all(width: 1, color: Colors.grey.shade300),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(18),
-                child: Row(
-                  children: [
-                    Gap(10),
-                    SvgPicture.asset("assets/icons/Facebook.svg"),
-                    Gap(30),
-                    Text(
-                      "Sign in with Facebook",
-                      style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
+                Gap(15),
+                Container(
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 1, color: Colors.grey.shade300),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(18),
+                    child: Row(
+                      children: [
+                        Gap(10),
+                        SvgPicture.asset("assets/icons/Facebook.svg"),
+                        Gap(30),
+                        Text(
+                          "Sign in with Facebook",
+                          style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.text,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
+                Gap(40),
+              ],
             ),
           ],
         ),

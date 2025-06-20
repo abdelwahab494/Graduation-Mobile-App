@@ -2,28 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:grad_project/Pages/chatbot/chatbot.dart';
+import 'package:grad_project/screens/chatbot/chatbot.dart';
 import 'package:grad_project/Tools/colors.dart';
 
-appBar(title) {
+appBar(title, context) {
   return AppBar(
-    backgroundColor: Colors.white,
+    backgroundColor: AppColors.backGround,
     elevation: 0,
     scrolledUnderElevation: 0.0,
     centerTitle: true,
+    leading: GestureDetector(
+      onTap: () => Navigator.pop(context),
+      child: Icon(Icons.arrow_back, color: AppColors.text),
+    ),
     title: Text(
       title,
-      style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.bold),
+      style: GoogleFonts.poppins(
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+        color: AppColors.text,
+      ),
     ),
   );
 }
 
-botton(text, Function() onTap) {
+botton(text, Function() onTap, {double width = 250}) {
   return GestureDetector(
     onTap: onTap,
     child: Container(
       padding: EdgeInsets.all(15),
-      width: 250,
+      width: width,
       decoration: BoxDecoration(
         color: AppColors.primary,
         borderRadius: BorderRadius.circular(50),
@@ -81,6 +89,7 @@ reports(title, date) {
                 style: GoogleFonts.poppins(
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
+                  color: AppColors.text,
                 ),
               ),
               Text(
@@ -104,18 +113,26 @@ reports(title, date) {
 
 cards(title, logo) {
   return Card(
-    color: Colors.white,
+    color: AppColors.backGround,
     child: Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Row(
         children: [
-          SvgPicture.asset(logo),
+          Container(
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: Color(0xffe6eefb),
+              borderRadius: BorderRadius.circular(500),
+            ),
+            child: Icon(logo, color: AppColors.primary),
+          ),
           Gap(15),
           Text(
             title,
             style: GoogleFonts.poppins(
               fontSize: 16,
               fontWeight: FontWeight.w600,
+              color: AppColors.text,
             ),
           ),
           Spacer(),
@@ -145,7 +162,7 @@ class CommonIssue extends StatelessWidget {
         child: Container(
           margin: EdgeInsets.symmetric(vertical: 3),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppColors.backGround,
             border: Border.all(color: Colors.grey.shade300, width: 1.5),
             borderRadius: BorderRadius.circular(10),
             boxShadow: [
@@ -174,6 +191,7 @@ class CommonIssue extends StatelessWidget {
               style: GoogleFonts.poppins(
                 fontSize: 15,
                 fontWeight: FontWeight.w400,
+                color: AppColors.text,
               ),
             ),
             trailing: Icon(Icons.arrow_forward_ios_outlined),

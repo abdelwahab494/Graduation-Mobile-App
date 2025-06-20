@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:grad_project/Pages/start.dart';
+import 'package:grad_project/screens/start.dart';
 import 'package:grad_project/Tools/colors.dart';
 import 'package:grad_project/models.dart';
+import 'package:grad_project/providers/splash_provider.dart';
+import 'package:provider/provider.dart';
 
 class Info extends StatefulWidget {
   const Info({super.key});
@@ -30,7 +32,7 @@ class _InfoState extends State<Info> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.backGround,
       body: Column(
         children: [
           Gap(60),
@@ -40,16 +42,21 @@ class _InfoState extends State<Info> {
               padding: const EdgeInsets.only(right: 25),
               child: GestureDetector(
                 onTap: () {
+                  final isSplash = Provider.of<SplashProvider>(
+                    context,
+                    listen: false,
+                  );
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (c) => Start()),
                   );
+                  isSplash.hideSplash();
                 },
                 child: Text(
                   "Skip",
                   style: GoogleFonts.poppins(
                     fontSize: 14,
-                    color: Color(0xffA1A8B0),
+                    color: AppColors.logo,
                   ),
                 ),
               ),
@@ -88,6 +95,7 @@ class _InfoState extends State<Info> {
                         style: GoogleFonts.poppins(
                           fontWeight: FontWeight.bold,
                           fontSize: 22,
+                          color: AppColors.text,
                         ),
                         textAlign: TextAlign.left,
                       ),
@@ -122,6 +130,10 @@ class _InfoState extends State<Info> {
                   ),
                   GestureDetector(
                     onTap: () {
+                      final isSplash = Provider.of<SplashProvider>(
+                        context,
+                        listen: false,
+                      );
                       if (_currentIndex < info.length - 1) {
                         _pageController.nextPage(
                           duration: Duration(milliseconds: 300),
@@ -132,6 +144,7 @@ class _InfoState extends State<Info> {
                           context,
                           MaterialPageRoute(builder: (c) => Start()),
                         );
+                        isSplash.hideSplash();
                       }
                     },
                     child: Container(

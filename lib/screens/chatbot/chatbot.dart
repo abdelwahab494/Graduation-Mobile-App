@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:grad_project/Tools/colors.dart';
 
 class Chatbot extends StatefulWidget {
   const Chatbot({super.key});
@@ -26,10 +27,7 @@ Format each tip as: "1. [Tip text]"
 ''';
 
     try {
-      final response = await gemini.textAndImage(
-        text: prompt,
-        images: [],
-      );
+      final response = await gemini.textAndImage(text: prompt, images: []);
 
       String responseText =
           response?.content?.parts
@@ -40,7 +38,6 @@ Format each tip as: "1. [Tip text]"
 
       responseText = _cleanMarkdown(responseText);
 
-      
       List<String> tips =
           responseText
               .split(RegExp(r'\d+\.'))
@@ -92,7 +89,7 @@ class _ChatbotState extends State<Chatbot> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        foregroundColor: Colors.white,
+        foregroundColor: AppColors.backGround,
         leadingWidth: 30,
         backgroundColor: Color(0xff407CE2),
         title: Row(
@@ -106,7 +103,7 @@ class _ChatbotState extends State<Chatbot> {
               style: GoogleFonts.poppins(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
-                color: Colors.white,
+                color: AppColors.backGround,
               ),
             ),
           ],
@@ -144,7 +141,7 @@ class _ChatbotState extends State<Chatbot> {
                   color: Color(0xff407CE2),
                 ),
                 padding: EdgeInsets.all(10),
-                child: Icon(Icons.send, color: Colors.white, size: 25),
+                child: Icon(Icons.send, color: AppColors.backGround, size: 25),
               ),
             ),
           );

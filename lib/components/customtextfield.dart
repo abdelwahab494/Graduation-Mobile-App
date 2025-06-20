@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:grad_project/Tools/colors.dart';
+import 'package:grad_project/providers/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 class CustomTextField extends StatelessWidget {
   const CustomTextField({
@@ -15,14 +17,17 @@ class CustomTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isLight = Provider.of<ChangeThemeProvider>(context).isLight;
+
     return TextField(
       controller: controller,
+      cursorColor: Colors.black,
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: TextStyle(color: const Color(0xFF757575)),
+        hintStyle: TextStyle(color: isLight ? Color.fromARGB(255, 73, 73, 73) : Color(0xffF2F2F2)),
         prefixIcon: Icon(icon, color: Colors.grey[700]),
         filled: true,
-        fillColor: Color(0xffF2F2F2),
+        fillColor: isLight ? Color(0xffF2F2F2) : Color.fromARGB(255, 73, 73, 73),
         contentPadding: EdgeInsets.symmetric(vertical: 18.0, horizontal: 16.0),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(5),
@@ -33,7 +38,7 @@ class CustomTextField extends StatelessWidget {
           borderSide: BorderSide(color: Colors.transparent),
         ),
       ),
-      style: TextStyle(color: Colors.black),
+      style: TextStyle(color: AppColors.text),
     );
   }
 }
@@ -49,16 +54,22 @@ class Customtextfield2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isLight = Provider.of<ChangeThemeProvider>(context).isLight;
+
     return TextField(
       cursorColor: AppColors.primary,
       controller: controller,
       decoration: InputDecoration(
         label: Text(label),
-        labelStyle: TextStyle(color: Colors.grey.shade600, fontSize: 14),
+        labelStyle: TextStyle(
+          color: isLight ? Color.fromARGB(255, 73, 73, 73) : Color(0xffF2F2F2),
+          fontSize: 14,
+        ),
         filled: true,
-        fillColor: Colors.grey.shade100,
+        fillColor:
+            isLight ? Color(0xffF2F2F2) : Color.fromARGB(255, 73, 73, 73),
         enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.black),
+          borderSide: BorderSide(color: AppColors.text),
         ),
         focusedBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: AppColors.primary, width: 2.0),
@@ -81,16 +92,21 @@ class OnlyEngTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isLight = Provider.of<ChangeThemeProvider>(context).isLight;
+
     return TextField(
       keyboardType: TextInputType.text,
       inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z]'))],
       controller: controller,
+      cursorColor: Colors.black,
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: TextStyle(color: Colors.grey[600]),
+        hintStyle: TextStyle(
+          color: isLight ? Color.fromARGB(255, 73, 73, 73) : Color(0xffF2F2F2),
+        ),
         prefixIcon: Icon(icon, color: Colors.grey[700]),
         filled: true,
-        fillColor: Color(0xffF2F2F2),
+        fillColor: isLight ? Color(0xffF2F2F2) : Color.fromARGB(255, 73, 73, 73),
         contentPadding: EdgeInsets.symmetric(vertical: 18.0, horizontal: 16.0),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(5),
@@ -101,7 +117,7 @@ class OnlyEngTextField extends StatelessWidget {
           borderSide: BorderSide(color: Colors.transparent),
         ),
       ),
-      style: TextStyle(color: Colors.black),
+      style: TextStyle(color: AppColors.text),
     );
   }
 }
@@ -119,18 +135,23 @@ class OnlyArTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isLight = Provider.of<ChangeThemeProvider>(context).isLight;
+
     return TextField(
       keyboardType: TextInputType.text,
       inputFormatters: [
         FilteringTextInputFormatter.allow(RegExp(r'[\u0600-\u06FF]')),
       ],
+      cursorColor: Colors.black,
       controller: controller,
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: TextStyle(color: Colors.grey[600]),
+        hintStyle: TextStyle(
+          color: isLight ? Color.fromARGB(255, 73, 73, 73) : Color(0xffF2F2F2),
+        ),
         prefixIcon: Icon(icon, color: Colors.grey[700]),
         filled: true,
-        fillColor: Color(0xffF2F2F2),
+        fillColor: isLight ? Color(0xffF2F2F2) : Color.fromARGB(255, 73, 73, 73),
         contentPadding: EdgeInsets.symmetric(vertical: 18.0, horizontal: 16.0),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(5),
@@ -141,7 +162,7 @@ class OnlyArTextField extends StatelessWidget {
           borderSide: BorderSide(color: Colors.transparent),
         ),
       ),
-      style: TextStyle(color: Colors.black),
+      style: TextStyle(color: AppColors.text),
     );
   }
 }
@@ -159,16 +180,21 @@ class OnlyNumTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isLight = Provider.of<ChangeThemeProvider>(context).isLight;
+
     return TextField(
       keyboardType: TextInputType.number,
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       controller: controller,
+      cursorColor: Colors.black,
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: TextStyle(color: Colors.grey[600]),
+        hintStyle: TextStyle(
+          color: isLight ? Color.fromARGB(255, 73, 73, 73) : Color(0xffF2F2F2),
+        ),
         prefixIcon: Icon(icon, color: Colors.grey[700]),
         filled: true,
-        fillColor: Color(0xffF2F2F2),
+        fillColor: isLight ? Color(0xffF2F2F2) : Color.fromARGB(255, 73, 73, 73),
         contentPadding: EdgeInsets.symmetric(vertical: 18.0, horizontal: 16.0),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(5),
@@ -179,7 +205,7 @@ class OnlyNumTextField extends StatelessWidget {
           borderSide: BorderSide(color: Colors.transparent),
         ),
       ),
-      style: TextStyle(color: Colors.black),
+      style: TextStyle(color: AppColors.text),
     );
   }
 }
@@ -197,15 +223,18 @@ class PasswordTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isLight = Provider.of<ChangeThemeProvider>(context).isLight;
+
     return TextField(
       obscureText: true,
       controller: controller,
+      cursorColor: Colors.black,
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: TextStyle(color: const Color(0xFF757575)),
+        hintStyle: TextStyle(color: isLight ? Color.fromARGB(255, 73, 73, 73) : Color(0xffF2F2F2)),
         prefixIcon: Icon(icon, color: Colors.grey[700]),
         filled: true,
-        fillColor: Color(0xffF2F2F2),
+        fillColor: isLight ? Color(0xffF2F2F2) : Color.fromARGB(255, 73, 73, 73),
         contentPadding: EdgeInsets.symmetric(vertical: 18.0, horizontal: 16.0),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(5),
@@ -216,7 +245,7 @@ class PasswordTextField extends StatelessWidget {
           borderSide: BorderSide(color: Colors.transparent),
         ),
       ),
-      style: TextStyle(color: Colors.black),
+      style: TextStyle(color: AppColors.text),
     );
   }
 }
@@ -234,18 +263,21 @@ class OnlyEmailTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isLight = Provider.of<ChangeThemeProvider>(context).isLight;
+
     return TextField(
       keyboardType: TextInputType.emailAddress,
       inputFormatters: [
         FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9@._-]')),
       ],
+      cursorColor: Colors.black,
       controller: controller,
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: TextStyle(color: const Color(0xFF757575)),
+        hintStyle: TextStyle(color: isLight ? Color.fromARGB(255, 73, 73, 73) : Color(0xffF2F2F2)),
         prefixIcon: Icon(icon, color: Colors.grey[700]),
         filled: true,
-        fillColor: Color(0xffF2F2F2),
+        fillColor: isLight ? Color(0xffF2F2F2) : Color.fromARGB(255, 73, 73, 73),
         contentPadding: EdgeInsets.symmetric(vertical: 18.0, horizontal: 16.0),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(5),
@@ -256,7 +288,7 @@ class OnlyEmailTextField extends StatelessWidget {
           borderSide: BorderSide(color: Colors.transparent),
         ),
       ),
-      style: TextStyle(color: Colors.black),
+      style: TextStyle(color: AppColors.text),
     );
   }
 }

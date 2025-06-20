@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:grad_project/Pages/issue_details.dart';
+import 'package:grad_project/screens/issue_details.dart';
+import 'package:grad_project/Tools/colors.dart';
 import 'package:grad_project/Tools/functions.dart';
 import 'package:grad_project/Tools/globals.dart';
 
@@ -14,8 +15,8 @@ class _IssuesState extends State<Issues> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: appBar("Common Issues"),
+      backgroundColor: AppColors.backGround,
+      appBar: appBar("Common Issues", context),
       body: ListView(
         children: List.generate(issues.length, (index) {
           final item = issues[index];
@@ -27,14 +28,14 @@ class _IssuesState extends State<Issues> {
                 context,
                 MaterialPageRoute(
                   builder:
-                    (c) => IssueDatails(
-                      title: item.title,
-                      subTitle: item.subTitle,
-                      discription: item.discription,
-                      subDiscription: item.subDiscription,
-                      subTreatment: item.subTreatment,
-                      treatment: item.treatment,
-                    ),
+                      (c) => IssueDatails(
+                        title: item.title,
+                        subTitle: item.subTitle,
+                        discription: item.discription,
+                        subDiscription: item.subDiscription,
+                        subTreatment: item.subTreatment,
+                        treatment: item.treatment,
+                      ),
                 ),
               );
             },

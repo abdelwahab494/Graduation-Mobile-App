@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -9,7 +8,7 @@ import 'package:grad_project/Tools/colors.dart';
 import 'package:grad_project/Auth/auth_service.dart';
 import 'package:grad_project/Tools/functions.dart';
 import 'package:grad_project/models.dart';
-import 'package:grad_project/Pages/chatbot/chatbot.dart';
+import 'package:grad_project/screens/chatbot/chatbot.dart';
 import 'package:grad_project/providers/profile_image_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -158,7 +157,7 @@ class _HomeState extends State<Home> {
                     ),
                     child: Icon(
                       Icons.health_and_safety,
-                      color: Colors.white,
+                      color: AppColors.backGround,
                       size: 23,
                     ),
                   ),
@@ -273,7 +272,7 @@ class _HomeState extends State<Home> {
     });
 
     return Scaffold(
-      backgroundColor: Colors.lightBlue.shade100,
+      backgroundColor: Color.fromARGB(255, 196, 218, 255),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
@@ -293,7 +292,7 @@ class _HomeState extends State<Home> {
                           duration: Duration(milliseconds: 2000),
                           child: CircleAvatar(
                             radius: 25,
-                            backgroundColor: Colors.white,
+                            backgroundColor: AppColors.backGround,
                             backgroundImage:
                                 imageProvider.selectedImage == null
                                     ? AssetImage("assets/images/user.png")
@@ -350,7 +349,7 @@ class _HomeState extends State<Home> {
               padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
               width: double.infinity,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppColors.backGround,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(35),
                   topRight: Radius.circular(35),

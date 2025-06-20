@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:grad_project/Tools/colors.dart';
-import 'package:grad_project/Tools/customtextfield.dart';
+import 'package:grad_project/components/customtextfield.dart';
 import 'package:grad_project/Tools/functions.dart';
 import 'package:grad_project/Database/medicine.dart';
 import 'package:grad_project/Database/medicine_database.dart';
+import 'package:grad_project/providers/theme_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AddMedicine extends StatefulWidget {
@@ -76,6 +79,8 @@ class _AddMedicineState extends State<AddMedicine> {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (c) {
+        bool isLight = Provider.of<ChangeThemeProvider>(context).isLight;
+
         return StatefulBuilder(
           builder: (context, setModalState) {
             return DraggableScrollableSheet(
@@ -93,12 +98,12 @@ class _AddMedicineState extends State<AddMedicine> {
                     horizontal: 20,
                     vertical: 16,
                   ),
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.vertical(
+                  decoration: BoxDecoration(
+                    color: AppColors.backGround,
+                    borderRadius: const BorderRadius.vertical(
                       top: Radius.circular(16),
                     ),
-                    boxShadow: [
+                    boxShadow: const [
                       BoxShadow(
                         color: Colors.black12,
                         blurRadius: 8,
@@ -142,15 +147,21 @@ class _AddMedicineState extends State<AddMedicine> {
                       ),
                       Gap(12),
                       DropdownButtonFormField<int>(
-                        dropdownColor: Colors.white,
+                        dropdownColor: AppColors.backGround,
                         decoration: InputDecoration(
                           label: Text("Frequency per day"),
                           labelStyle: TextStyle(
-                            color: Colors.grey.shade600,
+                            color:
+                                isLight
+                                    ? Color.fromARGB(255, 73, 73, 73)
+                                    : Color(0xffF2F2F2),
                             fontSize: 14,
                           ),
                           filled: true,
-                          fillColor: Colors.grey.shade100,
+                          fillColor:
+                              isLight
+                                  ? Color(0xffF2F2F2)
+                                  : Color.fromARGB(255, 73, 73, 73),
                           enabledBorder: UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.black),
                           ),
@@ -173,6 +184,12 @@ class _AddMedicineState extends State<AddMedicine> {
                                     value: value,
                                     child: Text(
                                       '$value time${value > 1 ? 's' : ''}',
+                                      style: TextStyle(
+                                        color:
+                                            isLight
+                                                ? Colors.grey[800]
+                                                : Colors.grey[500],
+                                      ),
                                     ),
                                   ),
                                 )
@@ -188,16 +205,22 @@ class _AddMedicineState extends State<AddMedicine> {
                         "Meal Timing",
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
-                          color: Colors.grey[800],
+                          color: isLight ? Colors.grey[800] : Colors.grey[500],
                         ),
                       ),
                       Row(
                         children: [
                           Expanded(
                             child: RadioListTile<String>(
-                              title: const Text(
+                              title: Text(
                                 "Before Meal",
-                                style: TextStyle(fontSize: 14),
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color:
+                                      isLight
+                                          ? Colors.grey[800]
+                                          : Colors.grey[500],
+                                ),
                               ),
                               value: "Before Meal",
                               groupValue: mealTiming,
@@ -212,9 +235,15 @@ class _AddMedicineState extends State<AddMedicine> {
                           ),
                           Expanded(
                             child: RadioListTile<String>(
-                              title: const Text(
+                              title: Text(
                                 "After Meal",
-                                style: TextStyle(fontSize: 14),
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color:
+                                      isLight
+                                          ? Colors.grey[800]
+                                          : Colors.grey[500],
+                                ),
                               ),
                               value: "After Meal",
                               groupValue: mealTiming,
@@ -233,7 +262,7 @@ class _AddMedicineState extends State<AddMedicine> {
                         "Dose Times",
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
-                          color: Colors.grey[800],
+                          color: isLight ? Colors.grey[800] : Colors.grey[500],
                           fontSize: 14,
                         ),
                       ),
@@ -303,7 +332,10 @@ class _AddMedicineState extends State<AddMedicine> {
                                 "Start Date",
                                 style: TextStyle(
                                   fontWeight: FontWeight.w600,
-                                  color: Colors.grey[800],
+                                  color:
+                                      isLight
+                                          ? Colors.grey[800]
+                                          : Colors.grey[500],
                                   fontSize: 14,
                                 ),
                               ),
@@ -371,7 +403,10 @@ class _AddMedicineState extends State<AddMedicine> {
                                 "End Date",
                                 style: TextStyle(
                                   fontWeight: FontWeight.w600,
-                                  color: Colors.grey[800],
+                                  color:
+                                      isLight
+                                          ? Colors.grey[800]
+                                          : Colors.grey[500],
                                   fontSize: 14,
                                 ),
                               ),
@@ -439,6 +474,26 @@ class _AddMedicineState extends State<AddMedicine> {
                             ? "Update Medicine"
                             : "Add Medicine",
                         () async {
+                          // Validation for required fields
+                          if (nameController.text.isEmpty ||
+                              dosageController.text.isEmpty ||
+                              selectedFrequency == null ||
+                              doseTimes.isEmpty ||
+                              startDate == null ||
+                              endDate == null ||
+                              mealTiming == null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  'Please fill in all required fields!',
+                                ),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                            return;
+                          }
+
+                          // Proceed if all fields are filled
                           final userId =
                               Supabase.instance.client.auth.currentUser?.id;
                           if (userId == null) {
@@ -510,7 +565,7 @@ class _AddMedicineState extends State<AddMedicine> {
   Widget build(BuildContext context) {
     final db = MedicineDatabase();
     return Scaffold(
-      appBar: appBar("Medicine Tracking"),
+      appBar: appBar("Medicine Tracking", context),
       body: StreamBuilder<List<Medicine>>(
         key: _streamKey,
         stream: db.stream,
@@ -532,84 +587,219 @@ class _AddMedicineState extends State<AddMedicine> {
             );
           }
           final medicines = snapshot.data!;
-          return ListView.builder(
-            padding: EdgeInsets.all(16),
-            itemCount: medicines.length,
-            itemBuilder: (context, index) {
-              final medicine = medicines[index];
-              return Card(
-                elevation: 4,
-                margin: EdgeInsets.symmetric(vertical: 8),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        medicine.name,
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.primary,
-                        ),
-                      ),
-                      Gap(8),
-                      Text('Dosage: ${medicine.dosage}'),
-                      if (medicine.frequency != null)
+          return Scaffold(
+            backgroundColor: AppColors.backGround,
+            body: ListView.builder(
+              padding: EdgeInsets.all(16),
+              itemCount: medicines.length,
+              itemBuilder: (context, index) {
+                final medicine = medicines[index];
+                return Container(
+                  margin: EdgeInsets.symmetric(vertical: 8),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey.shade300, width: 1),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 20,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                         Text(
-                          'Frequency: ${medicine.frequency} time${medicine.frequency! > 1 ? 's' : ''} per day',
-                        ),
-                      Text('Dose Times: ${medicine.doseTimes.join(', ')}'),
-                      if (medicine.mealTiming != null)
-                        Text('Meal Timing: ${medicine.mealTiming}'),
-                      if (medicine.startDate != null)
-                        Text(
-                          'Start Date: ${medicine.startDate!.day}/${medicine.startDate!.month}/${medicine.startDate!.year}',
-                        ),
-                      if (medicine.endDate != null)
-                        Text(
-                          'End Date: ${medicine.endDate!.day}/${medicine.endDate!.month}/${medicine.endDate!.year}',
-                        ),
-                      Gap(12),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          IconButton(
-                            icon: Icon(Icons.edit, color: Colors.blue),
-                            onPressed: () {
-                              _showBottomSheet(medicineToEdit: medicine);
-                            },
+                          medicine.name,
+                          style: GoogleFonts.poppins(
+                            fontSize: 30,
+                            letterSpacing: 5,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.primary,
                           ),
-                          IconButton(
-                            icon: Icon(Icons.delete, color: Colors.red),
-                            onPressed: () async {
-                              final db = MedicineDatabase();
-                              await db.deleteMedicine(medicine);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    'Medicine deleted successfully',
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: ListTile(
+                                title: Text(
+                                  'Dosage:',
+                                  style: GoogleFonts.poppins(
+                                    color: Colors.grey,
+                                    fontSize: 13,
                                   ),
                                 ),
-                              );
-                              setState(() {
-                                _streamKey.currentState?.dispose();
-                              });
-                            },
+                                subtitle: Padding(
+                                  padding: const EdgeInsets.only(left: 8),
+                                  child: Text(
+                                    '${medicine.dosage}',
+                                    style: GoogleFonts.poppins(
+                                      color: AppColors.text,
+                                      fontSize: 17,
+                                    ),
+                                  ),
+                                ),
+                                contentPadding: EdgeInsets.all(0),
+                              ),
+                            ),
+                            if (medicine.frequency != null)
+                              Expanded(
+                                child: ListTile(
+                                  title: Text(
+                                    'Meal Timing:',
+                                    style: GoogleFonts.poppins(
+                                      color: Colors.grey,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                  subtitle: Padding(
+                                    padding: const EdgeInsets.only(left: 8),
+                                    child: Text(
+                                      '${medicine.mealTiming}',
+                                      style: GoogleFonts.poppins(
+                                        color: AppColors.text,
+                                        fontSize: 17,
+                                      ),
+                                    ),
+                                  ),
+                                  contentPadding: EdgeInsets.all(0),
+                                ),
+                              ),
+                          ],
+                        ),
+                        if (medicine.frequency != null)
+                          ListTile(
+                            title: Text(
+                              'Frequancy:',
+                              style: GoogleFonts.poppins(
+                                color: Colors.grey,
+                                fontSize: 13,
+                              ),
+                            ),
+                            subtitle: Padding(
+                              padding: const EdgeInsets.only(left: 8),
+                              child: Text(
+                                '${medicine.frequency} time${medicine.frequency! > 1 ? 's' : ''} per day',
+                                style: GoogleFonts.poppins(
+                                  color: AppColors.text,
+                                  fontSize: 17,
+                                ),
+                              ),
+                            ),
+                            contentPadding: EdgeInsets.all(0),
                           ),
-                        ],
-                      ),
-                    ],
+                        ListTile(
+                          title: Text(
+                            'Dose Times:',
+                            style: GoogleFonts.poppins(
+                              color: Colors.grey,
+                              fontSize: 13,
+                            ),
+                          ),
+                          subtitle: Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: Text(
+                              '${medicine.doseTimes.join(', ')}',
+                              style: GoogleFonts.poppins(
+                                color: AppColors.text,
+                                fontSize: 17,
+                              ),
+                            ),
+                          ),
+                          contentPadding: EdgeInsets.all(0),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            if (medicine.startDate != null)
+                              Expanded(
+                                child: ListTile(
+                                  title: Text(
+                                    'Start Date:',
+                                    style: GoogleFonts.poppins(
+                                      color: Colors.grey,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                  subtitle: Padding(
+                                    padding: const EdgeInsets.only(left: 8),
+                                    child: Text(
+                                      '${medicine.startDate!.day}/${medicine.startDate!.month}/${medicine.startDate!.year}',
+                                      style: GoogleFonts.poppins(
+                                        color: AppColors.text,
+                                        fontSize: 17,
+                                      ),
+                                    ),
+                                  ),
+                                  contentPadding: EdgeInsets.all(0),
+                                ),
+                              ),
+                            if (medicine.endDate != null)
+                              Expanded(
+                                child: ListTile(
+                                  title: Text(
+                                    'End Date:',
+                                    style: GoogleFonts.poppins(
+                                      color: Colors.grey,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                  subtitle: Padding(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: Text(
+                                      '${medicine.endDate!.day}/${medicine.endDate!.month}/${medicine.endDate!.year}',
+                                      style: GoogleFonts.poppins(
+                                        color: AppColors.text,
+                                        fontSize: 17,
+                                      ),
+                                    ),
+                                  ),
+                                  contentPadding: EdgeInsets.all(0),
+                                ),
+                              ),
+                          ],
+                        ),
+                        Gap(8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            IconButton(
+                              icon: Icon(Icons.edit, color: Colors.blue),
+                              onPressed: () {
+                                _showBottomSheet(medicineToEdit: medicine);
+                              },
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.delete, color: Colors.red),
+                              onPressed: () async {
+                                final db = MedicineDatabase();
+                                await db.deleteMedicine(medicine);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'Medicine deleted successfully',
+                                    ),
+                                  ),
+                                );
+                                setState(() {
+                                  _streamKey.currentState?.dispose();
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           );
         },
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
+        foregroundColor: AppColors.backGround,
         onPressed: () => _showBottomSheet(),
         child: Icon(Icons.add_alarm_outlined),
       ),

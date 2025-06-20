@@ -30,7 +30,8 @@ class _IssueDatailsState extends State<IssueDatails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar("Issue Details"),
+      backgroundColor: AppColors.backGround,
+      appBar: appBar("Issue Details", context),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         child: ListView(
@@ -45,6 +46,7 @@ class _IssueDatailsState extends State<IssueDatails> {
                   style: GoogleFonts.poppins(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
+                    color: AppColors.text,
                   ),
                 ),
               ),
@@ -52,7 +54,7 @@ class _IssueDatailsState extends State<IssueDatails> {
             Container(
               padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppColors.backGround,
                 border: Border.all(color: Colors.grey.shade300, width: 1.5),
                 borderRadius: BorderRadius.circular(10),
                 boxShadow: [
@@ -79,6 +81,7 @@ class _IssueDatailsState extends State<IssueDatails> {
                   style: GoogleFonts.poppins(
                     fontSize: 17,
                     fontWeight: FontWeight.w400,
+                    color: AppColors.text,
                   ),
                 ),
               ),
@@ -86,11 +89,7 @@ class _IssueDatailsState extends State<IssueDatails> {
             Gap(10),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-              child: Container(
-                width: double.infinity,
-                height: 1,
-                color: Colors.black26,
-              ),
+              child: Divider(),
             ),
             SizedBox(
               width: double.infinity,
@@ -101,6 +100,7 @@ class _IssueDatailsState extends State<IssueDatails> {
                   style: GoogleFonts.poppins(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
+                    color: AppColors.text,
                   ),
                 ),
               ),
@@ -108,7 +108,7 @@ class _IssueDatailsState extends State<IssueDatails> {
             Container(
               padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppColors.backGround,
                 border: Border.all(color: Colors.grey.shade300, width: 1.5),
                 borderRadius: BorderRadius.circular(10),
                 boxShadow: [
@@ -135,6 +135,7 @@ class _IssueDatailsState extends State<IssueDatails> {
                   style: GoogleFonts.poppins(
                     fontSize: 15,
                     fontWeight: FontWeight.w400,
+                    color: AppColors.text,
                   ),
                 ),
               ),
@@ -142,11 +143,7 @@ class _IssueDatailsState extends State<IssueDatails> {
             Gap(10),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-              child: Container(
-                width: double.infinity,
-                height: 1,
-                color: Colors.black26,
-              ),
+              child: Divider(),
             ),
             SizedBox(
               width: double.infinity,
@@ -157,6 +154,7 @@ class _IssueDatailsState extends State<IssueDatails> {
                   style: GoogleFonts.poppins(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
+                    color: AppColors.text,
                   ),
                 ),
               ),
@@ -164,7 +162,7 @@ class _IssueDatailsState extends State<IssueDatails> {
             Container(
               padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppColors.backGround,
                 border: Border.all(color: Colors.grey.shade300, width: 1.5),
                 borderRadius: BorderRadius.circular(10),
                 boxShadow: [
@@ -191,6 +189,7 @@ class _IssueDatailsState extends State<IssueDatails> {
                   style: GoogleFonts.poppins(
                     fontSize: 15,
                     fontWeight: FontWeight.w400,
+                    color: AppColors.text,
                   ),
                 ),
               ),
@@ -198,11 +197,7 @@ class _IssueDatailsState extends State<IssueDatails> {
             Gap(10),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-              child: Container(
-                width: double.infinity,
-                height: 1,
-                color: Colors.black26,
-              ),
+              child: Divider(),
             ),
             Gap(10),
             botton("Back", () {

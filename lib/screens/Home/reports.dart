@@ -11,7 +11,7 @@ class Reports extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.backGround,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30),
         child: Column(
@@ -56,30 +56,15 @@ class Reports extends StatelessWidget {
             Expanded(
               child: ListView(
                 children: [
-                  reports(
-                    "General Report 1",
-                    "Apr 9, 2002",
-                  ),
+                  reports("General Report 1", "Apr 9, 2002"),
                   Gap(10),
-                  reports(
-                    "General Report 2",
-                    "Feb 18, 2019",
-                  ),
+                  reports("General Report 2", "Feb 18, 2019"),
                   Gap(10),
-                  reports(
-                    "General Report 3",
-                    "Aug 6, 2023",
-                  ),
+                  reports("General Report 3", "Aug 6, 2023"),
                   Gap(10),
-                  reports(
-                    "General Report 4",
-                    "Aug 6, 2023",
-                  ),
+                  reports("General Report 4", "Aug 6, 2023"),
                   Gap(10),
-                  reports(
-                    "General Report 5",
-                    "Aug 6, 2023",
-                  ),
+                  reports("General Report 5", "Aug 6, 2023"),
                 ],
               ),
             ),
