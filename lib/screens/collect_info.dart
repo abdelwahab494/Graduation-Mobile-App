@@ -7,7 +7,7 @@ class CollectInfo extends StatelessWidget {
   CollectInfo({super.key});
 
   final TextEditingController _age = TextEditingController();
-  final TextEditingController _weight = TextEditingController();
+  final TextEditingController _bmi = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -22,62 +22,27 @@ class CollectInfo extends StatelessWidget {
               CustomTextField(
                 controller: _age,
                 hint: "Age",
-                icon: Icons.perm_contact_calendar_sharp,
+                icon: Icons.question_mark,
               ),
               Gap(20),
               CustomTextField(
-                controller: _weight,
-                hint: "Weight",
-                icon: Icons.account_balance_wallet,
+                controller: _bmi,
+                hint: "BMI",
+                icon: Icons.question_mark,
               ),
               Gap(20),
               CustomTextField(
-                controller: _weight,
-                hint: "Weight",
-                icon: Icons.account_balance_wallet,
+                controller: _bmi,
+                hint: "High Blood Pressure",
+                icon: Icons.question_mark,
               ),
               Gap(20),
               CustomTextField(
-                controller: _weight,
-                hint: "Weight",
-                icon: Icons.account_balance_wallet,
+                controller: _bmi,
+                hint: "Have you ever had a stroke",
+                icon: Icons.question_mark,
               ),
               Gap(20),
-              CustomTextField(
-                controller: _weight,
-                hint: "Weight",
-                icon: Icons.account_balance_wallet,
-              ),
-              Gap(20),
-              CustomTextField(
-                controller: _weight,
-                hint: "Weight",
-                icon: Icons.account_balance_wallet,
-              ),
-              Gap(20),
-              CustomTextField(
-                controller: _weight,
-                hint: "Weight",
-                icon: Icons.account_balance_wallet,
-              ),
-              Gap(20),
-              CustomTextField(
-                controller: _weight,
-                hint: "Weight",
-                icon: Icons.account_balance_wallet,
-              ),
-              Gap(20),
-              CustomTextField(
-                controller: _weight,
-                hint: "Weight",
-                icon: Icons.account_balance_wallet,
-              ),
-              Gap(20),
-              CustomTextField(
-                controller: _weight,
-                hint: "Weight",
-                icon: Icons.account_balance_wallet,
-              ),
             ],
           ),
         ),

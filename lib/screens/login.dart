@@ -7,7 +7,7 @@ import 'package:grad_project/components/customtextfield.dart';
 import 'package:grad_project/Tools/functions.dart';
 import 'package:grad_project/Auth/auth_gate.dart';
 import 'package:grad_project/Auth/auth_service.dart';
-import 'package:grad_project/screens/signup_root.dart';
+import 'package:grad_project/screens/signup.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -136,7 +136,7 @@ class _LoginState extends State<Login> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => SignupRoot()),
+                      MaterialPageRoute(builder: (context) => Signup()),
                     );
                   },
                   child: Text(

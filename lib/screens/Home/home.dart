@@ -1,5 +1,4 @@
-import 'dart:io';
-import 'package:avatar_glow/avatar_glow.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
@@ -7,9 +6,15 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:grad_project/Tools/colors.dart';
 import 'package:grad_project/Auth/auth_service.dart';
 import 'package:grad_project/Tools/functions.dart';
+import 'package:grad_project/components/health_articales.dart';
+import 'package:grad_project/components/measure_botton.dart';
+import 'package:grad_project/components/search_bar.dart';
+import 'package:grad_project/components/welcome_user.dart';
 import 'package:grad_project/models.dart';
+import 'package:grad_project/screens/add_medicine.dart';
 import 'package:grad_project/screens/chatbot/chatbot.dart';
 import 'package:grad_project/providers/profile_image_provider.dart';
+import 'package:grad_project/screens/issues.dart';
 import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
@@ -75,7 +80,7 @@ class _HomeState extends State<Home> {
 
     try {
       final tips = await Chatbot.getHealthTips(
-        age: "35", // These should come from user profile
+        age: "35",
         gender: "Male",
         medicalCondition: "Type 2 Diabetes",
         lifestyle: "Sedentary, works in office",
@@ -170,96 +175,100 @@ class _HomeState extends State<Home> {
       );
     }
 
-    return Container(
-      height: 400,
-      padding: EdgeInsets.all(16),
-      margin: EdgeInsets.symmetric(horizontal: 0, vertical: 8),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300, width: 1),
-        borderRadius: BorderRadius.circular(5),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Your Today's Health Tips",
-                style: GoogleFonts.poppins(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
+    if (!_healthTips.isEmpty) {
+      return Container(
+        height: 400,
+        padding: EdgeInsets.all(16),
+        margin: EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey.shade300, width: 1),
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Your Today's Health Tips",
+                  style: GoogleFonts.poppins(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
-              IconButton(
-                icon: Icon(Icons.refresh, color: AppColors.primary),
-                onPressed: _showHealthTips,
-                tooltip: 'Refresh Tips',
-              ),
-            ],
-          ),
-          Gap(8),
-          SizedBox(
-            height: 300,
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: Column(
-                children: [
-                  ...List.generate(
-                    _healthTips.length,
-                    (index) => Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 5),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: EdgeInsets.all(4),
-                                decoration: BoxDecoration(
-                                  color: AppColors.primary.withOpacity(0.1),
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                child: Text(
-                                  '${index + 1}',
-                                  style: GoogleFonts.poppins(
-                                    color: AppColors.primary,
-                                    fontWeight: FontWeight.w600,
+                IconButton(
+                  icon: Icon(Icons.refresh, color: AppColors.primary),
+                  onPressed: _showHealthTips,
+                  tooltip: 'Refresh Tips',
+                ),
+              ],
+            ),
+            Gap(8),
+            SizedBox(
+              height: 300,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Column(
+                  children: [
+                    ...List.generate(
+                      _healthTips.length,
+                      (index) => Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 5),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.all(4),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.primary.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: Text(
+                                    '${index + 1}',
+                                    style: GoogleFonts.poppins(
+                                      color: AppColors.primary,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Gap(8),
-                              Expanded(
-                                child: Text(
-                                  _healthTips[index],
-                                  style: GoogleFonts.poppins(fontSize: 14),
+                                Gap(8),
+                                Expanded(
+                                  child: Text(
+                                    _healthTips[index],
+                                    style: GoogleFonts.poppins(fontSize: 14),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          index == 4
+                              ? SizedBox.shrink()
+                              : Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 40,
+                                ),
+                                child: Divider(
+                                  thickness: 1,
+                                  color: Colors.grey.shade300,
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                        index == 4
-                            ? SizedBox.shrink()
-                            : Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 40,
-                              ),
-                              child: Divider(
-                                thickness: 1,
-                                color: Colors.grey.shade300,
-                              ),
-                            ),
-                        Gap(5),
-                      ],
+                          Gap(5),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    } else {
+      return SizedBox.shrink();
+    }
   }
 
   @override
@@ -277,76 +286,14 @@ class _HomeState extends State<Home> {
         scrollDirection: Axis.vertical,
         child: Column(
           children: [
-            Gap(50), // Reduced gap since we now have AppBar
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25),
-              child: Row(
-                children: [
-                  Consumer<ProfileImageProvider>(
-                    builder: (context, imageProvider, child) {
-                      return GestureDetector(
-                        onTap: () => widget.onNavigate(3),
-                        child: AvatarGlow(
-                          glowRadiusFactor: 0.25,
-                          glowColor: AppColors.primary,
-                          duration: Duration(milliseconds: 2000),
-                          child: CircleAvatar(
-                            radius: 25,
-                            backgroundColor: AppColors.backGround,
-                            backgroundImage:
-                                imageProvider.selectedImage == null
-                                    ? AssetImage("assets/images/user.png")
-                                    : FileImage(
-                                      File(imageProvider.selectedImage!.path),
-                                    ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                  Gap(15),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Welcome !",
-                        style: GoogleFonts.poppins(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      Text(
-                        currentusername,
-                        style: GoogleFonts.poppins(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w400,
-                        ),
-                        maxLines: 1,
-                      ),
-                      Gap(5),
-                      Text(
-                        "How is it going today ?",
-                        style: GoogleFonts.poppins(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.grey.shade500,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Spacer(),
-                  GestureDetector(
-                    onTap: () {
-                      widget.onNavigate(2);
-                    },
-                    child: Icon(Icons.notifications, color: AppColors.primary),
-                  ),
-                ],
-              ),
+            Gap(50),
+            WelcomeUser(
+              onNavigate: widget.onNavigate,
+              currentusername: currentusername,
             ),
             Gap(25),
             Container(
-              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 25),
               width: double.infinity,
               decoration: BoxDecoration(
                 color: AppColors.backGround,
@@ -357,207 +304,100 @@ class _HomeState extends State<Home> {
               ),
               child: Column(
                 children: [
-                  TextField(
-                    controller: searchController,
-                    cursorColor: AppColors.primary,
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.search, color: Colors.grey),
-                      hintText: "Search doctor, drugs, articles...",
-                      hintStyle: TextStyle(color: Colors.grey),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
-                        borderSide: BorderSide(
-                          color: Colors.grey.shade300,
-                          width: 1,
-                        ),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
-                        borderSide: BorderSide(
-                          color: Colors.grey.shade300,
-                          width: 1,
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
-                        borderSide: BorderSide(
-                          color: Colors.grey.shade400,
-                          width: 1.2,
-                        ),
-                      ),
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: 0,
-                        vertical: 14,
-                      ),
-                    ),
-                  ),
+                  CustomSearchBar(searchController: searchController),
                   Gap(20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Column(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: AppColors.primary,
-                              borderRadius: BorderRadius.circular(500),
+                      GestureDetector(
+                        child: Column(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: AppColors.primary,
+                                borderRadius: BorderRadius.circular(500),
+                              ),
+                              child: SvgPicture.asset(
+                                "assets/icons/Top Doctors.svg",
+                                width: 35,
+                              ),
                             ),
-                            child: SvgPicture.asset(
-                              "assets/icons/Top Doctors.svg",
-                              width: 35,
+                            Gap(10),
+                            Text(
+                              "Health \ncondition",
+                              style: GoogleFonts.poppins(fontSize: 14),
+                              textAlign: TextAlign.center,
                             ),
-                          ),
-                          Gap(10),
-                          Text(
-                            "Top Doctors",
-                            style: GoogleFonts.poppins(fontSize: 14),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                      Column(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: AppColors.primary,
-                              borderRadius: BorderRadius.circular(500),
+                      GestureDetector(
+                        onTap:
+                            () => Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (c) => AddMedicine()),
                             ),
-                            child: SvgPicture.asset(
-                              "assets/icons/Pharmacy.svg",
-                              width: 35,
+                        child: Column(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: AppColors.primary,
+                                borderRadius: BorderRadius.circular(500),
+                              ),
+                              child: SvgPicture.asset(
+                                "assets/icons/Pharmacy.svg",
+                                width: 35,
+                              ),
                             ),
-                          ),
-                          Gap(10),
-                          Text(
-                            "Pharmacy",
-                            style: GoogleFonts.poppins(fontSize: 14),
-                          ),
-                        ],
+                            Gap(10),
+                            Text(
+                              "Medicine \nTracking",
+                              style: GoogleFonts.poppins(fontSize: 14),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
                       ),
-                      Column(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: AppColors.primary,
-                              borderRadius: BorderRadius.circular(500),
+                      GestureDetector(
+                        onTap:
+                            () => Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (c) => Issues()),
                             ),
-                            child: SvgPicture.asset(
-                              "assets/icons/Ambulance.svg",
-                              width: 35,
+                        child: Column(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: AppColors.primary,
+                                borderRadius: BorderRadius.circular(500),
+                              ),
+                              child: Icon(
+                                CupertinoIcons.question_diamond,
+                                color: Colors.white,
+                                size: 35,
+                              ),
                             ),
-                          ),
-                          Gap(10),
-                          Text(
-                            "Ambulance",
-                            style: GoogleFonts.poppins(fontSize: 14),
-                          ),
-                        ],
+                            Gap(10),
+                            Text(
+                              "Common\nIssues",
+                              style: GoogleFonts.poppins(fontSize: 14),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
-                  Gap(15),
+                  Gap(35),
+                  MeasureBotton(),
+                  Gap(35),
                   _buildHealthTipsSection(),
                   Gap(15),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Health articles",
-                        style: GoogleFonts.poppins(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      Text(
-                        "See all",
-                        style: GoogleFonts.inter(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14,
-                          color: AppColors.primary,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: articales.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Container(
-                            padding: EdgeInsets.all(6),
-                            margin: EdgeInsets.only(bottom: 10),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Colors.grey.shade300,
-                                width: 1,
-                              ),
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Image.asset(
-                                  "assets/images/articale${articales[index].image}.png",
-                                  width: 55,
-                                  fit: BoxFit.cover,
-                                ),
-                                Gap(10),
-                                Expanded(
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        articales[index].title,
-                                        style: GoogleFonts.poppins(
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                      Text(
-                                        articales[index].subTitle,
-                                        style: GoogleFonts.poppins(
-                                          fontSize: 8,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.grey.shade400,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Gap(5),
-                                GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      articales[index].isSaved =
-                                          !articales[index].isSaved;
-                                    });
-                                  },
-                                  child: Icon(
-                                    articales[index].isSaved
-                                        ? Icons.bookmark
-                                        : Icons.bookmark_border,
-                                    color:
-                                        articales[index].isSaved
-                                            ? AppColors.primary
-                                            : Colors.grey.shade500,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
+                  HealthArticales(articales: articales),
                 ],
               ),
             ),

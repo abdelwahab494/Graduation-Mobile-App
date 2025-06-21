@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:grad_project/providers/signup_provider.dart';
+import 'package:grad_project/Auth/auth_gate.dart';
+import 'package:grad_project/Auth/auth_service.dart';
+import 'package:grad_project/Tools/functions.dart';
 import 'package:grad_project/screens/login.dart';
 import 'package:grad_project/Tools/colors.dart';
 import 'package:grad_project/components/customtextfield.dart';
-import 'package:provider/provider.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -15,68 +16,153 @@ class Signup extends StatefulWidget {
 }
 
 class _SignupState extends State<Signup> {
-  // // checkbox value
-  // bool _isTermsAccepted = false;
+  // form key
+  final _formKey = GlobalKey<FormState>();
 
-  // // get auth service
-  // final authService = AuthService();
+  // checkbox value
+  bool _isTermsAccepted = false;
 
-  // // text controllers
-  // final _usernamecontroller = TextEditingController();
-  // final _emailController = TextEditingController();
-  // final _passwordController = TextEditingController();
-  // final _confirmPasswordController = TextEditingController();
+  // get auth service
+  final authService = AuthService();
+
+  // text controllers
+  final _usernamecontroller = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
   // sign up button pressed
+  void signup() async {
+    // prepare data
+    final email = _emailController.text;
+    final username = _usernamecontroller.text;
+    final password = _passwordController.text;
+    final confirmPassword = _confirmPasswordController.text;
 
-  // @override
-  // void dispose() {
-  //   _emailController.dispose();
-  //   _passwordController.dispose();
-  //   _confirmPasswordController.dispose();
-  //   _usernamecontroller.dispose();
-  //   super.dispose();
-  // }
+    // ensure filling all fields
+    if (email == "" ||
+        username == "" ||
+        password == "" ||
+        confirmPassword == "") {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: const Color.fromARGB(220, 255, 17, 0),
+          content: Text(
+            "Please Fill All Fields.",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      );
+      return;
+    }
+    // cheching matching passwords
+    if (password != confirmPassword) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: const Color.fromARGB(220, 255, 17, 0),
+          content: Text(
+            "Password doesn't match! \nPlease try again.",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      );
+      return;
+    }
+    // checking terms
+    if (!_isTermsAccepted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: const Color.fromARGB(220, 255, 17, 0),
+          content: Text(
+            "Please accept the Terms and Conditions to proceed.",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      );
+      return;
+    }
+    // attempt sign up
+    try {
+      await authService.signUpWithEmailPassword(email, password, username);
+      if (mounted) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const AuthGate()),
+          (route) => false,
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Error: $e")));
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    _usernamecontroller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<SignupProvider>(
-      builder: (context, provider, child) {
-        return Scaffold(
-          backgroundColor: AppColors.backGround,
-          body: SafeArea(
-            child: Column(
-              children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 36),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
+    return GestureDetector(
+      onTap: () => Focus.of(context).unfocus(),
+      child: Scaffold(
+        backgroundColor: AppColors.backGround,
+        appBar: appBar("Sign Up", context),
+        body: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 36),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Form(
+                          key: _formKey,
+                          child: Column(
                             children: [
                               Gap(30),
                               CustomTextField(
-                                controller: provider.usernamecontroller,
+                                controller: _usernamecontroller,
                                 hint: "Name",
                                 icon: Icons.person_outline_outlined,
                               ),
                               Gap(20),
                               OnlyEmailTextField(
-                                controller: provider.emailController,
+                                controller: _emailController,
                                 hint: "Email",
                                 icon: Icons.mail_outline_outlined,
                               ),
                               Gap(20),
                               PasswordTextField(
-                                controller: provider.passwordController,
+                                controller: _passwordController,
                                 hint: "Password",
                                 icon: Icons.lock_outlined,
                               ),
                               Gap(20),
                               PasswordTextField(
-                                controller: provider.confirmPasswordController,
+                                controller: _confirmPasswordController,
                                 hint: "Confirm password",
                                 icon: Icons.lock_outlined,
                               ),
@@ -85,12 +171,11 @@ class _SignupState extends State<Signup> {
                                 checkColor: Colors.white,
                                 activeColor: AppColors.primary,
                                 contentPadding: EdgeInsets.zero,
-                                value: provider.isTermsAccepted,
+                                value: _isTermsAccepted,
                                 onChanged: (newValue) {
-                                  // setState(() {
-                                  //   _isTermsAccepted = newValue!;
-                                  // });
-                                  provider.toggleCheck(newValue);
+                                  setState(() {
+                                    _isTermsAccepted = newValue!;
+                                  });
                                 },
                                 title: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -121,81 +206,79 @@ class _SignupState extends State<Signup> {
                               ),
                             ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 36,
-                    vertical: 10,
-                  ),
-                  child: Column(
-                    children: [
-                      // GestureDetector(
-                      //   onTap: () => {},
-                      //   child: Container(
-                      //     padding: EdgeInsets.all(15),
-                      //     width: 350,
-                      //     decoration: BoxDecoration(
-                      //       color:
-                      //           provider.isTersAccepted
-                      //               ? AppColors.primary
-                      //               : Colors.grey,
-                      //       borderRadius: BorderRadius.circular(50),
-                      //     ),
-                      //     child: Text(
-                      //       "Create account",
-                      //       textAlign: TextAlign.center,
-                      //       style: GoogleFonts.inter(
-                      //         fontSize: 16,
-                      //         fontWeight: FontWeight.w600,
-                      //         color: Colors.white,
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
-                      Gap(10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Already have an account?",
-                            style: GoogleFonts.poppins(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.text,
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => Login(),
-                                ),
-                              );
-                            },
-                            child: Text(
-                              " Login",
-                              style: GoogleFonts.poppins(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.primary,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 36,
+                  vertical: 10,
                 ),
-              ],
-            ),
+                child: Column(
+                  children: [
+                    GestureDetector(
+                      onTap: () => signup(),
+                      child: Container(
+                        padding: EdgeInsets.all(15),
+                        width: 350,
+                        decoration: BoxDecoration(
+                          color:
+                              _isTermsAccepted
+                                  ? AppColors.primary
+                                  : Colors.grey,
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: Text(
+                          "Create account",
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.inter(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Gap(10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Already have an account?",
+                          style: GoogleFonts.poppins(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.text,
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => Login()),
+                            );
+                          },
+                          child: Text(
+                            " Login",
+                            style: GoogleFonts.poppins(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.primary,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }
@@ -243,7 +326,7 @@ Future _showDialog(context) {
           decoration: BoxDecoration(
             color: Color.fromARGB(255, 247, 250, 255),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: AppColors.primary),
+            // border: Border.all(color: AppColors.primary),
           ),
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,

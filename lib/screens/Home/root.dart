@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grad_project/screens/Home/home.dart';
+import 'package:grad_project/screens/Home/home2.dart';
 import 'package:grad_project/screens/Home/notifications.dart';
 import 'package:grad_project/screens/Home/profile.dart';
 import 'package:grad_project/screens/Home/reports.dart';
@@ -24,7 +25,8 @@ class _BaseState extends State<Base> {
   @override
   Widget build(BuildContext context) {
     final List<Widget> _pages = [
-      Home(onNavigate: _onItemTapped),
+      // Home(onNavigate: _onItemTapped),
+      Home2(),
       Reports(),
       Notifications(),
       Profile(),

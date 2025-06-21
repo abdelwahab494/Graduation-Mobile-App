@@ -19,15 +19,23 @@ class CustomTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isLight = Provider.of<ChangeThemeProvider>(context).isLight;
 
-    return TextField(
+    return TextFormField(
       controller: controller,
       cursorColor: Colors.black,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return "Please fill this field to proceed.";
+        }
+      },
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: TextStyle(color: isLight ? Color.fromARGB(255, 73, 73, 73) : Color(0xffF2F2F2)),
+        hintStyle: TextStyle(
+          color: isLight ? Color.fromARGB(255, 73, 73, 73) : Color(0xffF2F2F2),
+        ),
         prefixIcon: Icon(icon, color: Colors.grey[700]),
         filled: true,
-        fillColor: isLight ? Color(0xffF2F2F2) : Color.fromARGB(255, 73, 73, 73),
+        fillColor:
+            isLight ? Color(0xffF2F2F2) : Color.fromARGB(255, 73, 73, 73),
         contentPadding: EdgeInsets.symmetric(vertical: 18.0, horizontal: 16.0),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(5),
@@ -56,9 +64,14 @@ class Customtextfield2 extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isLight = Provider.of<ChangeThemeProvider>(context).isLight;
 
-    return TextField(
-      cursorColor: AppColors.primary,
+    return TextFormField(
       controller: controller,
+      cursorColor: AppColors.primary,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return "Please fill this field to proceed.";
+        }
+      },
       decoration: InputDecoration(
         label: Text(label),
         labelStyle: TextStyle(
@@ -94,11 +107,16 @@ class OnlyEngTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isLight = Provider.of<ChangeThemeProvider>(context).isLight;
 
-    return TextField(
+    return TextFormField(
       keyboardType: TextInputType.text,
       inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z]'))],
       controller: controller,
       cursorColor: Colors.black,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return "Please fill this field to proceed.";
+        }
+      },
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: TextStyle(
@@ -106,7 +124,8 @@ class OnlyEngTextField extends StatelessWidget {
         ),
         prefixIcon: Icon(icon, color: Colors.grey[700]),
         filled: true,
-        fillColor: isLight ? Color(0xffF2F2F2) : Color.fromARGB(255, 73, 73, 73),
+        fillColor:
+            isLight ? Color(0xffF2F2F2) : Color.fromARGB(255, 73, 73, 73),
         contentPadding: EdgeInsets.symmetric(vertical: 18.0, horizontal: 16.0),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(5),
@@ -137,13 +156,18 @@ class OnlyArTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isLight = Provider.of<ChangeThemeProvider>(context).isLight;
 
-    return TextField(
+    return TextFormField(
       keyboardType: TextInputType.text,
       inputFormatters: [
         FilteringTextInputFormatter.allow(RegExp(r'[\u0600-\u06FF]')),
       ],
       cursorColor: Colors.black,
       controller: controller,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return "Please fill this field to proceed.";
+        }
+      },
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: TextStyle(
@@ -151,7 +175,8 @@ class OnlyArTextField extends StatelessWidget {
         ),
         prefixIcon: Icon(icon, color: Colors.grey[700]),
         filled: true,
-        fillColor: isLight ? Color(0xffF2F2F2) : Color.fromARGB(255, 73, 73, 73),
+        fillColor:
+            isLight ? Color(0xffF2F2F2) : Color.fromARGB(255, 73, 73, 73),
         contentPadding: EdgeInsets.symmetric(vertical: 18.0, horizontal: 16.0),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(5),
@@ -182,11 +207,16 @@ class OnlyNumTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isLight = Provider.of<ChangeThemeProvider>(context).isLight;
 
-    return TextField(
+    return TextFormField(
       keyboardType: TextInputType.number,
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       controller: controller,
       cursorColor: Colors.black,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return "Please fill this field to proceed.";
+        }
+      },
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: TextStyle(
@@ -194,7 +224,8 @@ class OnlyNumTextField extends StatelessWidget {
         ),
         prefixIcon: Icon(icon, color: Colors.grey[700]),
         filled: true,
-        fillColor: isLight ? Color(0xffF2F2F2) : Color.fromARGB(255, 73, 73, 73),
+        fillColor:
+            isLight ? Color(0xffF2F2F2) : Color.fromARGB(255, 73, 73, 73),
         contentPadding: EdgeInsets.symmetric(vertical: 18.0, horizontal: 16.0),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(5),
@@ -225,16 +256,24 @@ class PasswordTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isLight = Provider.of<ChangeThemeProvider>(context).isLight;
 
-    return TextField(
+    return TextFormField(
       obscureText: true,
       controller: controller,
       cursorColor: Colors.black,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return "Please fill this field to proceed.";
+        }
+      },
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: TextStyle(color: isLight ? Color.fromARGB(255, 73, 73, 73) : Color(0xffF2F2F2)),
+        hintStyle: TextStyle(
+          color: isLight ? Color.fromARGB(255, 73, 73, 73) : Color(0xffF2F2F2),
+        ),
         prefixIcon: Icon(icon, color: Colors.grey[700]),
         filled: true,
-        fillColor: isLight ? Color(0xffF2F2F2) : Color.fromARGB(255, 73, 73, 73),
+        fillColor:
+            isLight ? Color(0xffF2F2F2) : Color.fromARGB(255, 73, 73, 73),
         contentPadding: EdgeInsets.symmetric(vertical: 18.0, horizontal: 16.0),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(5),
@@ -265,19 +304,27 @@ class OnlyEmailTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isLight = Provider.of<ChangeThemeProvider>(context).isLight;
 
-    return TextField(
+    return TextFormField(
       keyboardType: TextInputType.emailAddress,
       inputFormatters: [
         FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9@._-]')),
       ],
       cursorColor: Colors.black,
       controller: controller,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return "Please fill this field to proceed.";
+        }
+      },
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: TextStyle(color: isLight ? Color.fromARGB(255, 73, 73, 73) : Color(0xffF2F2F2)),
+        hintStyle: TextStyle(
+          color: isLight ? Color.fromARGB(255, 73, 73, 73) : Color(0xffF2F2F2),
+        ),
         prefixIcon: Icon(icon, color: Colors.grey[700]),
         filled: true,
-        fillColor: isLight ? Color(0xffF2F2F2) : Color.fromARGB(255, 73, 73, 73),
+        fillColor:
+            isLight ? Color(0xffF2F2F2) : Color.fromARGB(255, 73, 73, 73),
         contentPadding: EdgeInsets.symmetric(vertical: 18.0, horizontal: 16.0),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(5),

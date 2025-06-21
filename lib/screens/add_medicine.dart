@@ -571,18 +571,27 @@ class _AddMedicineState extends State<AddMedicine> {
         stream: db.stream,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(color: AppColors.primary),
+            return Scaffold(
+              backgroundColor: AppColors.backGround,
+              body: Center(
+                child: CircularProgressIndicator(color: AppColors.primary),
+              ),
             );
           }
           if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
+            return Scaffold(
+              backgroundColor: AppColors.backGround,
+              body: Center(child: Text('Error: ${snapshot.error}')),
+            );
           }
           if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(
-              child: Text(
-                'No medicines found. \nAdd a new medicine!',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            return Scaffold(
+              backgroundColor: AppColors.backGround,
+              body: Center(
+                child: Text(
+                  'No medicines found. \nAdd a new medicine!',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
               ),
             );
           }
