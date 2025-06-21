@@ -37,28 +37,32 @@ class _MeasureBottonState extends State<MeasureBotton>
     return ScaleTransition(
       scale: _animation,
       child: Container(
-        width: 250,
-        height: 250,
+        // width: 250,
+        // height: 250,
         padding: EdgeInsets.symmetric(vertical: 15),
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color(0xFF2196F3),
-              Color(0xFF1976D2),
-              Color(0xFF0D47A1),
-              Color(0xFF0D47A1),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(500),
+          // gradient: LinearGradient(
+          //   colors: [
+          //     Color(0xFF2196F3),
+          //     Color(0xFF1976D2),
+          //     Color(0xFF0D47A1),
+          //     Color(0xFF0D47A1),
+          //   ],
+          //   begin: Alignment.topLeft,
+          //   end: Alignment.bottomRight,
+          // ),
+          color: AppColors.primary,
+          borderRadius: BorderRadius.circular(10),
+          // borderRadius: BorderRadius.circular(500),
         ),
         child: Center(
           child: Text(
-            "Measure \nYour Glucose",
+            "Measure Your Glucose",
+            // "Measure \nYour Glucose",
             style: GoogleFonts.poppins(
               color: Colors.white,
-              fontSize: 26,
+              fontSize: 20,
+              // fontSize: 26,
               fontWeight: FontWeight.bold,
             ),
             textAlign: TextAlign.center,

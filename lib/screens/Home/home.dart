@@ -1,21 +1,19 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grad_project/Tools/colors.dart';
 import 'package:grad_project/Auth/auth_service.dart';
 import 'package:grad_project/Tools/functions.dart';
-import 'package:grad_project/components/health_articales.dart';
+import 'package:grad_project/components/home_buttons.dart';
 import 'package:grad_project/components/measure_botton.dart';
 import 'package:grad_project/components/search_bar.dart';
 import 'package:grad_project/components/welcome_user.dart';
 import 'package:grad_project/models.dart';
-import 'package:grad_project/screens/add_medicine.dart';
 import 'package:grad_project/screens/chatbot/chatbot.dart';
 import 'package:grad_project/providers/profile_image_provider.dart';
-import 'package:grad_project/screens/issues.dart';
+import 'package:grad_project/screens/measurements.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class Home extends StatefulWidget {
   final Function(int) onNavigate;
@@ -106,18 +104,97 @@ class _HomeState extends State<Home> {
 
   Widget _buildHealthTipsSection() {
     if (_isLoadingTips) {
-      return Center(
+      return Skeletonizer(
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          height: 400,
+          padding: EdgeInsets.all(16),
           margin: EdgeInsets.symmetric(horizontal: 0, vertical: 8),
           decoration: BoxDecoration(
             border: Border.all(color: Colors.grey.shade300, width: 1),
             borderRadius: BorderRadius.circular(5),
           ),
-          child: CircularProgressIndicator(color: AppColors.primary),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Your Today's Health Tips",
+                    style: GoogleFonts.poppins(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.refresh, color: AppColors.primary),
+                    onPressed: _showHealthTips,
+                    tooltip: 'Refresh Tips',
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 300,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: articales.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(10),
+                            child: Text(
+                              "$index",
+                              style: TextStyle(fontSize: 18),
+                            ),
+                          ),
+                          Gap(10),
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Incorporate 30 minutes of moderate-intensity exercise most days of the week: Start with short walks during your lunch break or after work, gradually increasing duration and intensity.",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                Gap(10),
+                                Divider(),
+                              ],
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       );
     }
+    // if (_isLoadingTips) {
+    //   return Center(
+    //     child: Container(
+    //       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+    //       margin: EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+    //       decoration: BoxDecoration(
+    //         border: Border.all(color: Colors.grey.shade300, width: 1),
+    //         borderRadius: BorderRadius.circular(5),
+    //       ),
+    //       child: CircularProgressIndicator(color: AppColors.primary),
+    //     ),
+    //   );
+    // }
 
     if (_healthTips.isEmpty) {
       return Container(
@@ -281,123 +358,51 @@ class _HomeState extends State<Home> {
     });
 
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 196, 218, 255),
+      backgroundColor: Color(0xFFC4DAFF),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
           children: [
-            Gap(50),
-            WelcomeUser(
-              onNavigate: widget.onNavigate,
-              currentusername: currentusername,
+            Container(
+              color: Color.fromARGB(255, 196, 218, 255),
+              child: Column(
+                children: [
+                  Gap(50),
+                  WelcomeUser(
+                    onNavigate: widget.onNavigate,
+                    currentusername: currentusername,
+                  ),
+                  Gap(25),
+                ],
+              ),
             ),
-            Gap(25),
             Container(
               padding: EdgeInsets.symmetric(vertical: 20, horizontal: 25),
               width: double.infinity,
               decoration: BoxDecoration(
                 color: AppColors.backGround,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(35),
-                  topRight: Radius.circular(35),
-                ),
+                borderRadius: BorderRadius.circular(35),
               ),
               child: Column(
                 children: [
                   CustomSearchBar(searchController: searchController),
                   Gap(20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      GestureDetector(
-                        child: Column(
-                          children: [
-                            Container(
-                              padding: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: AppColors.primary,
-                                borderRadius: BorderRadius.circular(500),
-                              ),
-                              child: SvgPicture.asset(
-                                "assets/icons/Top Doctors.svg",
-                                width: 35,
-                              ),
-                            ),
-                            Gap(10),
-                            Text(
-                              "Health \ncondition",
-                              style: GoogleFonts.poppins(fontSize: 14),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap:
-                            () => Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (c) => AddMedicine()),
-                            ),
-                        child: Column(
-                          children: [
-                            Container(
-                              padding: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: AppColors.primary,
-                                borderRadius: BorderRadius.circular(500),
-                              ),
-                              child: SvgPicture.asset(
-                                "assets/icons/Pharmacy.svg",
-                                width: 35,
-                              ),
-                            ),
-                            Gap(10),
-                            Text(
-                              "Medicine \nTracking",
-                              style: GoogleFonts.poppins(fontSize: 14),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap:
-                            () => Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (c) => Issues()),
-                            ),
-                        child: Column(
-                          children: [
-                            Container(
-                              padding: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: AppColors.primary,
-                                borderRadius: BorderRadius.circular(500),
-                              ),
-                              child: Icon(
-                                CupertinoIcons.question_diamond,
-                                color: Colors.white,
-                                size: 35,
-                              ),
-                            ),
-                            Gap(10),
-                            Text(
-                              "Common\nIssues",
-                              style: GoogleFonts.poppins(fontSize: 14),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                  HomeButtons(),
                   Gap(35),
-                  MeasureBotton(),
+                  GestureDetector(
+                    onTap:
+                        () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (c) => MeasurementScreen(),
+                          ),
+                        ),
+                    child: MeasureBotton(),
+                  ),
                   Gap(35),
                   _buildHealthTipsSection(),
                   Gap(15),
-                  HealthArticales(articales: articales),
+                  // HealthArticales(articales: articales),
                 ],
               ),
             ),

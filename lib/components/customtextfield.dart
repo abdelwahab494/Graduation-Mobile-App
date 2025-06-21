@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:grad_project/Tools/colors.dart';
@@ -22,10 +23,14 @@ class CustomTextField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       cursorColor: Colors.black,
+      inputFormatters: [
+        FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9 ]')),
+      ],
       validator: (value) {
         if (value == null || value.isEmpty) {
           return "Please fill this field to proceed.";
         }
+        return null;
       },
       decoration: InputDecoration(
         hintText: hint,
@@ -71,6 +76,7 @@ class Customtextfield2 extends StatelessWidget {
         if (value == null || value.isEmpty) {
           return "Please fill this field to proceed.";
         }
+        return null;
       },
       decoration: InputDecoration(
         label: Text(label),
@@ -112,11 +118,6 @@ class OnlyEngTextField extends StatelessWidget {
       inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z]'))],
       controller: controller,
       cursorColor: Colors.black,
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return "Please fill this field to proceed.";
-        }
-      },
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: TextStyle(
@@ -163,11 +164,6 @@ class OnlyArTextField extends StatelessWidget {
       ],
       cursorColor: Colors.black,
       controller: controller,
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return "Please fill this field to proceed.";
-        }
-      },
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: TextStyle(
@@ -212,11 +208,6 @@ class OnlyNumTextField extends StatelessWidget {
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       controller: controller,
       cursorColor: Colors.black,
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return "Please fill this field to proceed.";
-        }
-      },
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: TextStyle(
@@ -241,7 +232,7 @@ class OnlyNumTextField extends StatelessWidget {
   }
 }
 
-class PasswordTextField extends StatelessWidget {
+class PasswordTextField extends StatefulWidget {
   const PasswordTextField({
     super.key,
     required this.controller,
@@ -253,24 +244,48 @@ class PasswordTextField extends StatelessWidget {
   final IconData icon;
 
   @override
+  State<PasswordTextField> createState() => _PasswordTextFieldState();
+}
+
+class _PasswordTextFieldState extends State<PasswordTextField> {
+  bool showPassword = false;
+  @override
   Widget build(BuildContext context) {
     bool isLight = Provider.of<ChangeThemeProvider>(context).isLight;
 
     return TextFormField(
-      obscureText: true,
-      controller: controller,
+      obscureText: !showPassword,
+      controller: widget.controller,
       cursorColor: Colors.black,
       validator: (value) {
         if (value == null || value.isEmpty) {
           return "Please fill this field to proceed.";
         }
+        if (value.contains(" ")) {
+          return "Can't contain spaces.";
+        }
+        if (value.length < 8) {
+          return "Short password.";
+        }
+        return null;
       },
       decoration: InputDecoration(
-        hintText: hint,
+        hintText: widget.hint,
         hintStyle: TextStyle(
           color: isLight ? Color.fromARGB(255, 73, 73, 73) : Color(0xffF2F2F2),
         ),
-        prefixIcon: Icon(icon, color: Colors.grey[700]),
+        suffix: GestureDetector(
+          onTap:
+              () => setState(() {
+                showPassword = !showPassword;
+              }),
+          child: Icon(
+            showPassword ? Icons.visibility_off : Icons.visibility,
+            size: 17,
+            color: Colors.grey[600],
+          ),
+        ),
+        prefixIcon: Icon(widget.icon, color: Colors.grey[700]),
         filled: true,
         fillColor:
             isLight ? Color(0xffF2F2F2) : Color.fromARGB(255, 73, 73, 73),
@@ -307,7 +322,7 @@ class OnlyEmailTextField extends StatelessWidget {
     return TextFormField(
       keyboardType: TextInputType.emailAddress,
       inputFormatters: [
-        FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9@._-]')),
+        FilteringTextInputFormatter.allow(RegExp(r'[a-z0-9@._-]')),
       ],
       cursorColor: Colors.black,
       controller: controller,
@@ -315,6 +330,13 @@ class OnlyEmailTextField extends StatelessWidget {
         if (value == null || value.isEmpty) {
           return "Please fill this field to proceed.";
         }
+        if (!value.endsWith("@gmail.com")) {
+          return "Invalid Email format.";
+        }
+        if (value.contains(" ")) {
+          return "Can't contain spaces.";
+        }
+        return null;
       },
       decoration: InputDecoration(
         hintText: hint,

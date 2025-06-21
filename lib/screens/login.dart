@@ -4,9 +4,9 @@ import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grad_project/Tools/colors.dart';
 import 'package:grad_project/components/customtextfield.dart';
-import 'package:grad_project/Tools/functions.dart';
 import 'package:grad_project/Auth/auth_gate.dart';
 import 'package:grad_project/Auth/auth_service.dart';
+import 'package:grad_project/Reset%20Password/forgot_password.dart';
 import 'package:grad_project/screens/signup.dart';
 
 class Login extends StatefulWidget {
@@ -17,6 +17,9 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  // form key
+  final _formKey = GlobalKey<FormState>();
+
   // get auth service
   final authService = AuthService();
 
@@ -68,148 +71,188 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backGround,
-      appBar: appBar("Login", context),
+      appBar: AppBar(
+        backgroundColor: AppColors.backGround,
+        elevation: 0,
+        scrolledUnderElevation: 0.0,
+        centerTitle: true,
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Icon(Icons.arrow_back, color: AppColors.text),
+        ),
+        title: Text(
+          "Login",
+          style: GoogleFonts.poppins(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: AppColors.text,
+          ),
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 36),
-        child: ListView(
-          children: [
-            Gap(30),
-            OnlyEmailTextField(
-              controller: _emailController,
-              hint: "Enter your email",
-              icon: Icons.mail_outline_outlined,
-            ),
-            SizedBox(height: 20),
-            PasswordTextField(
-              controller: _passwordController,
-              hint: "Enter your password",
-              icon: Icons.lock_outlined,
-            ),
-            Gap(10),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Padding(
-                padding: const EdgeInsets.only(right: 10),
-                child: Text(
-                  "Forgot Password?",
-                  style: GoogleFonts.roboto(
-                    fontSize: 14,
-                    color: AppColors.primary,
-                  ),
-                ),
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            children: [
+              Gap(30),
+              OnlyEmailTextField(
+                controller: _emailController,
+                hint: "Enter your email",
+                icon: Icons.mail_outline_outlined,
               ),
-            ),
-            SizedBox(height: 50),
-            GestureDetector(
-              onTap: () => login(),
-              child: Container(
-                padding: EdgeInsets.all(15),
-                width: 350,
-                decoration: BoxDecoration(
-                  color: AppColors.primary,
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: Text(
-                  "Login",
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.inter(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                  ),
-                ),
+              SizedBox(height: 20),
+              PasswordTextField(
+                controller: _passwordController,
+                hint: "Enter your password",
+                icon: Icons.lock_outlined,
               ),
-            ),
-            Gap(10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Don’t have an account?",
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.text,
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
+              Gap(10),
+              GestureDetector(
+                onTap:
+                    () => Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Signup()),
-                    );
-                  },
+                      MaterialPageRoute(
+                        builder:
+                            (c) => ForgotPassword(
+                              email: _emailController.text.trim(),
+                            ),
+                      ),
+                    ),
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 10),
+                    child: Text(
+                      "Forgot Password?",
+                      style: GoogleFonts.roboto(
+                        fontSize: 14,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 50),
+              GestureDetector(
+                onTap: () {
+                  if (_formKey.currentState!.validate()) {
+                    login();
+                  } else {
+                    return;
+                  }
+                },
+                child: Container(
+                  padding: EdgeInsets.all(15),
+                  width: 350,
+                  decoration: BoxDecoration(
+                    color: AppColors.primary,
+                    borderRadius: BorderRadius.circular(50),
+                  ),
                   child: Text(
-                    " Sign Up",
-                    style: GoogleFonts.poppins(
-                      fontSize: 15,
+                    "Login",
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.inter(
+                      fontSize: 16,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.primary,
+                      color: Colors.white,
                     ),
                   ),
                 ),
-              ],
-            ),
-            Gap(120),
-            Column(
-              children: [
-                SvgPicture.asset("assets/icons/hr.svg"),
-                Gap(20),
-                Container(
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    border: Border.all(width: 1, color: Colors.grey.shade300),
-                    borderRadius: BorderRadius.circular(10),
+              ),
+              Gap(10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Don’t have an account?",
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.text,
+                    ),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(18),
-                    child: Row(
-                      children: [
-                        Gap(10),
-                        SvgPicture.asset("assets/icons/Google.svg"),
-                        Gap(30),
-                        Text(
-                          "Sign in with Google",
-                          style: GoogleFonts.poppins(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.text,
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Signup()),
+                      );
+                    },
+                    child: Text(
+                      " Sign Up",
+                      style: GoogleFonts.poppins(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Gap(120),
+              Column(
+                children: [
+                  SvgPicture.asset("assets/icons/hr.svg"),
+                  Gap(20),
+                  Container(
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      border: Border.all(width: 1, color: Colors.grey.shade300),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(18),
+                      child: Row(
+                        children: [
+                          Gap(10),
+                          SvgPicture.asset("assets/icons/Google.svg"),
+                          Gap(30),
+                          Text(
+                            "Sign in with Google",
+                            style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.text,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                Gap(15),
-                Container(
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    border: Border.all(width: 1, color: Colors.grey.shade300),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(18),
-                    child: Row(
-                      children: [
-                        Gap(10),
-                        SvgPicture.asset("assets/icons/Facebook.svg"),
-                        Gap(30),
-                        Text(
-                          "Sign in with Facebook",
-                          style: GoogleFonts.poppins(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.text,
+                  Gap(15),
+                  Container(
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      border: Border.all(width: 1, color: Colors.grey.shade300),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(18),
+                      child: Row(
+                        children: [
+                          Gap(10),
+                          SvgPicture.asset("assets/icons/Facebook.svg"),
+                          Gap(30),
+                          Text(
+                            "Sign in with Facebook",
+                            style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.text,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                Gap(40),
-              ],
-            ),
-          ],
+                  Gap(40),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

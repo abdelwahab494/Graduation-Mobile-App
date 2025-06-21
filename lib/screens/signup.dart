@@ -48,7 +48,7 @@ class _SignupState extends State<Signup> {
         SnackBar(
           backgroundColor: const Color.fromARGB(220, 255, 17, 0),
           content: Text(
-            "Please Fill All Fields.",
+            "Please Fill All Fields to proceed.",
             style: TextStyle(
               color: Colors.white,
               fontSize: 16,
@@ -220,7 +220,13 @@ class _SignupState extends State<Signup> {
                 child: Column(
                   children: [
                     GestureDetector(
-                      onTap: () => signup(),
+                      onTap: () {
+                        if (_formKey.currentState!.validate()) {
+                          signup();
+                        } else {
+                          return;
+                        }
+                      },
                       child: Container(
                         padding: EdgeInsets.all(15),
                         width: 350,

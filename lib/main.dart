@@ -9,7 +9,11 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<void> main() async {
   Gemini.init(apiKey: "");
-  await Supabase.initialize(anonKey: "", url: "");
+  await Supabase.initialize(
+    anonKey:
+        "",
+    url: "",
+  );
   runApp(
     MultiProvider(
       providers: [
