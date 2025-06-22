@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:grad_project/Tools/colors.dart';
-import 'package:grad_project/Auth/auth_service.dart';
-import 'package:grad_project/Tools/functions.dart';
+import 'package:grad_project/core/colors.dart';
+import 'package:grad_project/auth/auth_service.dart';
+import 'package:grad_project/components/chat_botton.dart';
 import 'package:grad_project/components/home_buttons.dart';
 import 'package:grad_project/components/measure_botton.dart';
-import 'package:grad_project/components/search_bar.dart';
 import 'package:grad_project/components/welcome_user.dart';
-import 'package:grad_project/models.dart';
+import 'package:grad_project/models/articales_model.dart';
 import 'package:grad_project/screens/chatbot/chatbot.dart';
 import 'package:grad_project/providers/profile_image_provider.dart';
 import 'package:grad_project/screens/measurements.dart';
@@ -358,34 +357,30 @@ class _HomeState extends State<Home> {
     });
 
     return Scaffold(
-      backgroundColor: Color(0xFFC4DAFF),
+      backgroundColor: Color.fromARGB(255, 196, 218, 255),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
           children: [
-            Container(
-              color: Color.fromARGB(255, 196, 218, 255),
-              child: Column(
-                children: [
-                  Gap(50),
-                  WelcomeUser(
-                    onNavigate: widget.onNavigate,
-                    currentusername: currentusername,
-                  ),
-                  Gap(25),
-                ],
-              ),
+            Gap(50),
+            WelcomeUser(
+              onNavigate: widget.onNavigate,
+              currentusername: currentusername,
             ),
+            Gap(25),
             Container(
               padding: EdgeInsets.symmetric(vertical: 20, horizontal: 25),
               width: double.infinity,
               decoration: BoxDecoration(
                 color: AppColors.backGround,
-                borderRadius: BorderRadius.circular(35),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(35),
+                  topRight: Radius.circular(35),
+                ),
               ),
               child: Column(
                 children: [
-                  CustomSearchBar(searchController: searchController),
+                  // CustomSearchBar(searchController: searchController),
                   Gap(20),
                   HomeButtons(),
                   Gap(35),

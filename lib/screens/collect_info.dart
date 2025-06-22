@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:grad_project/Tools/colors.dart';
+import 'package:grad_project/core/colors.dart';
 import 'package:grad_project/components/customtextfield.dart';
 
 class CollectInfo extends StatelessWidget {

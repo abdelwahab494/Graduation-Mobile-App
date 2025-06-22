@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:grad_project/Tools/colors.dart';
+import 'package:grad_project/auth/auth_service.dart';
+import 'package:grad_project/core/colors.dart';
+import 'package:grad_project/providers/profile_image_provider.dart';
+import 'package:provider/provider.dart';
 
 class Chatbot extends StatefulWidget {
   const Chatbot({super.key});
@@ -70,14 +73,14 @@ Format each tip as: "1. [Tip text]"
 
 class _ChatbotState extends State<Chatbot> {
   final Gemini gemini = Gemini.instance;
+  final userName = AuthService().getCurrentItem("name");
 
   List<ChatMessage> messages = [];
   List<String> healthTips = [];
 
   ChatUser currentUser = ChatUser(
     id: "0",
-    firstName: "User",
-    profileImage: "assets/images/3bwhab2.jpg",
+    firstName: AuthService().getCurrentItem("name"),
   );
   ChatUser geminiUser = ChatUser(
     id: "1",
@@ -88,6 +91,7 @@ class _ChatbotState extends State<Chatbot> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.backGround,
       appBar: AppBar(
         foregroundColor: AppColors.backGround,
         leadingWidth: 30,
@@ -114,6 +118,12 @@ class _ChatbotState extends State<Chatbot> {
   }
 
   Widget _buildUI() {
+    final width = MediaQuery.of(context).size.width;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ProfileImageProvider>(context, listen: false).loadImage();
+    });
+
     return DashChat(
       currentUser: currentUser,
       onSend: _sendMessage,
@@ -136,22 +146,23 @@ class _ChatbotState extends State<Chatbot> {
             child: Padding(
               padding: const EdgeInsets.only(left: 7),
               child: Container(
+                padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: Color(0xff407CE2),
                 ),
-                padding: EdgeInsets.all(10),
                 child: Icon(Icons.send, color: AppColors.backGround, size: 25),
               ),
             ),
           );
         },
       ),
-      messageOptions: const MessageOptions(
+      messageOptions: MessageOptions(
+        maxWidth: width * 0.67,
         showTime: true,
         showCurrentUserAvatar: true,
-        containerColor: Color(0xff407CE2),
-        currentUserContainerColor: Color(0xFFCECDCD),
+        containerColor: const Color(0xff407CE2),
+        currentUserContainerColor: const Color(0xFFCECDCD),
         textColor: Colors.white,
         currentUserTextColor: Colors.black,
       ),

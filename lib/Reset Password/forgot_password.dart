@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:grad_project/Reset%20Password/reset_password.dart';
-import 'package:grad_project/Tools/colors.dart';
-import 'package:grad_project/Tools/functions.dart';
+import 'package:grad_project/reset%20password/reset_password.dart';
+import 'package:grad_project/core/colors.dart';
+import 'package:grad_project/components/custom_app_bar.dart';
 import 'package:grad_project/components/customtextfield.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -37,7 +37,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backGround,
-      appBar: appBar("", context),
+      appBar: CustomAppBar(title: ""),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -96,6 +96,25 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                   color: Colors.white,
                                 ),
                               ),
+                    ),
+                  ),
+                ),
+                Gap(15),
+                GestureDetector(
+                  onTap:
+                      () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder:
+                              (c) => ResetPassword(
+                                email: emailController.text.trim(),
+                              ),
+                        ),
+                      ),
+                  child: Center(
+                    child: Text(
+                      "Already have a Token?",
+                      style: TextStyle(color: AppColors.text, fontSize: 13),
                     ),
                   ),
                 ),

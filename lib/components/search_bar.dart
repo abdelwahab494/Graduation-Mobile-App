@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:grad_project/Tools/colors.dart';
+import 'package:grad_project/core/colors.dart';
 
 class CustomSearchBar extends StatelessWidget {
   const CustomSearchBar({super.key, required this.searchController});

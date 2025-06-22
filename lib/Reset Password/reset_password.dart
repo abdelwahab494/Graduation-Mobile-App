@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:grad_project/Tools/colors.dart';
-import 'package:grad_project/Tools/functions.dart';
+import 'package:grad_project/core/colors.dart';
+import 'package:grad_project/components/custom_app_bar.dart';
 import 'package:grad_project/components/customtextfield.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -105,7 +105,8 @@ class _ResetPasswordState extends State<ResetPassword> {
                   TextButton(
                     onPressed: () {
                       Navigator.pop(context);
-                      Navigator.pop(context); // Back to login or home
+                      Navigator.pop(context);
+                      Navigator.pop(context);
                     },
                     child: Text(
                       "OK",
@@ -161,7 +162,7 @@ class _ResetPasswordState extends State<ResetPassword> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backGround,
-      appBar: appBar(" RESET Password", context),
+      appBar: CustomAppBar(title: "RESET Password"),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),

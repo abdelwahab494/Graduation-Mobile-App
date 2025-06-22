@@ -3,7 +3,8 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:grad_project/Tools/colors.dart';
+import 'package:grad_project/core/colors.dart';
+import 'package:grad_project/components/custom_app_bar.dart';
 import 'package:intl/intl.dart';
 
 class MeasurementScreen extends StatefulWidget {
@@ -50,20 +51,14 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: AppColors.backGround,
+      appBar: CustomAppBar(title: "GlucoMate"),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(
-                child: Text(
-                  "GlucoMate",
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                ),
-              ),
-              Gap(16),
               Container(
                 padding: EdgeInsets.all(16),
                 decoration: BoxDecoration(

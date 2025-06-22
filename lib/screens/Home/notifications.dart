@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:grad_project/components/chat_botton.dart';
+import 'package:grad_project/components/custom_report.dart';
 import 'package:grad_project/screens/add_medicine.dart';
-import 'package:grad_project/Tools/colors.dart';
-import 'package:grad_project/Tools/functions.dart';
+import 'package:grad_project/core/colors.dart';
 
 class Notifications extends StatelessWidget {
   const Notifications({super.key});
@@ -104,15 +105,15 @@ class Notifications extends StatelessWidget {
             Expanded(
               child: ListView(
                 children: [
-                  reports("General Report 1", "Apr 9, 2002"),
+                  CustomReport(title: "General Report 1", date: "Apr 9, 2002"),
                   Gap(10),
-                  reports("General Report 2", "Feb 18, 2019"),
+                  CustomReport(title: "General Report 2", date: "Feb 18, 2019"),
                   Gap(10),
-                  reports("General Report 3", "Aug 6, 2023"),
+                  CustomReport(title: "General Report 3", date: "Aug 6, 2023"),
                   Gap(10),
-                  reports("General Report 4", "Aug 6, 2023"),
+                  CustomReport(title: "General Report 4", date: "Aug 6, 2023"),
                   Gap(10),
-                  reports("General Report 5", "Aug 6, 2023"),
+                  CustomReport(title: "General Report 5", date: "Aug 6, 2023"),
                 ],
               ),
             ),

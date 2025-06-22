@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:grad_project/Tools/colors.dart';
+import 'package:grad_project/core/colors.dart';
 import 'package:grad_project/screens/add_medicine.dart';
-import 'package:grad_project/screens/issues.dart';
+import 'package:grad_project/screens/issues/issues.dart';
 
 class HomeButtons extends StatelessWidget {
   const HomeButtons({super.key});

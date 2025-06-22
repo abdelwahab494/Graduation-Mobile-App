@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:grad_project/Tools/colors.dart';
+import 'package:grad_project/core/colors.dart';
+import 'package:grad_project/components/custom_app_bar.dart';
+import 'package:grad_project/components/custom_botton.dart';
 import 'package:grad_project/components/customtextfield.dart';
-import 'package:grad_project/Tools/functions.dart';
-import 'package:grad_project/Database/medicine.dart';
-import 'package:grad_project/Database/medicine_database.dart';
+import 'package:grad_project/database/medicine/medicine.dart';
+import 'package:grad_project/database/medicine/medicine_database.dart';
 import 'package:grad_project/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -469,11 +470,12 @@ class _AddMedicineState extends State<AddMedicine> {
                         ],
                       ),
                       Gap(10),
-                      botton(
-                        editingMedicine != null
-                            ? "Update Medicine"
-                            : "Add Medicine",
-                        () async {
+                      CustomBotton(
+                        text:
+                            editingMedicine != null
+                                ? "Update Medicine"
+                                : "Add Medicine",
+                        onTap: () async {
                           // Validation for required fields
                           if (nameController.text.isEmpty ||
                               dosageController.text.isEmpty ||
@@ -565,7 +567,7 @@ class _AddMedicineState extends State<AddMedicine> {
   Widget build(BuildContext context) {
     final db = MedicineDatabase();
     return Scaffold(
-      appBar: appBar("Medicine Tracking", context),
+      appBar: CustomAppBar(title: "Medicine Tracking"),
       body: StreamBuilder<List<Medicine>>(
         key: _streamKey,
         stream: db.stream,
@@ -581,7 +583,12 @@ class _AddMedicineState extends State<AddMedicine> {
           if (snapshot.hasError) {
             return Scaffold(
               backgroundColor: AppColors.backGround,
-              body: Center(child: Text('Error: ${snapshot.error}')),
+              body: Center(
+                child: Text(
+                  'Error: Something went wrong!\n please check your connection.',
+                  textAlign: TextAlign.center,
+                ),
+              ),
             );
           }
           if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -806,12 +813,39 @@ class _AddMedicineState extends State<AddMedicine> {
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColors.primary,
-        foregroundColor: AppColors.backGround,
-        onPressed: () => _showBottomSheet(),
-        child: Icon(Icons.add_alarm_outlined),
+      floatingActionButton: Container(
+        width: double.infinity,
+        margin: EdgeInsets.symmetric(horizontal: 30),
+        decoration: BoxDecoration(
+          border: Border.all(color: AppColors.primary, width: 2),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: InkWell(
+          onTap: () {
+            _showBottomSheet();
+          },
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.add, color: AppColors.primary, size: 24),
+                Gap(8),
+                Text(
+                  'Add New Medicine',
+                  style: GoogleFonts.poppins(
+                    color: AppColors.primary,
+                    fontSize: 17,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

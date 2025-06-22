@@ -4,12 +4,16 @@ import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:grad_project/Tools/colors.dart';
+import 'package:grad_project/core/colors.dart';
 import 'package:grad_project/providers/profile_image_provider.dart';
 import 'package:provider/provider.dart';
 
 class WelcomeUser extends StatelessWidget {
-  const WelcomeUser({super.key, required this.onNavigate, required this.currentusername});
+  const WelcomeUser({
+    super.key,
+    required this.onNavigate,
+    required this.currentusername,
+  });
   final dynamic onNavigate;
   final String currentusername;
 

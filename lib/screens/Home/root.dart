@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:grad_project/screens/Home/home.dart';
-import 'package:grad_project/screens/Home/notifications.dart';
-import 'package:grad_project/screens/Home/profile.dart';
-import 'package:grad_project/screens/Home/reports.dart';
-import 'package:grad_project/Tools/colors.dart';
+import 'package:grad_project/screens/home/home.dart';
+import 'package:grad_project/screens/home/notifications.dart';
+import 'package:grad_project/screens/home/profile.dart';
+import 'package:grad_project/screens/home/reports.dart';
+import 'package:grad_project/core/colors.dart';
 
 class Base extends StatefulWidget {
   const Base({super.key});

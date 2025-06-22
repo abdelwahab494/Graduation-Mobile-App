@@ -30,7 +30,7 @@
 // }
 
 import 'package:flutter/material.dart';
-import 'package:grad_project/Tools/colors.dart';
+import 'package:grad_project/core/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ChangeThemeProvider extends ChangeNotifier {

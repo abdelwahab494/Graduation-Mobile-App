@@ -4,10 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:grad_project/screens/issues.dart';
-import 'package:grad_project/Tools/colors.dart';
-import 'package:grad_project/Tools/functions.dart';
-import 'package:grad_project/Auth/auth_service.dart';
+import 'package:grad_project/components/custom_card.dart';
+import 'package:grad_project/components/custom_information.dart';
+import 'package:grad_project/screens/issues/issues.dart';
+import 'package:grad_project/core/colors.dart';
+import 'package:grad_project/auth/auth_service.dart';
 import 'package:grad_project/providers/profile_image_provider.dart';
 import 'package:grad_project/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
@@ -102,20 +103,20 @@ class _ProfileState extends State<Profile> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        information(
-                          "assets/icons/Heartbeat.svg",
-                          "Heart rate",
-                          "215bmp",
+                        CustomInformation(
+                          logo: "assets/icons/Heartbeat.svg",
+                          title: "Heart rate",
+                          measure: "215bmp",
                         ),
-                        information(
-                          "assets/icons/Fire.svg",
-                          "Calories",
-                          "756cal",
+                        CustomInformation(
+                          logo: "assets/icons/Fire.svg",
+                          title: "Calories",
+                          measure: "756cal",
                         ),
-                        information(
-                          "assets/icons/weight.svg",
-                          "Weight",
-                          "68kg",
+                        CustomInformation(
+                          logo: "assets/icons/weight.svg",
+                          title: "Weight",
+                          measure: "68kg",
                         ),
                       ],
                     ),
@@ -123,11 +124,20 @@ class _ProfileState extends State<Profile> {
                   Gap(15),
                   Column(
                     children: [
-                      cards("My Saved", CupertinoIcons.square_favorites_alt),
+                      CustomCard(
+                        title: "My Saved",
+                        logo: CupertinoIcons.square_favorites_alt,
+                      ),
                       Gap(5),
-                      cards("Appointment", CupertinoIcons.calendar_today),
+                      CustomCard(
+                        title: "Appointment",
+                        logo: CupertinoIcons.calendar_today,
+                      ),
                       Gap(5),
-                      cards("Payment Method", CupertinoIcons.money_dollar),
+                      CustomCard(
+                        title: 'Payment Method',
+                        logo: CupertinoIcons.money_dollar,
+                      ),
                       Gap(5),
                       GestureDetector(
                         onTap: () {
@@ -136,9 +146,9 @@ class _ProfileState extends State<Profile> {
                             MaterialPageRoute(builder: (c) => Issues()),
                           );
                         },
-                        child: cards(
-                          "Common Issues",
-                          CupertinoIcons.question_diamond,
+                        child: CustomCard(
+                          title: "Common Issues",
+                          logo: CupertinoIcons.question_diamond,
                         ),
                       ),
                       Gap(5),
@@ -185,7 +195,10 @@ class _ProfileState extends State<Profile> {
                       Gap(5),
                       GestureDetector(
                         onTap: () => logout(),
-                        child: cards("Logout", Icons.logout_rounded),
+                        child: CustomCard(
+                          title: "Logout",
+                          logo: Icons.logout_rounded,
+                        ),
                       ),
                       Gap(10),
                     ],
