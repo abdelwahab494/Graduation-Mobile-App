@@ -4,8 +4,8 @@ import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grad_project/components/chat_botton.dart';
 import 'package:grad_project/components/custom_report.dart';
-import 'package:grad_project/screens/add_medicine.dart';
 import 'package:grad_project/core/colors.dart';
+import 'package:grad_project/screens/home/add_medicine.dart';
 
 class Notifications extends StatelessWidget {
   const Notifications({super.key});

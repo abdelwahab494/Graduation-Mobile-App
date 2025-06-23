@@ -11,6 +11,7 @@ import 'package:grad_project/core/colors.dart';
 import 'package:grad_project/auth/auth_service.dart';
 import 'package:grad_project/providers/profile_image_provider.dart';
 import 'package:grad_project/providers/theme_provider.dart';
+import 'package:grad_project/screens/user_info/account_info.dart';
 import 'package:provider/provider.dart';
 
 class Profile extends StatefulWidget {
@@ -46,42 +47,20 @@ class _ProfileState extends State<Profile> {
                   Gap(60),
                   Consumer<ProfileImageProvider>(
                     builder: (context, imageProvider, child) {
-                      return Stack(
-                        children: [
-                          AvatarGlow(
-                            glowRadiusFactor: 0.3,
-                            glowColor: AppColors.primary,
-                            duration: Duration(milliseconds: 2000),
-                            child: CircleAvatar(
-                              radius: 60,
-                              backgroundColor: AppColors.backGround,
-                              backgroundImage:
-                                  imageProvider.selectedImage == null
-                                      ? AssetImage("assets/images/user.png")
-                                      : FileImage(
-                                        File(imageProvider.selectedImage!.path),
-                                      ),
-                            ),
-                          ),
-                          Positioned(
-                            bottom: 0,
-                            right: 0,
-                            child: GestureDetector(
-                              onTap: imageProvider.uploadImage,
-                              child: Container(
-                                padding: EdgeInsets.all(4),
-                                decoration: BoxDecoration(
-                                  color: AppColors.primary,
-                                  borderRadius: BorderRadius.circular(500),
-                                ),
-                                child: Icon(
-                                  Icons.edit,
-                                  color: AppColors.backGround,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
+                      return AvatarGlow(
+                        glowRadiusFactor: 0.2,
+                        glowColor: AppColors.primary,
+                        duration: Duration(milliseconds: 2000),
+                        child: CircleAvatar(
+                          radius: 60,
+                          backgroundColor: AppColors.backGround,
+                          backgroundImage:
+                              imageProvider.selectedImage == null
+                                  ? AssetImage("assets/images/user.png")
+                                  : FileImage(
+                                    File(imageProvider.selectedImage!.path),
+                                  ),
+                        ),
                       );
                     },
                   ),
@@ -124,9 +103,16 @@ class _ProfileState extends State<Profile> {
                   Gap(15),
                   Column(
                     children: [
-                      CustomCard(
-                        title: "My Saved",
-                        logo: CupertinoIcons.square_favorites_alt,
+                      GestureDetector(
+                        onTap:
+                            () => Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (c) => AccountInfo()),
+                            ),
+                        child: CustomCard(
+                          title: "Account Information",
+                          logo: Icons.manage_accounts_rounded,
+                        ),
                       ),
                       Gap(5),
                       CustomCard(

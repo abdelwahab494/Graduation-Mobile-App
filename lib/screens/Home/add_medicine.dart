@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grad_project/core/colors.dart';
-import 'package:grad_project/components/custom_app_bar.dart';
 import 'package:grad_project/components/custom_botton.dart';
 import 'package:grad_project/components/customtextfield.dart';
 import 'package:grad_project/database/medicine/medicine.dart';
@@ -567,7 +566,20 @@ class _AddMedicineState extends State<AddMedicine> {
   Widget build(BuildContext context) {
     final db = MedicineDatabase();
     return Scaffold(
-      appBar: CustomAppBar(title: "Medicine Tracking"),
+      appBar: AppBar(
+        backgroundColor: AppColors.backGround,
+        elevation: 0,
+        scrolledUnderElevation: 0.0,
+        centerTitle: true,
+        title: Text(
+          "Medicine Tracker",
+          style: GoogleFonts.poppins(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: AppColors.text,
+          ),
+        ),
+      ),
       body: StreamBuilder<List<Medicine>>(
         key: _streamKey,
         stream: db.stream,
@@ -586,6 +598,7 @@ class _AddMedicineState extends State<AddMedicine> {
               body: Center(
                 child: Text(
                   'Error: Something went wrong!\n please check your connection.',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
               ),

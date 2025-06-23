@@ -310,16 +310,19 @@ class OnlyEmailTextField extends StatelessWidget {
     required this.controller,
     required this.hint,
     required this.icon,
+    this.readOnly = false,
   });
   final TextEditingController controller;
   final String hint;
   final IconData icon;
+  final bool readOnly;
 
   @override
   Widget build(BuildContext context) {
     bool isLight = Provider.of<ChangeThemeProvider>(context).isLight;
 
     return TextFormField(
+      readOnly: readOnly,
       keyboardType: TextInputType.emailAddress,
       inputFormatters: [
         FilteringTextInputFormatter.allow(RegExp(r'[a-z0-9@._-]')),
