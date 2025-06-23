@@ -27,15 +27,24 @@ class _AccountInfoState extends State<AccountInfo> {
   final TextEditingController emailC = TextEditingController();
   final TextEditingController passwordC = TextEditingController();
 
+  // original name to compare for changes
+  late String originalName;
+
   // auth services
   final authService = AuthService();
 
   // form key
   final formKey = GlobalKey<FormState>();
 
+  bool isChanged() {
+    return nameC.text.trim() != originalName ||
+        passwordC.text.trim().isNotEmpty;
+  }
+
   @override
   void initState() {
-    nameC.text = authService.getCurrentItem("name");
+    originalName = authService.getCurrentItem("name");
+    nameC.text = originalName;
     emailC.text = authService.getCurrentEmail().toString();
     super.initState();
   }
@@ -55,15 +64,39 @@ class _AccountInfoState extends State<AccountInfo> {
         ),
       );
 
+      // Update originalName and clear password field
+      originalName = nameC.text.trim();
+      passwordC.clear();
+
       // Show success message
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Account info updated successfully")),
+        SnackBar(
+          content: Text(
+            "Account info updated successfully.",
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            ),
+          ),
+          backgroundColor: Colors.green,
+        ),
       );
     } catch (e) {
       print("Error updating user: $e");
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Failed to update account info")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "Failed to update account info.",
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            ),
+          ),
+          backgroundColor: Colors.red,
+        ),
+      );
     } finally {
       setState(() => isLoading = false);
     }
@@ -106,8 +139,11 @@ class _AccountInfoState extends State<AccountInfo> {
                                     provider.selectedImage == null
                                         ? AssetImage("assets/images/user.png")
                                         : FileImage(
-                                          File(provider.selectedImage!.path),
-                                        ),
+                                              File(
+                                                provider.selectedImage!.path,
+                                              ),
+                                            )
+                                            as ImageProvider,
                               ),
                               Positioned(
                                 bottom: 0,
@@ -132,7 +168,7 @@ class _AccountInfoState extends State<AccountInfo> {
                           Gap(15),
                           Text(
                             maxLines: 1,
-                            authService.getCurrentItem("name"),
+                            originalName,
                             style: GoogleFonts.poppins(
                               fontSize: 18,
                               fontWeight: FontWeight.w600,
@@ -207,25 +243,31 @@ class _AccountInfoState extends State<AccountInfo> {
             );
           },
         ),
-        bottomNavigationBar: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-            child:
-                isLoading
-                    ? Center(
-                      child: CircularProgressIndicator(
-                        color: AppColors.primary,
-                      ),
-                    )
-                    : CustomBotton(
-                      onTap: () {
-                        if (!formKey.currentState!.validate()) return;
-                        saveChanges();
-                      },
-                      text: "Save Changes",
+        bottomNavigationBar:
+            isChanged()
+                ? SafeArea(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 25,
+                      vertical: 10,
                     ),
-          ),
-        ),
+                    child:
+                        isLoading
+                            ? Center(
+                              child: CircularProgressIndicator(
+                                color: AppColors.primary,
+                              ),
+                            )
+                            : CustomBotton(
+                              onTap: () {
+                                if (!formKey.currentState!.validate()) return;
+                                saveChanges();
+                              },
+                              text: "Save Changes",
+                            ),
+                  ),
+                )
+                : null,
       ),
     );
   }
