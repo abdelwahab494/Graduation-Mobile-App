@@ -36,11 +36,6 @@ class _AccountInfoState extends State<AccountInfo> {
   // form key
   final formKey = GlobalKey<FormState>();
 
-  bool isChanged() {
-    return nameC.text.trim() != originalName ||
-        passwordC.text.trim().isNotEmpty;
-  }
-
   @override
   void initState() {
     originalName = authService.getCurrentItem("name");
@@ -134,7 +129,7 @@ class _AccountInfoState extends State<AccountInfo> {
                             children: [
                               CircleAvatar(
                                 radius: 70,
-                                backgroundColor: AppColors.backGround,
+                                backgroundColor: Colors.white,
                                 backgroundImage:
                                     provider.selectedImage == null
                                         ? AssetImage("assets/images/user.png")
@@ -158,7 +153,7 @@ class _AccountInfoState extends State<AccountInfo> {
                                     ),
                                     child: Icon(
                                       Icons.edit,
-                                      color: AppColors.backGround,
+                                      color: Colors.white,
                                     ),
                                   ),
                                 ),
@@ -172,6 +167,7 @@ class _AccountInfoState extends State<AccountInfo> {
                             style: GoogleFonts.poppins(
                               fontSize: 18,
                               fontWeight: FontWeight.w600,
+                              color: AppColors.text,
                             ),
                           ),
                         ],
@@ -243,31 +239,25 @@ class _AccountInfoState extends State<AccountInfo> {
             );
           },
         ),
-        bottomNavigationBar:
-            isChanged()
-                ? SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 25,
-                      vertical: 10,
+        bottomNavigationBar: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+            child:
+                isLoading
+                    ? Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.primary,
+                      ),
+                    )
+                    : CustomBotton(
+                      onTap: () {
+                        if (!formKey.currentState!.validate()) return;
+                        saveChanges();
+                      },
+                      text: "Save Changes",
                     ),
-                    child:
-                        isLoading
-                            ? Center(
-                              child: CircularProgressIndicator(
-                                color: AppColors.primary,
-                              ),
-                            )
-                            : CustomBotton(
-                              onTap: () {
-                                if (!formKey.currentState!.validate()) return;
-                                saveChanges();
-                              },
-                              text: "Save Changes",
-                            ),
-                  ),
-                )
-                : null,
+          ),
+        ),
       ),
     );
   }

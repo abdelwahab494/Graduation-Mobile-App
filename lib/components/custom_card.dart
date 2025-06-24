@@ -34,7 +34,7 @@ class CustomCard extends StatelessWidget {
               ),
             ),
             Spacer(),
-            Icon(Icons.arrow_forward_ios),
+            Icon(Icons.arrow_forward_ios, color: AppColors.logo),
           ],
         ),
       ),

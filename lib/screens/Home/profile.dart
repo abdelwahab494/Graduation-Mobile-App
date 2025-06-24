@@ -53,7 +53,7 @@ class _ProfileState extends State<Profile> {
                         duration: Duration(milliseconds: 2000),
                         child: CircleAvatar(
                           radius: 60,
-                          backgroundColor: AppColors.backGround,
+                          backgroundColor: Colors.white,
                           backgroundImage:
                               imageProvider.selectedImage == null
                                   ? AssetImage("assets/images/user.png")
@@ -71,6 +71,7 @@ class _ProfileState extends State<Profile> {
                     style: GoogleFonts.poppins(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
+                      color: AppColors.text,
                     ),
                   ),
                   Gap(10),
@@ -164,6 +165,7 @@ class _ProfileState extends State<Profile> {
                                 style: GoogleFonts.poppins(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
+                                  color: AppColors.text,
                                 ),
                               ),
                               Spacer(),

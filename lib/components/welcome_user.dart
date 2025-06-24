@@ -33,7 +33,7 @@ class WelcomeUser extends StatelessWidget {
                   duration: Duration(milliseconds: 2000),
                   child: CircleAvatar(
                     radius: 25,
-                    backgroundColor: AppColors.backGround,
+                    backgroundColor: Colors.white,
                     backgroundImage:
                         imageProvider.selectedImage == null
                             ? AssetImage("assets/images/user.png")

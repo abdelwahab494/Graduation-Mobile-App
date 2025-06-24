@@ -31,6 +31,7 @@ class _BaseState extends State<Base> {
       Reports(),
       // Notifications(),
       AddMedicine(),
+      // AddMedicine2(),
       Profile(),
     ];
 

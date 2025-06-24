@@ -1,9 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:grad_project/components/custom_medicine_row.dart';
-import 'package:grad_project/components/new_medicine_botton.dart';
 import 'package:grad_project/core/colors.dart';
 import 'package:grad_project/components/custom_botton.dart';
 import 'package:grad_project/components/customtextfield.dart';
@@ -13,14 +10,14 @@ import 'package:grad_project/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class AddMedicine extends StatefulWidget {
-  const AddMedicine({super.key});
+class AddMedicine2 extends StatefulWidget {
+  const AddMedicine2({super.key});
 
   @override
-  State<AddMedicine> createState() => _AddMedicineState();
+  State<AddMedicine2> createState() => _AddMedicine2State();
 }
 
-class _AddMedicineState extends State<AddMedicine> {
+class _AddMedicine2State extends State<AddMedicine2> {
   ScrollController scrollController = ScrollController();
   TextEditingController nameController = TextEditingController();
   TextEditingController dosageController = TextEditingController();
@@ -31,7 +28,6 @@ class _AddMedicineState extends State<AddMedicine> {
   String? mealTiming;
   Medicine? editingMedicine;
   final _streamKey = GlobalKey();
-  String error = "";
 
   String formatTime(TimeOfDay time) {
     final now = DateTime.now();
@@ -182,7 +178,7 @@ class _AddMedicineState extends State<AddMedicine> {
                         ),
                         value: selectedFrequency,
                         items:
-                            List.generate(5, (index) => index + 1)
+                            List.generate(6, (index) => index + 1)
                                 .map(
                                   (value) => DropdownMenuItem(
                                     value: value,
@@ -309,37 +305,20 @@ class _AddMedicineState extends State<AddMedicine> {
                         alignment: Alignment.topLeft,
                         child: TextButton.icon(
                           onPressed: () async {
-                            if ((selectedFrequency ?? 0) > doseTimes.length) {
-                              final TimeOfDay? picked = await showTimePicker(
-                                context: context,
-                                initialTime: TimeOfDay.now(),
-                              );
-                              if (picked != null) {
-                                setModalState(() {
-                                  doseTimes.add(picked);
-                                });
-                              }
-                            } else {
-                              null;
+                            final TimeOfDay? picked = await showTimePicker(
+                              context: context,
+                              initialTime: TimeOfDay.now(),
+                            );
+                            if (picked != null) {
+                              setModalState(() {
+                                doseTimes.add(picked);
+                              });
                             }
                           },
-                          icon: Container(
-                            padding: EdgeInsets.all(3),
-                            decoration: BoxDecoration(
-                              color:
-                                  (selectedFrequency ?? 0) > doseTimes.length
-                                      ? Color(0xffe6eefb)
-                                      : Colors.grey.shade200,
-                              borderRadius: BorderRadius.circular(500),
-                            ),
-                            child: Icon(Icons.access_time, size: 18),
-                          ),
+                          icon: Icon(Icons.access_time, size: 18),
                           label: Text("Add Dose Time"),
                           style: TextButton.styleFrom(
-                            foregroundColor:
-                                (selectedFrequency ?? 0) > doseTimes.length
-                                    ? AppColors.primary
-                                    : Colors.grey.shade400,
+                            foregroundColor: AppColors.primary,
                             textStyle: TextStyle(fontSize: 14),
                           ),
                         ),
@@ -403,17 +382,9 @@ class _AddMedicineState extends State<AddMedicine> {
                                               });
                                             }
                                           },
-                                          icon: Container(
-                                            padding: EdgeInsets.all(3),
-                                            decoration: BoxDecoration(
-                                              color: Color(0xffe6eefb),
-                                              borderRadius:
-                                                  BorderRadius.circular(500),
-                                            ),
-                                            child: Icon(
-                                              Icons.edit_calendar_rounded,
-                                              size: 18,
-                                            ),
+                                          icon: Icon(
+                                            Icons.edit_calendar_rounded,
+                                            size: 18,
                                           ),
                                           label: Text("Select Start Date"),
                                           style: TextButton.styleFrom(
@@ -482,17 +453,9 @@ class _AddMedicineState extends State<AddMedicine> {
                                               });
                                             }
                                           },
-                                          icon: Container(
-                                            padding: EdgeInsets.all(3),
-                                            decoration: BoxDecoration(
-                                              color: Color(0xffe6eefb),
-                                              borderRadius:
-                                                  BorderRadius.circular(500),
-                                            ),
-                                            child: Icon(
-                                              Icons.edit_calendar_rounded,
-                                              size: 18,
-                                            ),
+                                          icon: Icon(
+                                            Icons.edit_calendar_rounded,
+                                            size: 18,
                                           ),
                                           label: Text("Select End Date"),
                                           style: TextButton.styleFrom(
@@ -564,14 +527,30 @@ class _AddMedicineState extends State<AddMedicine> {
                             await db.updateMedicine(editingMedicine!, medicine);
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text('Medicine updated successfully'),
+                                content: Text(
+                                  'Medicine updated successfully',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                backgroundColor: Colors.green,
                               ),
                             );
                           } else {
                             await db.createMedicine(medicine);
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text('Medicine added successfully'),
+                                content: Text(
+                                  'Medicine added successfully',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                backgroundColor: Colors.green,
                               ),
                             );
                           }
@@ -602,7 +581,6 @@ class _AddMedicineState extends State<AddMedicine> {
   @override
   Widget build(BuildContext context) {
     final db = MedicineDatabase();
-    final width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.backGround,
@@ -610,7 +588,7 @@ class _AddMedicineState extends State<AddMedicine> {
         scrolledUnderElevation: 0.0,
         centerTitle: true,
         title: Text(
-          "Medicine Tracker",
+          "Medical Tracker",
           style: GoogleFonts.poppins(
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -636,11 +614,7 @@ class _AddMedicineState extends State<AddMedicine> {
               body: Center(
                 child: Text(
                   'Error: Something went wrong!\n please check your connection.',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.text,
-                  ),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -650,232 +624,239 @@ class _AddMedicineState extends State<AddMedicine> {
             return Scaffold(
               backgroundColor: AppColors.backGround,
               body: Center(
-                child: Text(
-                  'No medicines found. \nAdd a new medicine!',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.text,
-                  ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'No medicines found.',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Gap(8),
+                    Text(
+                      'Tap the button below to add a new medicine',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ],
                 ),
               ),
             );
           }
           final medicines = snapshot.data!;
+
           return Scaffold(
             backgroundColor: AppColors.backGround,
-            body: ListView.builder(
+            body: SingleChildScrollView(
               padding: EdgeInsets.all(16),
-              itemCount: medicines.length,
-              itemBuilder: (context, index) {
-                final medicine = medicines[index];
-                return Container(
-                  margin: EdgeInsets.symmetric(vertical: 8),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey.shade300, width: 1),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 20,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "My medicines",
+                    style: GoogleFonts.poppins(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.text,
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
+                  ),
+                  Gap(20),
+                  ...medicines.map((medicine) {
+                    return Container(
+                      margin: EdgeInsets.only(bottom: 24),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: AppColors.backGround,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 6,
+                            offset: Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 12,
+                            ),
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: Colors.grey.withOpacity(0.2),
+                                  width: 1,
+                                ),
+                              ),
+                            ),
+                            child: Text(
                               medicine.name,
                               style: GoogleFonts.poppins(
-                                fontSize: 22,
-                                letterSpacing: 3,
-                                fontWeight: FontWeight.w600,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
                                 color: AppColors.primary,
                               ),
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                IconButton(
-                                  icon: Icon(
-                                    Icons.mode_edit_outline_outlined,
-                                    color: Colors.blue,
-                                    size: 20,
-                                  ),
-                                  onPressed: () {
-                                    _showBottomSheet(medicineToEdit: medicine);
-                                  },
-                                ),
-                                IconButton(
-                                  icon: Icon(
-                                    CupertinoIcons.delete_simple,
-                                    color: Colors.red,
-                                    size: 18,
-                                  ),
-                                  onPressed: () async {
-                                    final db = MedicineDatabase();
-                                    await db.deleteMedicine(medicine);
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                          'Medicine deleted successfully',
-                                        ),
-                                      ),
-                                    );
-                                    setState(() {
-                                      _streamKey.currentState?.dispose();
-                                    });
-                                  },
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        Gap(10),
-                        CustomMedicineRow(
-                          icon: "assets/icons/Pharmacy.svg",
-                          title: 'Dosage:',
-                          data: '${medicine.dosage}',
-                          type: 'SVG',
-                        ),
-                        Gap(10),
-                        if (medicine.frequency != null)
-                          CustomMedicineRow(
-                            icon: "assets/icons/meal.png",
-                            title: 'Meal Timing:',
-                            data: '${medicine.mealTiming}',
-                            type: 'PNG',
                           ),
-                        Gap(10),
-                        if (medicine.frequency != null)
-                          CustomMedicineRow(
-                            icon: "assets/icons/swap.png",
-                            title: 'Frequancy:',
-                            data:
-                                '${medicine.frequency} time${medicine.frequency! > 1 ? 's' : ''} per day',
-                            type: "PNG",
-                          ),
-                        Gap(10),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Column(
+
+                          Padding(
+                            padding: EdgeInsets.all(16),
+                            child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.access_time,
-                                      color: AppColors.primary,
-                                      size: 20,
+                                // Dosage
+                                _buildDetailRow(
+                                  label: "Dosage :",
+                                  value: medicine.dosage,
+                                ),
+
+                                // Meal Timing
+                                if (medicine.mealTiming != null)
+                                  _buildDetailRow(
+                                    label: "Meal Timing :",
+                                    value: medicine.mealTiming!,
+                                  ),
+
+                                // Frequency
+                                if (medicine.frequency != null)
+                                  _buildDetailRow(
+                                    label: "Frequency :",
+                                    value:
+                                        "${medicine.frequency} time${medicine.frequency! > 1 ? 's' : ''} per day",
+                                  ),
+
+                                // Dose Times
+                                _buildDetailRow(
+                                  label: "Dose Times :",
+                                  value: medicine.doseTimes.join(", "),
+                                  isLast: true,
+                                ),
+
+                                // Period
+                                Container(
+                                  margin: EdgeInsets.only(top: 12),
+                                  padding: EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Text(
+                                    "Period: ${_formatDate(medicine.startDate!)} to ${medicine.endDate != null ? _formatDate(medicine.endDate!) : "Ongoing"}",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey[700],
                                     ),
-                                    Gap(10),
-                                    Text(
-                                      'Dose Times:',
-                                      style: GoogleFonts.poppins(
-                                        color: Colors.grey,
-                                        fontSize: 13,
+                                  ),
+                                ),
+
+                                // Edit/Delete buttons
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(
+                                        Icons.edit,
+                                        color: AppColors.primary,
+                                        size: 20,
                                       ),
+                                      onPressed: () {
+                                        _showBottomSheet(
+                                          medicineToEdit: medicine,
+                                        );
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: Icon(
+                                        Icons.delete,
+                                        color: Colors.red,
+                                        size: 20,
+                                      ),
+                                      onPressed: () async {
+                                        final db = MedicineDatabase();
+                                        await db.deleteMedicine(medicine);
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              'Medicine deleted successfully',
+                                            ),
+                                          ),
+                                        );
+                                        setState(() {
+                                          _streamKey.currentState?.dispose();
+                                        });
+                                      },
                                     ),
                                   ],
                                 ),
-                                Gap(5),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 8),
-                                  child: SizedBox(
-                                    width: width - 100,
-                                    child: Wrap(
-                                      spacing: 8,
-                                      runSpacing: 2,
-                                      children:
-                                          medicine.doseTimes
-                                              .map(
-                                                (time) => Chip(
-                                                  label: Text(
-                                                    time,
-                                                    style: TextStyle(
-                                                      color: AppColors.primary,
-                                                      fontSize: 12,
-                                                    ),
-                                                  ),
-                                                  backgroundColor:
-                                                      Color.fromARGB(
-                                                        255,
-                                                        215,
-                                                        228,
-                                                        251,
-                                                      ),
-                                                  shape: RoundedRectangleBorder(
-                                                    side: BorderSide(
-                                                      color: AppColors.primary,
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          16,
-                                                        ),
-                                                  ),
-                                                  padding: EdgeInsets.symmetric(
-                                                    horizontal: 5,
-                                                    vertical: 4,
-                                                  ),
-                                                  elevation: 1,
-                                                ),
-                                              )
-                                              .toList(),
-                                    ),
-                                  ),
-                                ),
                               ],
                             ),
-                          ],
-                        ),
-                        Gap(10),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.calendar_month,
-                              color: AppColors.primary,
-                              size: 20,
-                            ),
-                            Gap(10),
-                            Text(
-                              "Period:",
-                              style: GoogleFonts.poppins(
-                                color: Colors.grey,
-                                fontSize: 13,
-                              ),
-                            ),
-                            Gap(5),
-                            Text(
-                              "${_formatDate(medicine.startDate!)} to ${medicine.endDate != null ? _formatDate(medicine.endDate!) : "Ongoing"}",
-                              style: GoogleFonts.poppins(
-                                color: AppColors.text,
-                                fontSize: 13,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                ],
+              ),
             ),
           );
         },
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(bottom: 10, top: 5),
-        child: NewMedicineBotton(showBottomSheet: _showBottomSheet),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _showBottomSheet();
+        },
+        backgroundColor: AppColors.primary,
+        child: Icon(Icons.add, color: Colors.white),
       ),
-      backgroundColor: AppColors.backGround,
     );
   }
 
   String _formatDate(DateTime date) {
     return "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+  }
+
+  Widget _buildDetailRow({
+    required String label,
+    required String value,
+    bool isLast = false,
+  }) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 8),
+      decoration:
+          !isLast
+              ? BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: Colors.grey.withOpacity(0.1),
+                    width: 1,
+                  ),
+                ),
+              )
+              : null,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 2,
+            child: Text(
+              label,
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                color: Colors.grey[600],
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 3,
+            child: Text(value, style: TextStyle(color: AppColors.text)),
+          ),
+        ],
+      ),
+    );
   }
 }

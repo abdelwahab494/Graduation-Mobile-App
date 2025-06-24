@@ -4,11 +4,11 @@ import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grad_project/core/colors.dart';
-import 'package:grad_project/screens/home/add_medicine.dart';
 import 'package:grad_project/screens/issues/issues.dart';
 
 class HomeButtons extends StatelessWidget {
-  const HomeButtons({super.key});
+  const HomeButtons({super.key, required this.onNavigate});
+  final dynamic onNavigate;
 
   @override
   Widget build(BuildContext context) {
@@ -33,18 +33,14 @@ class HomeButtons extends StatelessWidget {
               Gap(10),
               Text(
                 "Health \ncondition",
-                style: GoogleFonts.poppins(fontSize: 14),
+                style: GoogleFonts.poppins(fontSize: 14, color: AppColors.text),
                 textAlign: TextAlign.center,
               ),
             ],
           ),
         ),
         GestureDetector(
-          onTap:
-              () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (c) => AddMedicine()),
-              ),
+          onTap: () => onNavigate(2),
           child: Column(
             children: [
               Container(
@@ -58,7 +54,7 @@ class HomeButtons extends StatelessWidget {
               Gap(10),
               Text(
                 "Medicine \nTracking",
-                style: GoogleFonts.poppins(fontSize: 14),
+                style: GoogleFonts.poppins(fontSize: 14, color: AppColors.text),
                 textAlign: TextAlign.center,
               ),
             ],
@@ -87,7 +83,7 @@ class HomeButtons extends StatelessWidget {
               Gap(10),
               Text(
                 "Common\nIssues",
-                style: GoogleFonts.poppins(fontSize: 14),
+                style: GoogleFonts.poppins(fontSize: 14, color: AppColors.text),
                 textAlign: TextAlign.center,
               ),
             ],
