@@ -22,7 +22,7 @@ class _SignupState extends State<Signup> {
   final _formKey = GlobalKey<FormState>();
 
   // checkbox value
-  bool _isTermsAccepted = false;
+  bool agree = false;
 
   // get auth service
   final authService = AuthService();
@@ -79,7 +79,7 @@ class _SignupState extends State<Signup> {
       return;
     }
     // checking terms
-    if (!_isTermsAccepted) {
+    if (!agree) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: const Color.fromARGB(220, 255, 17, 0),
@@ -97,7 +97,7 @@ class _SignupState extends State<Signup> {
     }
     // attempt sign up
     try {
-      await authService.signUpWithEmailPassword(email, password, username);
+      await authService.signUpWithEmailPassword(email, password, username, agree);
       if (mounted) {
         Navigator.pushAndRemoveUntil(
           context,
@@ -173,10 +173,10 @@ class _SignupState extends State<Signup> {
                                 checkColor: Colors.white,
                                 activeColor: AppColors.primary,
                                 contentPadding: EdgeInsets.zero,
-                                value: _isTermsAccepted,
+                                value: agree,
                                 onChanged: (newValue) {
                                   setState(() {
-                                    _isTermsAccepted = newValue!;
+                                    agree = newValue!;
                                   });
                                 },
                                 title: Column(
@@ -238,7 +238,7 @@ class _SignupState extends State<Signup> {
                         width: 350,
                         decoration: BoxDecoration(
                           color:
-                              _isTermsAccepted
+                              agree
                                   ? isLoading
                                       ? Colors.grey
                                       : AppColors.primary

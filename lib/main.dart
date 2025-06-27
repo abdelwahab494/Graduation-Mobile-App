@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:grad_project/auth/auth_gate.dart';
+import 'package:grad_project/providers/collect_info_provider.dart';
 import 'package:grad_project/providers/health_tips_provider.dart';
 import 'package:grad_project/providers/profile_image_provider.dart';
 import 'package:grad_project/providers/splash_provider.dart';
@@ -22,6 +23,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => ChangeThemeProvider()),
         ChangeNotifierProvider(create: (_) => SplashProvider()),
         ChangeNotifierProvider(create: (_) => HealthTipsProvider()),
+        ChangeNotifierProvider(create: (_) => CollectInfoProvider()),
         // ChangeNotifierProvider(create: (_) => SignupProvider()),
       ],
       child: const MyApp(),

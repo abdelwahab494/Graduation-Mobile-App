@@ -1,18 +1,18 @@
-import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:grad_project/core/colors.dart';
-import 'package:grad_project/auth/auth_service.dart';
-import 'package:grad_project/components/chat_botton.dart';
-import 'package:grad_project/components/home_buttons.dart';
-import 'package:grad_project/components/measure_botton.dart';
-import 'package:grad_project/components/welcome_user.dart';
-import 'package:grad_project/models/articales_model.dart';
-import 'package:grad_project/providers/profile_image_provider.dart';
-import 'package:grad_project/providers/health_tips_provider.dart';
-import 'package:grad_project/screens/measurements.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:grad_project/core/colors.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:grad_project/auth/auth_service.dart';
+import 'package:grad_project/screens/measurements.dart';
+import 'package:grad_project/components/chat_botton.dart';
+import 'package:grad_project/models/articales_model.dart';
+import 'package:grad_project/components/home_buttons.dart';
+import 'package:grad_project/components/welcome_user.dart';
+import 'package:grad_project/components/measure_botton.dart';
+import 'package:grad_project/providers/health_tips_provider.dart';
+import 'package:grad_project/providers/profile_image_provider.dart';
 
 class Home extends StatefulWidget {
   final Function(int) onNavigate;
@@ -351,7 +351,7 @@ class _HomeState extends State<Home> {
     });
 
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 196, 218, 255),
+      backgroundColor: Color(0xFFC4DAFF),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(

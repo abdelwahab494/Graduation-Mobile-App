@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:grad_project/core/colors.dart';
@@ -194,10 +193,15 @@ class OnlyNumTextField extends StatelessWidget {
     required this.controller,
     required this.hint,
     required this.icon,
+    this.minValue,
+    this.maxValue,
   });
+
   final TextEditingController controller;
   final String hint;
   final IconData icon;
+  final int? minValue;
+  final int? maxValue;
 
   @override
   Widget build(BuildContext context) {
@@ -208,6 +212,25 @@ class OnlyNumTextField extends StatelessWidget {
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       controller: controller,
       cursorColor: Colors.black,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return "Please fill this field.";
+        }
+        if (value.contains(" ")) {
+          return "Spaces are not allowed.";
+        }
+        int? number = int.tryParse(value);
+        if (number == null) {
+          return "Please enter a valid number.";
+        }
+        if (minValue != null && number < minValue!) {
+          return "Value must be greater than or equal to $minValue.";
+        }
+        if (maxValue != null && number > maxValue!) {
+          return "Value must be less than or equal to $maxValue.";
+        }
+        return null;
+      },
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: TextStyle(

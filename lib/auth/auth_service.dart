@@ -19,11 +19,12 @@ class AuthService {
     String email,
     String password,
     String username,
+    bool agree,
   ) async {
     return await supabase.auth.signUp(
       email: email,
       password: password,
-      data: {"name": username},
+      data: {"name": username, "agree" : agree},
     );
   }
 
