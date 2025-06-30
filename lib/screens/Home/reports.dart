@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:flutter/material.dart';
 import 'package:grad_project/core/colors.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:grad_project/components/chat_botton.dart';
 import 'package:grad_project/components/custom_report.dart';
 

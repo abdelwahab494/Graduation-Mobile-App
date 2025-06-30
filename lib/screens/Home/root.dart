@@ -3,8 +3,8 @@ import 'package:grad_project/providers/theme_provider.dart';
 import 'package:grad_project/screens/home/add_medicine.dart';
 import 'package:grad_project/screens/home/home.dart';
 import 'package:grad_project/screens/home/profile.dart';
-import 'package:grad_project/screens/home/reports.dart';
 import 'package:grad_project/core/colors.dart';
+import 'package:grad_project/screens/home/reports.dart';
 import 'package:provider/provider.dart';
 
 class Base extends StatefulWidget {
@@ -27,11 +27,8 @@ class _BaseState extends State<Base> {
   Widget build(BuildContext context) {
     final List<Widget> _pages = [
       Home(onNavigate: _onItemTapped),
-      // Home2(),
       Reports(),
-      // Notifications(),
       AddMedicine(),
-      // AddMedicine2(),
       Profile(),
     ];
 

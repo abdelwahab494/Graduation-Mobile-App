@@ -6,6 +6,7 @@ import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grad_project/components/custom_card.dart';
 import 'package:grad_project/components/custom_information.dart';
+import 'package:grad_project/providers/collect_info_provider.dart';
 import 'package:grad_project/screens/issues/issues.dart';
 import 'package:grad_project/core/colors.dart';
 import 'package:grad_project/auth/auth_service.dart';
@@ -80,25 +81,32 @@ class _ProfileState extends State<Profile> {
                       horizontal: 20,
                       vertical: 10,
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        CustomInformation(
-                          logo: "assets/icons/Heartbeat.svg",
-                          title: "Heart rate",
-                          measure: "215bmp",
-                        ),
-                        CustomInformation(
-                          logo: "assets/icons/Fire.svg",
-                          title: "Calories",
-                          measure: "756cal",
-                        ),
-                        CustomInformation(
-                          logo: "assets/icons/weight.svg",
-                          title: "Weight",
-                          measure: "68kg",
-                        ),
-                      ],
+                    child: Consumer<CollectInfoProvider>(
+                      builder: (context, provider, child) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            CustomInformation(
+                              logo: "assets/icons/Heartbeat.svg",
+                              title: "Heart rate",
+                              measure: "215bmp",
+                            ),
+                            CustomInformation(
+                              logo: "assets/icons/Fire.svg",
+                              title: "Calories",
+                              measure: "756cal",
+                            ),
+                            CustomInformation(
+                              logo: "assets/icons/weight.svg",
+                              title: "Weight",
+                              measure:
+                                  provider.weight == 0
+                                      ? "Unknown"
+                                      : "${provider.weight}kg",
+                            ),
+                          ],
+                        );
+                      },
                     ),
                   ),
                   Gap(15),
@@ -114,16 +122,6 @@ class _ProfileState extends State<Profile> {
                           title: "Account Information",
                           logo: Icons.manage_accounts_rounded,
                         ),
-                      ),
-                      Gap(5),
-                      CustomCard(
-                        title: "Appointment",
-                        logo: CupertinoIcons.calendar_today,
-                      ),
-                      Gap(5),
-                      CustomCard(
-                        title: 'Payment Method',
-                        logo: CupertinoIcons.money_dollar,
                       ),
                       Gap(5),
                       GestureDetector(

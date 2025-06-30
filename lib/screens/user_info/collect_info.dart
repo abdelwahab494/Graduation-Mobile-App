@@ -12,7 +12,7 @@ import 'package:grad_project/components/custom_botton.dart';
 import 'package:grad_project/core/colors.dart';
 import 'package:grad_project/providers/collect_info_provider.dart';
 import 'package:grad_project/providers/theme_provider.dart';
-import 'package:grad_project/screens/user_info/prediction.dart';
+import 'package:grad_project/screens/user_info/diabetes_prediction.dart';
 import 'package:provider/provider.dart';
 
 class CollectInfo extends StatefulWidget {
@@ -204,17 +204,65 @@ class _CollectInfoState extends State<CollectInfo> {
                     ),
                     Gap(15),
                     CustomBotton(
-                      onTap: () {
+                      onTap: () async {
                         if (!formKey1.currentState!.validate() ||
-                            !formKey2.currentState!.validate())
+                            !formKey2.currentState!.validate()) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                "Please fill all fields to proceed!",
+                              ),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
                           return;
+                        }
+
+                        showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder:
+                              (context) => Center(
+                                child: CircularProgressIndicator(
+                                  color: AppColors.primary,
+                                ),
+                              ),
+                        );
+
                         provider.height = int.parse(heightC.text);
                         provider.weight = int.parse(weightC.text);
                         provider.physHealth = int.parse(physHealthC.text);
                         provider.recentGL = int.parse(recentGLC.text);
+
+                        await provider.predictFromServer();
+
+                        Navigator.pop(context);
+
+                        if (provider.result.toLowerCase().contains("error")) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                // "Error trying to predict your diabetes condition!\nPlease try again later.",
+                                provider.result.toString(),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                          return;
+                        }
+
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (c) => Prediction()),
+                          MaterialPageRoute(
+                            builder:
+                                (c) =>
+                                    DiabetesPrediction(result: provider.result),
+                          ),
                         );
                       },
                       text: "Predict My Status",

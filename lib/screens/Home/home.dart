@@ -65,7 +65,7 @@ class _HomeState extends State<Home> {
   ];
 
   @override
-  void dispose() {
+  void dispose() {  
     searchController.dispose();
     super.dispose();
   }
