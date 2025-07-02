@@ -24,6 +24,7 @@ class _AccountInfoState extends State<AccountInfo> {
 
   // controllers
   final TextEditingController nameC = TextEditingController();
+  final TextEditingController idC = TextEditingController();
   final TextEditingController emailC = TextEditingController();
   final TextEditingController passwordC = TextEditingController();
 
@@ -38,8 +39,9 @@ class _AccountInfoState extends State<AccountInfo> {
 
   @override
   void initState() {
-    originalName = authService.getCurrentItem("name");
+    originalName = authService.getCurrentItemString("name");
     nameC.text = originalName;
+    idC.text = authService.getCurrentId().toString();
     emailC.text = authService.getCurrentEmail().toString();
     super.initState();
   }
@@ -194,6 +196,25 @@ class _AccountInfoState extends State<AccountInfo> {
                             controller: nameC,
                             hint: "",
                             icon: Icons.person,
+                          ),
+                          Gap(20),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Text(
+                              "ID",
+                              style: GoogleFonts.poppins(
+                                color: Colors.grey.shade600,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                          Gap(10),
+                          OnlyEmailTextField(
+                            controller: idC,
+                            hint: "",
+                            icon: Icons.numbers,
+                            readOnly: true,
+                            showCopyButton: true,
                           ),
                           Gap(20),
                           Padding(

@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:grad_project/database/user_health_data/user_health_data.dart';
+import 'package:grad_project/database/user_health_data/user_health_database.dart';
 import 'package:http/http.dart' as http;
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -171,7 +173,7 @@ class CollectInfoProvider extends ChangeNotifier {
       _result = "Connection Error: $e";
     }
 
-    // Save data to Supabase
+    // Save data to Supabase using createUserHealthData
     try {
       final userId = Supabase.instance.client.auth.currentUser?.id;
       if (userId == null) {
@@ -180,23 +182,26 @@ class CollectInfoProvider extends ChangeNotifier {
         return;
       }
 
-      await Supabase.instance.client.from('user_health_data').insert({
-        'userid': userId,
-        'highbp': values[0],
-        'highcol': values[1],
-        'bmi': values[2],
-        'stroke': values[3],
-        'heartattack': values[4],
-        'physactivity': values[5],
-        'genhealth': values[6],
-        'physhealth': values[7],
-        'diffwalk': values[8],
-        'age': values[9],
-        'education': values[10],
-        'income': values[11],
-        'prediction_status': int.tryParse(_result) ?? 0,
-        'feedback': null,
-      });
+      final userHealthData = UserHealthData(
+        userId: userId,
+        highbp: values[0],
+        highcol: values[1],
+        bmi: values[2],
+        stroke: values[3],
+        heartattack: values[4],
+        physactivity: values[5],
+        genhealth: values[6],
+        physhealth: values[7],
+        diffwalk: values[8],
+        age: values[9],
+        education: values[10],
+        income: values[11],
+        predictionStatus: int.tryParse(_result) ?? 0,
+        feedback: null,
+        createdAt: DateTime.now(),
+      );
+
+      await UserHealthDatabase().createUserHealthData(userHealthData);
     } catch (e) {
       _result = "Supabase Error: $e";
     }

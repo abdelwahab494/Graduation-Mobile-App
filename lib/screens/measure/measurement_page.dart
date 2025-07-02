@@ -1,0 +1,283 @@
+import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:grad_project/components/custom_app_bar.dart';
+import 'package:grad_project/components/custom_botton.dart';
+import 'package:grad_project/core/colors.dart';
+import 'package:grad_project/screens/measure/loading_screen.dart';
+import 'package:intl/intl.dart';
+
+class MeasurementPage extends StatefulWidget {
+  MeasurementPage({super.key});
+
+  @override
+  State<MeasurementPage> createState() => _MeasurementPageState();
+}
+
+class _MeasurementPageState extends State<MeasurementPage> {
+  int reading = 120;
+  String rating = "";
+  Color color = AppColors.primary;
+  Color bColor = AppColors.backGround;
+  final TextEditingController controller = TextEditingController();
+
+  @override
+  void initState() {
+    _updateRatingAndColors();
+    super.initState();
+  }
+
+  void _updateRatingAndColors() {
+    if (reading <= 54) {
+      rating = "Severe Low";
+      color = Colors.red.shade700;
+      bColor = Colors.red.shade100;
+    } else if (reading < 70 && reading > 54) {
+      rating = "Low";
+      color = Colors.orange;
+      bColor = Colors.orange.shade100;
+    } else if (reading >= 70 && reading <= 140) {
+      rating = "Normal";
+      color = Colors.green;
+      bColor = Colors.green.shade100;
+    } else if (reading > 140 && reading < 220) {
+      rating = "High";
+      color = Colors.orange;
+      bColor = Colors.orange.shade100;
+    } else {
+      rating = "Severe High";
+      color = Colors.red.shade700;
+      bColor = Colors.red.shade100;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    DateTime now = DateTime.now();
+    String formattedDateTime =
+        DateFormat('EEEE,  hh:mm a').format(now).toString();
+
+    return Scaffold(
+      backgroundColor: AppColors.backGround,
+      appBar: CustomAppBar(title: ""),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey, width: 1),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Glucose Reading",
+                      style: GoogleFonts.poppins(
+                        color: AppColors.text,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          reading.toString(),
+                          style: GoogleFonts.poppins(
+                            color: color,
+                            fontSize: 60,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 3,
+                          ),
+                        ),
+                        Gap(3),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 22),
+                          child: Text(
+                            "mg/dl",
+                            style: GoogleFonts.poppins(
+                              color: Colors.grey.shade600,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Text(
+                      formattedDateTime,
+                      style: GoogleFonts.poppins(
+                        color: Colors.grey.shade700,
+                        fontSize: 13,
+                      ),
+                    ),
+                    Gap(20),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 15,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: bColor,
+                        border: Border.all(color: color, width: 1.5),
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      child: Text(
+                        rating.toString(),
+                        style: GoogleFonts.poppins(
+                          color: color,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      height: 100,
+                      width: double.infinity,
+                      child: CustomPaint(painter: WavePainter()),
+                    ),
+                    // Gap(20),
+                    // OnlyNumTextField(
+                    //   controller: controller,
+                    //   hint: "",
+                    //   icon: Icons.numbers,
+                    // ),
+                    // Gap(20),
+                    // CustomBotton(
+                    //   onTap: () {
+                    //     setState(() {
+                    //       int? newReading = int.tryParse(controller.text);
+                    //       if (newReading != null) {
+                    //         reading = newReading;
+                    //         _updateRatingAndColors();
+                    //       } else {
+                    //         reading = 0;
+                    //         _updateRatingAndColors();
+                    //       }
+                    //       controller.clear();
+                    //     });
+                    //   },
+                    //   text: "Change Result",
+                    // ),
+                  ],
+                ),
+              ),
+              Gap(35),
+              CustomBotton(
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (c) => LoadingScreen()),
+                  );
+                },
+                text: "Measure Again",
+                width: double.infinity,
+              ),
+              Gap(35),
+              Text(
+                "Glucose Trends",
+                style: GoogleFonts.poppins(
+                  color: AppColors.text,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              Gap(10),
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey, width: 1),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "7-Day Overview",
+                      style: GoogleFonts.poppins(
+                        color: AppColors.text,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    Gap(10),
+                    SizedBox(
+                      height: 200,
+                      child: LineChart(
+                        LineChartData(
+                          borderData: FlBorderData(show: false),
+                          lineBarsData: [
+                            LineChartBarData(
+                              spots: const [
+                                FlSpot(0, 130),
+                                FlSpot(1, 120),
+                                FlSpot(2, 125),
+                                FlSpot(3, 140),
+                                FlSpot(4, 115),
+                                FlSpot(5, 125),
+                                FlSpot(6, 120),
+                              ],
+                              isCurved: true,
+                              color: AppColors.primary,
+                              barWidth: 3,
+                              isStrokeCapRound: true,
+                              dotData: FlDotData(show: true),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Gap(25),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class WavePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint =
+        Paint()
+          ..color = Colors.blue
+          ..style = PaintingStyle.fill;
+
+    final path = Path();
+    path.moveTo(0, size.height * 0.5);
+    path.quadraticBezierTo(
+      size.width * 0.25,
+      size.height * 0.7,
+      size.width * 0.5,
+      size.height * 0.6,
+    ); // Higher curve
+    path.quadraticBezierTo(
+      size.width * 0.75,
+      size.height * 0.5,
+      size.width,
+      size.height * 0.6,
+    ); // Higher curve
+    path.lineTo(size.width, size.height);
+    path.lineTo(0, size.height);
+    path.close();
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}

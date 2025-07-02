@@ -20,6 +20,8 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
   Color statusColor = Colors.green;
   DateTime? measuredAt;
 
+
+
   updateReading(int newReading) {
     setState(() {
       glucose = newReading;

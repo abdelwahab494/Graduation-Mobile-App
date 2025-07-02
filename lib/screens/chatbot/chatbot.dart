@@ -73,14 +73,14 @@ Format each tip as: "1. [Tip text]"
 
 class _ChatbotState extends State<Chatbot> {
   final Gemini gemini = Gemini.instance;
-  final userName = AuthService().getCurrentItem("name");
+  final userName = AuthService().getCurrentItemString("name");
 
   List<ChatMessage> messages = [];
   List<String> healthTips = [];
 
   ChatUser currentUser = ChatUser(
     id: "0",
-    firstName: AuthService().getCurrentItem("name"),
+    firstName: AuthService().getCurrentItemString("name"),
   );
   ChatUser geminiUser = ChatUser(
     id: "1",

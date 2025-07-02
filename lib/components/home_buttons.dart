@@ -5,7 +5,7 @@ import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grad_project/core/colors.dart';
 import 'package:grad_project/screens/issues/issues.dart';
-import 'package:grad_project/screens/user_info/collect_info.dart';
+import 'package:grad_project/screens/user%20info/collect_info.dart';
 
 class HomeButtons extends StatelessWidget {
   const HomeButtons({super.key, required this.onNavigate});

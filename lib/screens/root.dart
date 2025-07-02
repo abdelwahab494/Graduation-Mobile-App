@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:grad_project/auth/auth_service.dart';
 import 'package:grad_project/providers/theme_provider.dart';
-import 'package:grad_project/screens/home/add_medicine.dart';
-import 'package:grad_project/screens/home/home.dart';
-import 'package:grad_project/screens/home/profile.dart';
 import 'package:grad_project/core/colors.dart';
-import 'package:grad_project/screens/home/reports.dart';
+import 'package:grad_project/screens/partner%20pages/partner_home.dart';
+import 'package:grad_project/screens/patient%20pages/add_medicine.dart';
+import 'package:grad_project/screens/patient%20pages/home.dart';
+import 'package:grad_project/screens/patient%20pages/profile.dart';
+import 'package:grad_project/screens/patient%20pages/condition.dart';
 import 'package:provider/provider.dart';
 
 class Base extends StatefulWidget {
@@ -25,9 +27,12 @@ class _BaseState extends State<Base> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isPartner = AuthService().getCurrentItemBool("isPartner");
     final List<Widget> _pages = [
-      Home(onNavigate: _onItemTapped),
-      Reports(),
+      !isPartner
+          ? Home(onNavigate: _onItemTapped)
+          : PartnerHome(onNavigate: _onItemTapped),
+      Condition(),
       AddMedicine(),
       Profile(),
     ];
@@ -67,7 +72,7 @@ class _BaseState extends State<Base> {
                       _selectedIndex == 1
                           ? Icon(Icons.assignment)
                           : Icon(Icons.assignment_outlined),
-                  label: 'Reports',
+                  label: 'Condition',
                 ),
                 BottomNavigationBarItem(
                   icon:

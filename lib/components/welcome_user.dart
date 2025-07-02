@@ -13,9 +13,11 @@ class WelcomeUser extends StatelessWidget {
     super.key,
     required this.onNavigate,
     required this.currentusername,
+    this.isPartner = false,
   });
   final dynamic onNavigate;
   final String currentusername;
+  final bool isPartner;
 
   @override
   Widget build(BuildContext context) {
@@ -76,12 +78,14 @@ class WelcomeUser extends StatelessWidget {
             ],
           ),
           Spacer(),
-          GestureDetector(
-            onTap: () {
-              onNavigate(2);
-            },
-            child: Icon(Icons.notifications, color: AppColors.primary),
-          ),
+          !isPartner
+              ? GestureDetector(
+                onTap: () {
+                  onNavigate(2);
+                },
+                child: Icon(Icons.notifications, color: AppColors.primary),
+              )
+              : SizedBox.shrink(),
         ],
       ),
     );

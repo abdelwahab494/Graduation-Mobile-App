@@ -1,11 +1,11 @@
 import 'package:gap/gap.dart';
 import 'package:flutter/material.dart';
+import 'package:grad_project/screens/measure/loading_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:grad_project/core/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:grad_project/auth/auth_service.dart';
-import 'package:grad_project/screens/measurements.dart';
 import 'package:grad_project/components/chat_botton.dart';
 import 'package:grad_project/models/articales_model.dart';
 import 'package:grad_project/components/home_buttons.dart';
@@ -65,7 +65,7 @@ class _HomeState extends State<Home> {
   ];
 
   @override
-  void dispose() {  
+  void dispose() {
     searchController.dispose();
     super.dispose();
   }
@@ -344,7 +344,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     // get current username
-    final currentusername = authService.getCurrentItem("name");
+    final currentusername = authService.getCurrentItemString("name");
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<ProfileImageProvider>(context, listen: false).loadImage();
@@ -382,9 +382,7 @@ class _HomeState extends State<Home> {
                     onTap:
                         () => Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (c) => MeasurementScreen(),
-                          ),
+                          MaterialPageRoute(builder: (c) => LoadingScreen()),
                         ),
                     child: MeasureBotton(),
                   ),

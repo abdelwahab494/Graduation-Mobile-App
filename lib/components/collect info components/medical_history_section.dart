@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:grad_project/components/customtextfield.dart';
 import 'package:grad_project/core/colors.dart';
 import 'package:grad_project/providers/collect_info_provider.dart';
 import 'package:provider/provider.dart';
@@ -10,10 +9,9 @@ class MedicalHistorySection extends StatelessWidget {
   const MedicalHistorySection({
     super.key,
     required this.isLight,
-    required this.recentGLC, required this.formKey,
+    required this.formKey,
   });
   final isLight;
-  final TextEditingController recentGLC;
   final GlobalKey formKey;
 
   @override
@@ -25,27 +23,27 @@ class MedicalHistorySection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 10),
-            child: Text(
-              "Recent Glucose Level (mg/gl)",
-              style: GoogleFonts.poppins(
-                color: Colors.grey.shade600,
-                fontWeight: FontWeight.w600,
-                fontSize: 13,
-              ),
-            ),
-          ),
-          Gap(5),
-          SizedBox(
-            height: 50,
-            child: OnlyNumTextField(
-              controller: recentGLC,
-              hint: "e.g. 120",
-              icon: Icons.medical_information,
-            ),
-          ),
-          Gap(10),
+          // Padding(
+          //   padding: const EdgeInsets.only(left: 10),
+          //   child: Text(
+          //     "Recent Glucose Level (mg/gl)",
+          //     style: GoogleFonts.poppins(
+          //       color: Colors.grey.shade600,
+          //       fontWeight: FontWeight.w600,
+          //       fontSize: 13,
+          //     ),
+          //   ),
+          // ),
+          // Gap(5),
+          // SizedBox(
+          //   height: 50,
+          //   child: OnlyNumTextField(
+          //     controller: recentGLC,
+          //     hint: "e.g. 120",
+          //     icon: Icons.medical_information,
+          //   ),
+          // ),
+          // Gap(10),
           Padding(
             padding: const EdgeInsets.only(left: 10),
             child: Text(

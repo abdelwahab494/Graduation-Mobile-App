@@ -12,7 +12,7 @@ import 'package:grad_project/components/custom_botton.dart';
 import 'package:grad_project/core/colors.dart';
 import 'package:grad_project/providers/collect_info_provider.dart';
 import 'package:grad_project/providers/theme_provider.dart';
-import 'package:grad_project/screens/user_info/diabetes_prediction.dart';
+import 'package:grad_project/screens/user%20info/diabetes_prediction.dart';
 import 'package:provider/provider.dart';
 
 class CollectInfo extends StatefulWidget {
@@ -27,7 +27,7 @@ class _CollectInfoState extends State<CollectInfo> {
   final TextEditingController heightC = TextEditingController();
   final TextEditingController weightC = TextEditingController();
   final TextEditingController physHealthC = TextEditingController();
-  final TextEditingController recentGLC = TextEditingController();
+  // final TextEditingController recentGLC = TextEditingController();
 
   // form key
   final formKey1 = GlobalKey<FormState>();
@@ -38,7 +38,6 @@ class _CollectInfoState extends State<CollectInfo> {
     heightC.dispose();
     weightC.dispose();
     physHealthC.dispose();
-    recentGLC.dispose();
     super.dispose();
   }
 
@@ -196,7 +195,6 @@ class _CollectInfoState extends State<CollectInfo> {
                           Gap(10),
                           MedicalHistorySection(
                             isLight: isLight,
-                            recentGLC: recentGLC,
                             formKey: formKey2,
                           ),
                         ],
@@ -232,7 +230,7 @@ class _CollectInfoState extends State<CollectInfo> {
                         provider.height = int.parse(heightC.text);
                         provider.weight = int.parse(weightC.text);
                         provider.physHealth = int.parse(physHealthC.text);
-                        provider.recentGL = int.parse(recentGLC.text);
+                        // provider.recentGL = int.parse(recentGLC.text);
 
                         await provider.predictFromServer();
 
@@ -242,8 +240,7 @@ class _CollectInfoState extends State<CollectInfo> {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
-                                // "Error trying to predict your diabetes condition!\nPlease try again later.",
-                                provider.result.toString(),
+                                "Error trying to predict your diabetes condition!\nPlease try again later.",
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 16,

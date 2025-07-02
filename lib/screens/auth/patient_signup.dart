@@ -3,19 +3,19 @@ import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grad_project/auth/auth_gate.dart';
 import 'package:grad_project/auth/auth_service.dart';
-import 'package:grad_project/components/custom_app_bar.dart';
 import 'package:grad_project/screens/auth/login.dart';
 import 'package:grad_project/core/colors.dart';
 import 'package:grad_project/components/customtextfield.dart';
 
-class Signup extends StatefulWidget {
-  const Signup({super.key});
+class PatientSignup extends StatefulWidget {
+  const PatientSignup({super.key, required this.isPartner});
+  final bool isPartner;
 
   @override
-  State<Signup> createState() => _SignupState();
+  State<PatientSignup> createState() => _PatientSignupState();
 }
 
-class _SignupState extends State<Signup> {
+class _PatientSignupState extends State<PatientSignup> {
   bool isLoading = false;
 
   // form key
@@ -36,10 +36,10 @@ class _SignupState extends State<Signup> {
   // sign up button pressed
   Future<void> signup() async {
     // prepare data
-    final email = _emailController.text;
-    final username = _usernamecontroller.text;
-    final password = _passwordController.text;
-    final confirmPassword = _confirmPasswordController.text;
+    final email = _emailController.text.trim();
+    final username = _usernamecontroller.text.trim();
+    final password = _passwordController.text.trim();
+    final confirmPassword = _confirmPasswordController.text.trim();
 
     // ensure filling all fields
     if (email == "" ||
@@ -61,7 +61,7 @@ class _SignupState extends State<Signup> {
       );
       return;
     }
-    // cheching matching passwords
+    // checking matching passwords
     if (password != confirmPassword) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -97,7 +97,14 @@ class _SignupState extends State<Signup> {
     }
     // attempt sign up
     try {
-      await authService.signUpWithEmailPassword(email, password, username, agree);
+      await authService.signUpWithEmailPassword(
+        email,
+        password,
+        username,
+        agree,
+        widget.isPartner,
+        "", // No patientID for patient accounts
+      );
       if (mounted) {
         Navigator.pushAndRemoveUntil(
           context,
@@ -126,10 +133,9 @@ class _SignupState extends State<Signup> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Focus.of(context).unfocus(),
+      onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         backgroundColor: AppColors.backGround,
-        appBar: CustomAppBar(title: "Sign Up"),
         body: SafeArea(
           child: Column(
             children: [
@@ -229,8 +235,6 @@ class _SignupState extends State<Signup> {
                           await signup();
                           // finish loading
                           setState(() => isLoading = false);
-                        } else {
-                          return;
                         }
                       },
                       child: Container(
@@ -258,7 +262,7 @@ class _SignupState extends State<Signup> {
                                   ),
                                 )
                                 : Text(
-                                  "Create account",
+                                  "Create patient account",
                                   textAlign: TextAlign.center,
                                   style: GoogleFonts.inter(
                                     fontSize: 16,
@@ -307,210 +311,209 @@ class _SignupState extends State<Signup> {
       ),
     );
   }
-}
 
-Future _showDialog(context) {
-  return showDialog(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        contentPadding: EdgeInsets.all(15),
-        backgroundColor: Colors.white,
-        title: Text(
-          "Privacy & Security Policy.",
-          style: GoogleFonts.poppins(
-            fontWeight: FontWeight.w500,
-            color: AppColors.primary,
+  Future _showDialog(context) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(15),
+          backgroundColor: Colors.white,
+          title: Text(
+            "Privacy & Security Policy.",
+            style: GoogleFonts.poppins(
+              fontWeight: FontWeight.w500,
+              color: AppColors.primary,
+            ),
           ),
-        ),
-        actions: [
-          Center(
-            child: GestureDetector(
-              onTap: () => Navigator.pop(context),
-              child: Container(
-                padding: EdgeInsets.all(12),
-                width: 150,
-                decoration: BoxDecoration(
-                  color: AppColors.primary,
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: Text(
-                  "Back",
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.inter(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
+          actions: [
+            Center(
+              child: GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: Container(
+                  padding: EdgeInsets.all(12),
+                  width: 150,
+                  decoration: BoxDecoration(
+                    color: AppColors.primary,
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  child: Text(
+                    "Back",
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.inter(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
-        content: Container(
-          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-          decoration: BoxDecoration(
-            color: Color.fromARGB(255, 247, 250, 255),
-            borderRadius: BorderRadius.circular(20),
-            // border: Border.all(color: AppColors.primary),
-          ),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "We care about your privacy. We request your consent to:",
-                  style: GoogleFonts.poppins(
-                    color: AppColors.logo,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
+          ],
+          content: Container(
+            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+            decoration: BoxDecoration(
+              color: Color.fromARGB(255, 247, 250, 255),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "We care about your privacy. We request your consent to:",
+                    style: GoogleFonts.poppins(
+                      color: AppColors.logo,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
-                Gap(8),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "• ",
-                          style: GoogleFonts.poppins(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.text,
-                          ),
-                        ),
-                        Expanded(
-                          child: Text(
-                            "Analyze your health data and provide monthly reports",
+                  Gap(8),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "• ",
                             style: GoogleFonts.poppins(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                               color: AppColors.text,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    Gap(7),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "• ",
-                          style: GoogleFonts.poppins(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.text,
+                          Expanded(
+                            child: Text(
+                              "Analyze your health data and provide monthly reports",
+                              style: GoogleFonts.poppins(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.text,
+                              ),
+                            ),
                           ),
-                        ),
-                        Expanded(
-                          child: Text(
-                            "Help you track your progress",
+                        ],
+                      ),
+                      Gap(7),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "• ",
                             style: GoogleFonts.poppins(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                               color: AppColors.text,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    Gap(7),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "• ",
-                          style: GoogleFonts.poppins(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.text,
+                          Expanded(
+                            child: Text(
+                              "Help you track your progress",
+                              style: GoogleFonts.poppins(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.text,
+                              ),
+                            ),
                           ),
-                        ),
-                        Expanded(
-                          child: Text(
-                            "Send smart notifications based on your condition",
+                        ],
+                      ),
+                      Gap(7),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "• ",
                             style: GoogleFonts.poppins(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                               color: AppColors.text,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                Gap(10),
-                Text(
-                  "We promise:",
-                  style: GoogleFonts.poppins(
-                    color: AppColors.logo,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
+                          Expanded(
+                            child: Text(
+                              "Send smart notifications based on your condition",
+                              style: GoogleFonts.poppins(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.text,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                ),
-                Gap(8),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "• ",
-                          style: GoogleFonts.poppins(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.text,
-                          ),
-                        ),
-                        Expanded(
-                          child: Text(
-                            "Your data will not be shared with third parties",
+                  Gap(10),
+                  Text(
+                    "We promise:",
+                    style: GoogleFonts.poppins(
+                      color: AppColors.logo,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Gap(8),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "• ",
                             style: GoogleFonts.poppins(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                               color: AppColors.text,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    Gap(7),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "• ",
-                          style: GoogleFonts.poppins(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.text,
+                          Expanded(
+                            child: Text(
+                              "Your data will not be shared with third parties",
+                              style: GoogleFonts.poppins(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.text,
+                              ),
+                            ),
                           ),
-                        ),
-                        Expanded(
-                          child: Text(
-                            "Secure storage using encrypted databases",
+                        ],
+                      ),
+                      Gap(7),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "• ",
                             style: GoogleFonts.poppins(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                               color: AppColors.text,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
+                          Expanded(
+                            child: Text(
+                              "Secure storage using encrypted databases",
+                              style: GoogleFonts.poppins(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.text,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-      );
-    },
-  );
+        );
+      },
+    );
+  }
 }

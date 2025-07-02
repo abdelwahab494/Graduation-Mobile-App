@@ -5,6 +5,7 @@ import 'package:grad_project/screens/auth/start.dart';
 import 'package:grad_project/core/colors.dart';
 import 'package:grad_project/models/info_model.dart';
 import 'package:grad_project/providers/splash_provider.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 class Info extends StatefulWidget {
@@ -20,12 +21,14 @@ class _InfoState extends State<Info> {
 
   List<InfoModel> info = [
     InfoModel(
-      name: "Find a lot of specialist doctors in one place",
-      image: "assets/images/info_doc1.png",
+      name: "Measure glucose levels easily without pricks.",
+      image:
+          "https://lottie.host/5d7a7d38-7ac5-4495-9fbe-0d92f789c814/ss10EFVHJV.json",
     ),
     InfoModel(
-      name: "Get advice only from a doctor you believe in.",
-      image: "assets/images/info_doc2.png",
+      name: "Monitor your glucose easily with our non-invasive device and app!",
+      image:
+          "https://lottie.host/66f32e89-84b8-4f8d-a64d-5997bec40229/sPAUY3TlX9.json",
     ),
   ];
 
@@ -67,7 +70,9 @@ class _InfoState extends State<Info> {
               controller: _pageController,
               onPageChanged: (index) {
                 setState(() {
-                  _currentIndex = index;
+                  if (index < info.length) {
+                    _currentIndex = index;
+                  }
                 });
               },
               itemCount: info.length,
@@ -79,11 +84,7 @@ class _InfoState extends State<Info> {
                       child: Center(
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 50),
-                          child: Image.asset(
-                            info[index].image,
-                            fit: BoxFit.contain,
-                            width: 296,
-                          ),
+                          child: LottieBuilder.network(info[index].image),
                         ),
                       ),
                     ),
@@ -94,7 +95,7 @@ class _InfoState extends State<Info> {
                         info[index].name,
                         style: GoogleFonts.poppins(
                           fontWeight: FontWeight.bold,
-                          fontSize: 22,
+                          fontSize: 20,
                           color: AppColors.text,
                         ),
                         textAlign: TextAlign.left,

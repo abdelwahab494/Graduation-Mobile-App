@@ -24,7 +24,6 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => SplashProvider()),
         ChangeNotifierProvider(create: (_) => HealthTipsProvider()),
         ChangeNotifierProvider(create: (_) => CollectInfoProvider()),
-        // ChangeNotifierProvider(create: (_) => SignupProvider()),
       ],
       child: const MyApp(),
     ),

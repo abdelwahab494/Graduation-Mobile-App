@@ -10,10 +10,13 @@ class CustomTextField extends StatelessWidget {
     required this.controller,
     required this.hint,
     required this.icon,
+    this.showPastButton = false,
   });
+
   final TextEditingController controller;
   final String hint;
   final IconData icon;
+  final bool showPastButton;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +26,7 @@ class CustomTextField extends StatelessWidget {
       controller: controller,
       cursorColor: Colors.black,
       inputFormatters: [
-        FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9 ]')),
+        FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9 -]')),
       ],
       validator: (value) {
         if (value == null || value.isEmpty) {
@@ -32,6 +35,25 @@ class CustomTextField extends StatelessWidget {
         return null;
       },
       decoration: InputDecoration(
+        suffixIcon:
+            showPastButton
+                ? IconButton(
+                  icon: Icon(Icons.paste, color: Colors.grey[700]),
+                  onPressed: () async {
+                    final clipboardData = await Clipboard.getData('text/plain');
+                    if (clipboardData != null && clipboardData.text != null) {
+                      controller.text = clipboardData.text!;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Text pasted from clipboard!')),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('No text found in clipboard!')),
+                      );
+                    }
+                  },
+                )
+                : SizedBox.shrink(),
         hintText: hint,
         hintStyle: TextStyle(
           color: isLight ? Color.fromARGB(255, 73, 73, 73) : Color(0xffF2F2F2),
@@ -334,11 +356,14 @@ class OnlyEmailTextField extends StatelessWidget {
     required this.hint,
     required this.icon,
     this.readOnly = false,
+    this.showCopyButton = false,
   });
+
   final TextEditingController controller;
   final String hint;
   final IconData icon;
   final bool readOnly;
+  final bool showCopyButton;
 
   @override
   Widget build(BuildContext context) {
@@ -370,6 +395,18 @@ class OnlyEmailTextField extends StatelessWidget {
           color: isLight ? Color.fromARGB(255, 73, 73, 73) : Color(0xffF2F2F2),
         ),
         prefixIcon: Icon(icon, color: Colors.grey[700]),
+        suffixIcon:
+            showCopyButton
+                ? IconButton(
+                  icon: Icon(Icons.copy, color: Colors.grey[700]),
+                  onPressed: () {
+                    Clipboard.setData(ClipboardData(text: controller.text));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Email copied to clipboard!')),
+                    );
+                  },
+                )
+                : SizedBox.shrink(),
         filled: true,
         fillColor:
             isLight ? Color(0xffF2F2F2) : Color.fromARGB(255, 73, 73, 73),

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:grad_project/auth/auth_service.dart';
 import 'package:grad_project/components/custom_medicine_row.dart';
 import 'package:grad_project/components/new_medicine_botton.dart';
 import 'package:grad_project/core/colors.dart';
@@ -24,6 +25,7 @@ class _AddMedicineState extends State<AddMedicine> {
   ScrollController scrollController = ScrollController();
   TextEditingController nameController = TextEditingController();
   TextEditingController dosageController = TextEditingController();
+  final bool isPartner = AuthService().getCurrentItemBool("isPartner");
   int? selectedFrequency;
   List<TimeOfDay> doseTimes = [];
   DateTime? startDate;
@@ -610,7 +612,7 @@ class _AddMedicineState extends State<AddMedicine> {
         scrolledUnderElevation: 0.0,
         centerTitle: true,
         title: Text(
-          "Medicine Tracker",
+          !isPartner ? "Medicine Tracker" : "Your Patient Medicine Tracker",
           style: GoogleFonts.poppins(
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -651,7 +653,9 @@ class _AddMedicineState extends State<AddMedicine> {
               backgroundColor: AppColors.backGround,
               body: Center(
                 child: Text(
-                  'No medicines found. \nAdd a new medicine!',
+                  !isPartner
+                      ? "No added medicine yet.\nAdd a new medicine!"
+                      : 'Your patient has no medicine yet. \nAdd a new medicine!',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,

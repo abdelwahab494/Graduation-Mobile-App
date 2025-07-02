@@ -5,7 +5,7 @@ import 'package:grad_project/components/custom_botton.dart';
 import 'package:grad_project/screens/auth/login.dart';
 import 'package:grad_project/core/colors.dart';
 import 'package:grad_project/providers/splash_provider.dart';
-import 'package:grad_project/screens/auth/signup.dart';
+import 'package:grad_project/screens/auth/root.dart';
 import 'package:provider/provider.dart';
 
 class Start extends StatelessWidget {
@@ -62,7 +62,7 @@ class Start extends StatelessWidget {
                 await splashProvider.hideSplash();
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (c) => Signup()),
+                  MaterialPageRoute(builder: (c) => Root()),
                 );
               },
               child: Container(

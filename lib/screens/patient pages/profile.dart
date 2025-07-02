@@ -12,7 +12,7 @@ import 'package:grad_project/core/colors.dart';
 import 'package:grad_project/auth/auth_service.dart';
 import 'package:grad_project/providers/profile_image_provider.dart';
 import 'package:grad_project/providers/theme_provider.dart';
-import 'package:grad_project/screens/user_info/account_info.dart';
+import 'package:grad_project/screens/user%20info/account_info.dart';
 import 'package:provider/provider.dart';
 
 class Profile extends StatefulWidget {
@@ -37,6 +37,7 @@ class _ProfileState extends State<Profile> {
 
     return Consumer<ChangeThemeProvider>(
       builder: (context, themeProvider, child) {
+        final bool isPartner = authService.getCurrentItemBool("isPartner");
         return Scaffold(
           backgroundColor: AppColors.backGround,
           body: SingleChildScrollView(
@@ -68,7 +69,7 @@ class _ProfileState extends State<Profile> {
                   Gap(8),
                   Text(
                     maxLines: 1,
-                    authService.getCurrentItem("name"),
+                    authService.getCurrentItemString("name"),
                     style: GoogleFonts.poppins(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
@@ -76,39 +77,41 @@ class _ProfileState extends State<Profile> {
                     ),
                   ),
                   Gap(10),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 10,
-                    ),
-                    child: Consumer<CollectInfoProvider>(
-                      builder: (context, provider, child) {
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            CustomInformation(
-                              logo: "assets/icons/Heartbeat.svg",
-                              title: "Heart rate",
-                              measure: "215bmp",
-                            ),
-                            CustomInformation(
-                              logo: "assets/icons/Fire.svg",
-                              title: "Calories",
-                              measure: "756cal",
-                            ),
-                            CustomInformation(
-                              logo: "assets/icons/weight.svg",
-                              title: "Weight",
-                              measure:
-                                  provider.weight == 0
-                                      ? "Unknown"
-                                      : "${provider.weight}kg",
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  ),
+                  !isPartner
+                      ? Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 10,
+                        ),
+                        child: Consumer<CollectInfoProvider>(
+                          builder: (context, provider, child) {
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                CustomInformation(
+                                  logo: "assets/icons/Heartbeat.svg",
+                                  title: "Heart rate",
+                                  measure: "215bmp",
+                                ),
+                                CustomInformation(
+                                  logo: "assets/icons/Fire.svg",
+                                  title: "Calories",
+                                  measure: "756cal",
+                                ),
+                                CustomInformation(
+                                  logo: "assets/icons/weight.svg",
+                                  title: "Weight",
+                                  measure:
+                                      provider.weight == 0
+                                          ? "Unknown"
+                                          : "${provider.weight}kg",
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      )
+                      : SizedBox.shrink(),
                   Gap(15),
                   Column(
                     children: [
@@ -124,18 +127,20 @@ class _ProfileState extends State<Profile> {
                         ),
                       ),
                       Gap(5),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (c) => Issues()),
-                          );
-                        },
-                        child: CustomCard(
-                          title: "Common Issues",
-                          logo: CupertinoIcons.question_diamond,
-                        ),
-                      ),
+                      !isPartner
+                          ? GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (c) => Issues()),
+                              );
+                            },
+                            child: CustomCard(
+                              title: "Common Issues",
+                              logo: CupertinoIcons.question_diamond,
+                            ),
+                          )
+                          : SizedBox.shrink(),
                       Gap(5),
                       Card(
                         color: AppColors.backGround,
