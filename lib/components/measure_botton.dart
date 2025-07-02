@@ -41,16 +41,17 @@ class _MeasureBottonState extends State<MeasureBotton>
         // height: 250,
         padding: EdgeInsets.symmetric(vertical: 15),
         decoration: BoxDecoration(
-          // gradient: LinearGradient(
-          //   colors: [
-          //     Color(0xFF2196F3),
-          //     Color(0xFF1976D2),
-          //     Color(0xFF0D47A1),
-          //     Color(0xFF0D47A1),
-          //   ],
-          //   begin: Alignment.topLeft,
-          //   end: Alignment.bottomRight,
-          // ),
+          gradient: LinearGradient(
+            colors: [
+              Color(0xFF36589B),
+              Color(0xFF5B8FE5),
+              Color(0xFF5B8FE5),
+              Color(0xFF5B8FE5),
+              Color(0xFF36589B),
+            ],
+            begin: Alignment.centerRight,
+            end: Alignment.centerLeft,
+          ),
           color: AppColors.primary,
           borderRadius: BorderRadius.circular(10),
           // borderRadius: BorderRadius.circular(500),

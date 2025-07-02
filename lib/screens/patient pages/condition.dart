@@ -81,9 +81,13 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grad_project/auth/auth_service.dart';
+import 'package:grad_project/components/custom_report.dart';
+import 'package:grad_project/components/start_quize.dart';
 import 'package:grad_project/core/colors.dart';
 import 'package:grad_project/database/user_health_data/user_health_data.dart';
 import 'package:grad_project/database/user_health_data/user_health_database.dart';
+import 'package:grad_project/screens/user%20info/collect_info.dart';
+import 'package:grad_project/screens/user%20info/diabetes_detailes.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class Condition extends StatefulWidget {
@@ -96,6 +100,7 @@ class Condition extends StatefulWidget {
 class _ConditionState extends State<Condition> {
   UserHealthData? latestData;
   bool isLoading = false;
+  final _streamKey = GlobalKey();
   final bool isPartner = AuthService().getCurrentItemBool("isPartner");
 
   final Map data = {
@@ -112,26 +117,26 @@ class _ConditionState extends State<Condition> {
       "65 : 69",
       "70 : 74",
       "75 : 79",
-      "80 or older",
+      "> 80",
     ],
     "Gen Health": ["Excellent", "Very good", "Good", "Fair", "Poor"],
     "Education": [
       "No school",
       "Grades 1-8",
       "Grades 9-11",
-      "Grades 12 or GED",
-      "no degree yet",
-      "Bachelor'sdegree",
+      "Grades 12",
+      "no degree",
+      "Bachelor's",
     ],
     "Income": [
-      "Less than \$10,000",
-      "\$10,000 to \$14,999",
-      "\$10,000 to \$14,999",
-      "\$25,000 to \$34,999",
-      "Less than \$35,000",
-      "\$35,000 to \$49,999",
-      "\$50,000 to \$74,999",
-      "\$75,000 or more",
+      "< \$10,000",
+      "\$10,000:\$14,999",
+      "\$10,000 : \$14,999",
+      "\$25,000 : \$34,999",
+      "< \$35,000",
+      "\$35,000 : \$49,999",
+      "\$50,000 : \$74,999",
+      "> \$75,000",
     ],
   };
 
@@ -164,36 +169,49 @@ class _ConditionState extends State<Condition> {
 
   @override
   Widget build(BuildContext context) {
+    final db = UserHealthDatabase();
     return Scaffold(
       backgroundColor: AppColors.backGround,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30),
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
-          child:
+          child: Column(
+            children: [
+              Gap(25),
+              StartQuize(),
+              Gap(20),
               latestData == null
                   ? SizedBox.shrink()
                   : Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Gap(50),
-                      Text(
-                        !isPartner
-                            ? "Patient Overview"
-                            : "Your Patient's Overview",
-                        style: GoogleFonts.poppins(
-                          color: AppColors.text,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            !isPartner
+                                ? "Patient Overview"
+                                : "Your Patient's Overview",
+                            style: GoogleFonts.poppins(
+                              color: AppColors.text,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () => _fetchLatestData(),
+                            icon: Icon(Icons.refresh, color: AppColors.primary),
+                            tooltip: "Refresh",
+                          ),
+                        ],
                       ),
                       const Gap(10),
                       Skeletonizer(
                         enabled: isLoading,
                         child: GridView.builder(
                           shrinkWrap: true,
-                          physics:
-                              const NeverScrollableScrollPhysics(), // عشان الـ GridView ميتحركش لوحده
+                          physics: const NeverScrollableScrollPhysics(),
                           padding: const EdgeInsets.all(0),
                           gridDelegate:
                               const SliverGridDelegateWithFixedCrossAxisCount(
@@ -365,8 +383,133 @@ class _ConditionState extends State<Condition> {
                           },
                         ),
                       ),
+                      Gap(30),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            !isPartner
+                                ? "Patient History"
+                                : "Your Patient's History",
+                            style: GoogleFonts.poppins(
+                              color: AppColors.text,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          Text(
+                            "See all",
+                            style: GoogleFonts.inter(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                              color: AppColors.primary,
+                            ),
+                          ),
+                        ],
+                      ),
+                      StreamBuilder<List<UserHealthData>>(
+                        key: _streamKey,
+                        stream: db.stream,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 30),
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  color: AppColors.primary,
+                                ),
+                              ),
+                            );
+                          }
+                          if (snapshot.hasError) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 30),
+                              child: Center(
+                                child: Text(
+                                  'Something went wrong!\n please check your connection.',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.text,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            );
+                          }
+                          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                            return GestureDetector(
+                              onTap:
+                                  () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (c) => CollectInfo(),
+                                    ),
+                                  ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 30,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    !isPartner
+                                        ? "No History yet.\nStart Assessment!"
+                                        : 'Your patient has no History yet.\nStart Assessment!',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.text,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+                          final reports = snapshot.data!;
+                          return Column(
+                            children: [
+                              ListView.builder(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount:
+                                    reports.length <= 4 ? reports.length : 5,
+                                itemBuilder: (BuildContext context, int index) {
+                                  final report = reports[index];
+                                  return GestureDetector(
+                                    onTap:
+                                        () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder:
+                                                (c) => DiabetesDetailes(
+                                                  report: report,
+                                                ),
+                                          ),
+                                        ),
+                                    child: CustomReport(
+                                      title:
+                                          report.predictionStatus == 0
+                                              ? "Not Diabetes"
+                                              : "Diabetes",
+                                      date: report.createdAt.toString(),
+                                      color:
+                                          report.predictionStatus == 0
+                                              ? Colors.green.shade600
+                                              : Colors.red.shade600,
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                      Gap(30),
                     ],
                   ),
+            ],
+          ),
         ),
       ),
     );

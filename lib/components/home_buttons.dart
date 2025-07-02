@@ -38,7 +38,7 @@ class HomeButtons extends StatelessWidget {
               ),
               Gap(10),
               Text(
-                "Health \ncondition",
+                "Diabetes \ncondition",
                 style: GoogleFonts.poppins(fontSize: 14, color: AppColors.text),
                 textAlign: TextAlign.center,
               ),

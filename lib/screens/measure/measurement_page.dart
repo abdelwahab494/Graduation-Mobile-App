@@ -9,14 +9,15 @@ import 'package:grad_project/screens/measure/loading_screen.dart';
 import 'package:intl/intl.dart';
 
 class MeasurementPage extends StatefulWidget {
-  MeasurementPage({super.key});
+  MeasurementPage({super.key, required this.reading, required this.function});
+  final num reading;
+  final function;
 
   @override
   State<MeasurementPage> createState() => _MeasurementPageState();
 }
 
 class _MeasurementPageState extends State<MeasurementPage> {
-  int reading = 120;
   String rating = "";
   Color color = AppColors.primary;
   Color bColor = AppColors.backGround;
@@ -29,19 +30,19 @@ class _MeasurementPageState extends State<MeasurementPage> {
   }
 
   void _updateRatingAndColors() {
-    if (reading <= 54) {
+    if (widget.reading <= 54) {
       rating = "Severe Low";
       color = Colors.red.shade700;
       bColor = Colors.red.shade100;
-    } else if (reading < 70 && reading > 54) {
+    } else if (widget.reading < 70 && widget.reading > 54) {
       rating = "Low";
       color = Colors.orange;
       bColor = Colors.orange.shade100;
-    } else if (reading >= 70 && reading <= 140) {
+    } else if (widget.reading >= 70 && widget.reading <= 140) {
       rating = "Normal";
       color = Colors.green;
       bColor = Colors.green.shade100;
-    } else if (reading > 140 && reading < 220) {
+    } else if (widget.reading > 140 && widget.reading < 220) {
       rating = "High";
       color = Colors.orange;
       bColor = Colors.orange.shade100;
@@ -90,7 +91,7 @@ class _MeasurementPageState extends State<MeasurementPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          reading.toString(),
+                          widget.reading.toString(),
                           style: GoogleFonts.poppins(
                             color: color,
                             fontSize: 60,
@@ -144,29 +145,6 @@ class _MeasurementPageState extends State<MeasurementPage> {
                       width: double.infinity,
                       child: CustomPaint(painter: WavePainter()),
                     ),
-                    // Gap(20),
-                    // OnlyNumTextField(
-                    //   controller: controller,
-                    //   hint: "",
-                    //   icon: Icons.numbers,
-                    // ),
-                    // Gap(20),
-                    // CustomBotton(
-                    //   onTap: () {
-                    //     setState(() {
-                    //       int? newReading = int.tryParse(controller.text);
-                    //       if (newReading != null) {
-                    //         reading = newReading;
-                    //         _updateRatingAndColors();
-                    //       } else {
-                    //         reading = 0;
-                    //         _updateRatingAndColors();
-                    //       }
-                    //       controller.clear();
-                    //     });
-                    //   },
-                    //   text: "Change Result",
-                    // ),
                   ],
                 ),
               ),
@@ -174,6 +152,7 @@ class _MeasurementPageState extends State<MeasurementPage> {
               CustomBotton(
                 onTap: () {
                   Navigator.pop(context);
+                  widget.function;
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (c) => LoadingScreen()),

@@ -5,12 +5,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:grad_project/core/colors.dart';
 
 class CustomReport extends StatelessWidget {
-  const CustomReport({super.key, required this.title, required this.date});
+  const CustomReport({super.key, required this.title, required this.date, required this.color});
   final String title, date;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.symmetric(vertical: 4),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey.shade300, width: 1),
         borderRadius: BorderRadius.circular(5),
@@ -29,7 +31,7 @@ class CustomReport extends StatelessWidget {
                   style: GoogleFonts.poppins(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.text,
+                    color: color,
                   ),
                 ),
                 Text(
@@ -44,7 +46,7 @@ class CustomReport extends StatelessWidget {
               ],
             ),
             Spacer(),
-            Icon(Icons.more_horiz_outlined),
+            Icon(Icons.more_horiz_outlined, color: AppColors.text),
           ],
         ),
       ),

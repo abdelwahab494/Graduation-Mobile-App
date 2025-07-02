@@ -126,7 +126,7 @@ class _AccountInfoState extends State<AccountInfo> {
                     Center(
                       child: Column(
                         children: [
-                          Gap(30),
+                          Gap(10),
                           Stack(
                             children: [
                               CircleAvatar(
@@ -254,6 +254,7 @@ class _AccountInfoState extends State<AccountInfo> {
                         ],
                       ),
                     ),
+                    Gap(20),
                   ],
                 ),
               ),
