@@ -5,52 +5,26 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:grad_project/components/custom_app_bar.dart';
 import 'package:grad_project/components/custom_botton.dart';
 import 'package:grad_project/core/colors.dart';
+import 'package:grad_project/providers/measure_provider.dart';
 import 'package:grad_project/screens/measure/loading_screen.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class MeasurementPage extends StatefulWidget {
-  MeasurementPage({super.key, required this.reading, required this.function});
-  final num reading;
-  final function;
+  MeasurementPage({super.key});
 
   @override
   State<MeasurementPage> createState() => _MeasurementPageState();
 }
 
 class _MeasurementPageState extends State<MeasurementPage> {
-  String rating = "";
-  Color color = AppColors.primary;
-  Color bColor = AppColors.backGround;
-  final TextEditingController controller = TextEditingController();
-
   @override
   void initState() {
-    _updateRatingAndColors();
     super.initState();
-  }
-
-  void _updateRatingAndColors() {
-    if (widget.reading <= 54) {
-      rating = "Severe Low";
-      color = Colors.red.shade700;
-      bColor = Colors.red.shade100;
-    } else if (widget.reading < 70 && widget.reading > 54) {
-      rating = "Low";
-      color = Colors.orange;
-      bColor = Colors.orange.shade100;
-    } else if (widget.reading >= 70 && widget.reading <= 140) {
-      rating = "Normal";
-      color = Colors.green;
-      bColor = Colors.green.shade100;
-    } else if (widget.reading > 140 && widget.reading < 220) {
-      rating = "High";
-      color = Colors.orange;
-      bColor = Colors.orange.shade100;
-    } else {
-      rating = "Severe High";
-      color = Colors.red.shade700;
-      bColor = Colors.red.shade100;
-    }
+    Provider.of<MeasureProvider>(
+      context,
+      listen: false,
+    ).updateRatingAndColors();
   }
 
   @override
@@ -59,171 +33,178 @@ class _MeasurementPageState extends State<MeasurementPage> {
     String formattedDateTime =
         DateFormat('EEEE,  hh:mm a').format(now).toString();
 
-    return Scaffold(
-      backgroundColor: AppColors.backGround,
-      appBar: CustomAppBar(title: ""),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey, width: 1),
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Glucose Reading",
-                      style: GoogleFonts.poppins(
-                        color: AppColors.text,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
+    return Consumer<MeasureProvider>(
+      builder: (context, provider, child) {
+        return Scaffold(
+          backgroundColor: AppColors.backGround,
+          appBar: CustomAppBar(title: ""),
+          body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey, width: 1),
+                      borderRadius: BorderRadius.circular(5),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          widget.reading.toString(),
+                          "Glucose Reading",
                           style: GoogleFonts.poppins(
-                            color: color,
-                            fontSize: 60,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 3,
+                            color: AppColors.text,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                        Gap(3),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 22),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              provider.glucose.toString(),
+                              style: GoogleFonts.poppins(
+                                color: provider.color,
+                                fontSize: 60,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 3,
+                              ),
+                            ),
+                            Gap(3),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 22),
+                              child: Text(
+                                "mg/dl",
+                                style: GoogleFonts.poppins(
+                                  color: Colors.grey.shade600,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Text(
+                          formattedDateTime,
+                          style: GoogleFonts.poppins(
+                            color: Colors.grey.shade700,
+                            fontSize: 13,
+                          ),
+                        ),
+                        Gap(20),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 15,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: provider.bColor,
+                            border: Border.all(
+                              color: provider.color,
+                              width: 1.5,
+                            ),
+                            borderRadius: BorderRadius.circular(50),
+                          ),
                           child: Text(
-                            "mg/dl",
+                            provider.rating.toString(),
                             style: GoogleFonts.poppins(
-                              color: Colors.grey.shade600,
+                              color: provider.color,
                               fontSize: 14,
-                              fontWeight: FontWeight.w500,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          height: 100,
+                          width: double.infinity,
+                          child: CustomPaint(painter: WavePainter()),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Gap(35),
+                  CustomBotton(
+                    onTap: () {
+                      provider.connectToESP32(context);
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (c) => LoadingScreen()),
+                      );
+                    },
+                    text: "Measure Again",
+                    width: double.infinity,
+                  ),
+                  Gap(35),
+                  Text(
+                    "Glucose Trends",
+                    style: GoogleFonts.poppins(
+                      color: AppColors.text,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  Gap(10),
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey, width: 1),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "7-Day Overview",
+                          style: GoogleFonts.poppins(
+                            color: AppColors.text,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        Gap(10),
+                        SizedBox(
+                          height: 200,
+                          child: LineChart(
+                            LineChartData(
+                              borderData: FlBorderData(show: false),
+                              lineBarsData: [
+                                LineChartBarData(
+                                  spots: const [
+                                    FlSpot(0, 130),
+                                    FlSpot(1, 120),
+                                    FlSpot(2, 125),
+                                    FlSpot(3, 140),
+                                    FlSpot(4, 115),
+                                    FlSpot(5, 125),
+                                    FlSpot(6, 120),
+                                  ],
+                                  isCurved: true,
+                                  color: AppColors.primary,
+                                  barWidth: 3,
+                                  isStrokeCapRound: true,
+                                  dotData: FlDotData(show: true),
+                                ),
+                              ],
                             ),
                           ),
                         ),
                       ],
                     ),
-                    Text(
-                      formattedDateTime,
-                      style: GoogleFonts.poppins(
-                        color: Colors.grey.shade700,
-                        fontSize: 13,
-                      ),
-                    ),
-                    Gap(20),
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 15,
-                        vertical: 6,
-                      ),
-                      decoration: BoxDecoration(
-                        color: bColor,
-                        border: Border.all(color: color, width: 1.5),
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                      child: Text(
-                        rating.toString(),
-                        style: GoogleFonts.poppins(
-                          color: color,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      height: 100,
-                      width: double.infinity,
-                      child: CustomPaint(painter: WavePainter()),
-                    ),
-                  ],
-                ),
+                  ),
+                  Gap(25),
+                ],
               ),
-              Gap(35),
-              CustomBotton(
-                onTap: () {
-                  Navigator.pop(context);
-                  widget.function;
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (c) => LoadingScreen()),
-                  );
-                },
-                text: "Measure Again",
-                width: double.infinity,
-              ),
-              Gap(35),
-              Text(
-                "Glucose Trends",
-                style: GoogleFonts.poppins(
-                  color: AppColors.text,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              Gap(10),
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey, width: 1),
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "7-Day Overview",
-                      style: GoogleFonts.poppins(
-                        color: AppColors.text,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    Gap(10),
-                    SizedBox(
-                      height: 200,
-                      child: LineChart(
-                        LineChartData(
-                          borderData: FlBorderData(show: false),
-                          lineBarsData: [
-                            LineChartBarData(
-                              spots: const [
-                                FlSpot(0, 130),
-                                FlSpot(1, 120),
-                                FlSpot(2, 125),
-                                FlSpot(3, 140),
-                                FlSpot(4, 115),
-                                FlSpot(5, 125),
-                                FlSpot(6, 120),
-                              ],
-                              isCurved: true,
-                              color: AppColors.primary,
-                              barWidth: 3,
-                              isStrokeCapRound: true,
-                              dotData: FlDotData(show: true),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Gap(25),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

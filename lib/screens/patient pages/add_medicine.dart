@@ -691,9 +691,9 @@ class _AddMedicineState extends State<AddMedicine> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              medicine.name,
+                              medicine.name.toUpperCase(),
                               style: GoogleFonts.poppins(
-                                fontSize: 22,
+                                fontSize: 25,
                                 letterSpacing: 3,
                                 fontWeight: FontWeight.w600,
                                 color: AppColors.primary,

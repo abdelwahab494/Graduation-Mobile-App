@@ -5,9 +5,15 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:grad_project/core/colors.dart';
 
 class CustomReport extends StatelessWidget {
-  const CustomReport({super.key, required this.title, required this.date, required this.color});
+  const CustomReport({
+    super.key,
+    required this.title,
+    required this.date,
+    required this.color,
+    required this.picColor,
+  });
   final String title, date;
-  final Color color;
+  final Color color, picColor;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +27,7 @@ class CustomReport extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 10),
         child: Row(
           children: [
-            SvgPicture.asset("assets/icons/gen_report.svg"),
+            SvgPicture.asset("assets/icons/gen_report.svg", color: picColor),
             Gap(15),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,

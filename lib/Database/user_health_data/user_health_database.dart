@@ -63,7 +63,50 @@ class UserHealthDatabase {
     return null; // Return null if no data found
   }
 
-  // Read - Stream
+  // Read - Stream - Ascending
+  // Stream<List<UserHealthData>> get stream {
+  //   final bool isPartner = AuthService().getCurrentItemBool("isPartner");
+
+  //   if (!isPartner) {
+  //     final userId = Supabase.instance.client.auth.currentUser?.id;
+  //     if (userId == null) throw Exception('No user logged in');
+  //     return Supabase.instance.client
+  //         .from("user_health_data")
+  //         .stream(primaryKey: ["id"])
+  //         .eq('userid', userId)
+  //         .map((data) {
+  //           return data
+  //               .map((dataMap) => UserHealthData.fromMap(dataMap))
+  //               .toList();
+  //         });
+  //   } else {
+  //     final partnerId = AuthService().getCurrentId();
+  //     if (partnerId == null) throw Exception('No user logged in');
+
+  //     return Supabase.instance.client
+  //         .from('partners')
+  //         .stream(primaryKey: ['partner_id'])
+  //         .eq('partner_id', partnerId)
+  //         .asyncMap((partnerData) async {
+  //           if (partnerData.isEmpty) {
+  //             throw Exception('No patient ID found for partner');
+  //           }
+
+  //           final patientId = partnerData.first['patient_id'];
+
+  //           final healthData = await Supabase.instance.client
+  //               .from('user_health_data')
+  //               .select()
+  //               .eq('userid', patientId);
+
+  //           return healthData
+  //               .map((dataMap) => UserHealthData.fromMap(dataMap))
+  //               .toList();
+  //         });
+  //   }
+  // }
+
+  // Read - Stream - Descending
   Stream<List<UserHealthData>> get stream {
     final bool isPartner = AuthService().getCurrentItemBool("isPartner");
 
@@ -74,6 +117,7 @@ class UserHealthDatabase {
           .from("user_health_data")
           .stream(primaryKey: ["id"])
           .eq('userid', userId)
+          .order('created_at', ascending: false)
           .map((data) {
             return data
                 .map((dataMap) => UserHealthData.fromMap(dataMap))
@@ -97,7 +141,8 @@ class UserHealthDatabase {
             final healthData = await Supabase.instance.client
                 .from('user_health_data')
                 .select()
-                .eq('userid', patientId);
+                .eq('userid', patientId)
+                .order('created_at', ascending: false);
 
             return healthData
                 .map((dataMap) => UserHealthData.fromMap(dataMap))

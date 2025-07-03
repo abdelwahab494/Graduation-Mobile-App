@@ -1,82 +1,3 @@
-// import 'package:gap/gap.dart';
-// import 'package:flutter_svg/svg.dart';
-// import 'package:flutter/material.dart';
-// import 'package:grad_project/core/colors.dart';
-// import 'package:google_fonts/google_fonts.dart';
-// import 'package:grad_project/components/chat_botton.dart';
-// import 'package:grad_project/components/custom_report.dart';
-
-// class Condition extends StatelessWidget {
-//   const Condition({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: AppColors.backGround,
-//       body: Padding(
-//         padding: const EdgeInsets.symmetric(horizontal: 30),
-//         child: Column(
-//           children: [
-//             Gap(60),
-//             Column(
-//               children: [
-//                 SvgPicture.asset("assets/images/top.svg"),
-//                 Gap(20),
-//                 Row(
-//                   mainAxisAlignment: MainAxisAlignment.center,
-//                   children: [
-//                     SvgPicture.asset("assets/images/bottomleft.svg"),
-//                     Gap(20),
-//                     SvgPicture.asset("assets/images/bottomright.svg"),
-//                   ],
-//                 ),
-//                 Gap(40),
-//               ],
-//             ),
-//             Row(
-//               children: [
-//                 Text(
-//                   "Latest reports",
-//                   style: GoogleFonts.poppins(
-//                     fontSize: 16,
-//                     fontWeight: FontWeight.w600,
-//                   ),
-//                   textAlign: TextAlign.left,
-//                 ),
-//                 Spacer(),
-//                 Text(
-//                   "See all",
-//                   style: GoogleFonts.inter(
-//                     fontWeight: FontWeight.w600,
-//                     fontSize: 14,
-//                     color: AppColors.primary,
-//                   ),
-//                 ),
-//               ],
-//             ),
-//             Expanded(
-//               child: ListView(
-//                 children: [
-//                   CustomReport(title: "General Report 1", date: "Apr 9, 2002"),
-//                   Gap(10),
-//                   CustomReport(title: "General Report 2", date: "Feb 18, 2019"),
-//                   Gap(10),
-//                   CustomReport(title: "General Report 3", date: "Aug 6, 2023"),
-//                   Gap(10),
-//                   CustomReport(title: "General Report 4", date: "Aug 6, 2023"),
-//                   Gap(10),
-//                   CustomReport(title: "General Report 5", date: "Aug 6, 2023"),
-//                 ],
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//       floatingActionButton: ChatBotton(),
-//     );
-//   }
-// }
-
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -86,6 +7,7 @@ import 'package:grad_project/components/start_quize.dart';
 import 'package:grad_project/core/colors.dart';
 import 'package:grad_project/database/user_health_data/user_health_data.dart';
 import 'package:grad_project/database/user_health_data/user_health_database.dart';
+import 'package:grad_project/screens/user%20info/all_diabetes_history.dart';
 import 'package:grad_project/screens/user%20info/collect_info.dart';
 import 'package:grad_project/screens/user%20info/diabetes_detailes.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -218,7 +140,7 @@ class _ConditionState extends State<Condition> {
                                 crossAxisCount: 3,
                                 mainAxisSpacing: 10,
                                 crossAxisSpacing: 10,
-                                childAspectRatio: 1,
+                                childAspectRatio: 0.95,
                               ),
                           itemCount: 12,
                           itemBuilder: (BuildContext context, int index) {
@@ -384,28 +306,37 @@ class _ConditionState extends State<Condition> {
                         ),
                       ),
                       Gap(30),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            !isPartner
-                                ? "Patient History"
-                                : "Your Patient's History",
-                            style: GoogleFonts.poppins(
-                              color: AppColors.text,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w700,
+                      GestureDetector(
+                        onTap:
+                            () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (c) => AllDiabetesHistory(),
+                              ),
                             ),
-                          ),
-                          Text(
-                            "See all",
-                            style: GoogleFonts.inter(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14,
-                              color: AppColors.primary,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              !isPartner
+                                  ? "Patient Diabetes History"
+                                  : "Your Patient's Diabetes History",
+                              style: GoogleFonts.poppins(
+                                color: AppColors.text,
+                                fontSize: !isPartner ? 18 : 15,
+                                fontWeight: FontWeight.w700,
+                              ),
                             ),
-                          ),
-                        ],
+                            Text(
+                              "See all",
+                              style: GoogleFonts.inter(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                                color: AppColors.primary,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                       StreamBuilder<List<UserHealthData>>(
                         key: _streamKey,
@@ -427,7 +358,7 @@ class _ConditionState extends State<Condition> {
                               padding: const EdgeInsets.symmetric(vertical: 30),
                               child: Center(
                                 child: Text(
-                                  'Something went wrong!\n please check your connection.',
+                                  'Something went wrong!\n Please check your connection.',
                                   style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
@@ -494,6 +425,10 @@ class _ConditionState extends State<Condition> {
                                               : "Diabetes",
                                       date: report.createdAt.toString(),
                                       color:
+                                          report.predictionStatus == 0
+                                              ? Colors.green.shade600
+                                              : Colors.red.shade600,
+                                      picColor:
                                           report.predictionStatus == 0
                                               ? Colors.green.shade600
                                               : Colors.red.shade600,

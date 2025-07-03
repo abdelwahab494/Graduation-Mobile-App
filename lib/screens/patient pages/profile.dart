@@ -6,6 +6,7 @@ import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grad_project/components/custom_card.dart';
 import 'package:grad_project/components/custom_information.dart';
+import 'package:grad_project/noti_service.dart';
 import 'package:grad_project/providers/collect_info_provider.dart';
 import 'package:grad_project/screens/issues/issues.dart';
 import 'package:grad_project/core/colors.dart';
@@ -141,6 +142,19 @@ class _ProfileState extends State<Profile> {
                             ),
                           )
                           : SizedBox.shrink(),
+                      Gap(5),
+                      GestureDetector(
+                        onTap: () {
+                          NotiService().showNotification(
+                            title: "3bwhab",
+                            body: "Hello 3obad",
+                          );
+                        },
+                        child: CustomCard(
+                          title: "Send Notification",
+                          logo: CupertinoIcons.question_diamond,
+                        ),
+                      ),
                       Gap(5),
                       Card(
                         color: AppColors.backGround,

@@ -78,12 +78,12 @@ class _DiabetesDetailesState extends State<DiabetesDetailes> {
                         widget.report.predictionStatus == 0
                             ? Colors.green.shade600
                             : Colors.red.shade600,
-                    fontSize: 25,
+                    fontSize: 30,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
               ),
-              Gap(20),
+              Gap(15),
               Skeletonizer(
                 enabled: isLoading,
                 child: GridView.builder(
@@ -210,7 +210,7 @@ class _DiabetesDetailesState extends State<DiabetesDetailes> {
                               child: Icon(
                                 icon,
                                 color: AppColors.primary,
-                                size: 18,
+                                size: 25,
                               ),
                             ),
                           ),
