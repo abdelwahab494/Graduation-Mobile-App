@@ -378,14 +378,16 @@ class OnlyEmailTextField extends StatelessWidget {
       cursorColor: Colors.black,
       controller: controller,
       validator: (value) {
-        if (value == null || value.isEmpty) {
-          return "Please fill this field to proceed.";
-        }
-        if (!value.endsWith("@gmail.com")) {
-          return "Invalid Email format.";
-        }
-        if (value.contains(" ")) {
-          return "Can't contain spaces.";
+        if (!showCopyButton) {
+          if (value == null || value.isEmpty) {
+            return "Please fill this field to proceed.";
+          }
+          if (!value.endsWith("@gmail.com")) {
+            return "Invalid Email format.";
+          }
+          if (value.contains(" ")) {
+            return "Can't contain spaces.";
+          }
         }
         return null;
       },

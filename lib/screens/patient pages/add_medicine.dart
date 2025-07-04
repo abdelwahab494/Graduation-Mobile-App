@@ -10,6 +10,7 @@ import 'package:grad_project/components/custom_botton.dart';
 import 'package:grad_project/components/customtextfield.dart';
 import 'package:grad_project/database/medicine/medicine.dart';
 import 'package:grad_project/database/medicine/medicine_database.dart';
+import 'package:grad_project/noti_service.dart';
 import 'package:grad_project/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -34,6 +35,15 @@ class _AddMedicineState extends State<AddMedicine> {
   Medicine? editingMedicine;
   final _streamKey = GlobalKey();
   String error = "";
+
+  @override
+  void dispose() {
+    _streamKey.currentState?.dispose();
+    scrollController.dispose();
+    nameController.dispose();
+    dosageController.dispose();
+    super.dispose();
+  }
 
   String formatTime(TimeOfDay time) {
     final now = DateTime.now();
@@ -564,20 +574,14 @@ class _AddMedicineState extends State<AddMedicine> {
                           final db = MedicineDatabase();
                           if (editingMedicine != null) {
                             await db.updateMedicine(editingMedicine!, medicine);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Medicine updated successfully'),
-                              ),
-                            );
+                            // Provider.of<NotificationProvider>(
+                            //   context,
+                            //   listen: false,
+                            // ).scheduleDailyMedicineNotifications(medicine);
                           } else {
                             await db.createMedicine(medicine);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Medicine added successfully'),
-                              ),
-                            );
                           }
-                          Navigator.pop(context);
+                          // Clear fields and pop the modal
                           setState(() {
                             editingMedicine = null;
                             nameController.clear();
@@ -588,6 +592,7 @@ class _AddMedicineState extends State<AddMedicine> {
                             endDate = null;
                             mealTiming = null;
                           });
+                          Navigator.pop(context);
                         },
                       ),
                     ],
@@ -666,6 +671,9 @@ class _AddMedicineState extends State<AddMedicine> {
             );
           }
           final medicines = snapshot.data!;
+          for (var medicine in medicines) {
+            NotiService().scheduleNotification(medicine);
+          }
           return Scaffold(
             backgroundColor: AppColors.backGround,
             body: ListView.builder(
@@ -698,6 +706,8 @@ class _AddMedicineState extends State<AddMedicine> {
                                 fontWeight: FontWeight.w600,
                                 color: AppColors.primary,
                               ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
@@ -720,17 +730,24 @@ class _AddMedicineState extends State<AddMedicine> {
                                   ),
                                   onPressed: () async {
                                     final db = MedicineDatabase();
+                                    await NotiService()
+                                        .cancelMedicineNotifications(medicine);
                                     await db.deleteMedicine(medicine);
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                          'Medicine deleted successfully',
+                                    if (context.mounted) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            'Medicine deleted successfully',
+                                          ),
+                                          backgroundColor: Colors.green,
                                         ),
-                                      ),
-                                    );
-                                    setState(() {
-                                      _streamKey.currentState?.dispose();
-                                    });
+                                      );
+                                    }
+                                    // setState(() {
+                                    //   _streamKey.currentState?.dispose();
+                                    // });
                                   },
                                 ),
                               ],

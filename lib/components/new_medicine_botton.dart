@@ -18,7 +18,7 @@ class NewMedicineBotton extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
       ),
       child: InkWell(
-        onTap: () {
+        onTap: () async {
           showBottomSheet();
         },
         child: Padding(

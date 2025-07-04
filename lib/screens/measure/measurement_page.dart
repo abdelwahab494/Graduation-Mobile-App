@@ -130,9 +130,9 @@ class _MeasurementPageState extends State<MeasurementPage> {
                   Gap(35),
                   CustomBotton(
                     onTap: () {
-                      provider.connectToESP32(context);
-
-                      Navigator.push(
+                      // provider.connectToESP32(context);
+                      provider.sendMeasureCommand();
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (c) => LoadingScreen()),
                       );

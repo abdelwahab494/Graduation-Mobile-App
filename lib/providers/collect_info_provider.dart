@@ -27,6 +27,7 @@ class CollectInfoProvider extends ChangeNotifier {
   int _heartAttack = 0;
   String _result = '';
   String _feedbackResult = '';
+  UserHealthData? _userHealthData;
 
   ////// getters //////
   int get age => _age;
@@ -49,6 +50,7 @@ class CollectInfoProvider extends ChangeNotifier {
   int get heartAttack => _heartAttack;
   String get result => _result;
   String get feedbackResult => _feedbackResult;
+  UserHealthData? get userHealthData => _userHealthData;
 
   ////// setters //////
   set age(int value) {
@@ -123,6 +125,11 @@ class CollectInfoProvider extends ChangeNotifier {
 
   set heartAttack(int value) {
     _heartAttack = value;
+    notifyListeners();
+  }
+
+  set userHealthData(UserHealthData? value) {
+    _userHealthData = value;
     notifyListeners();
   }
 

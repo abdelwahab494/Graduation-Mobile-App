@@ -90,6 +90,12 @@ class _ConditionState extends State<Condition> {
   }
 
   @override
+  void dispose() {
+    _streamKey.currentState?.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final db = UserHealthDatabase();
     return Scaffold(

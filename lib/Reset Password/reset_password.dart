@@ -191,6 +191,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                   controller: resetTokenC,
                   hint: "Reset Token",
                   icon: Icons.key_outlined,
+                  showPastButton: true,
                 ),
                 Gap(15),
                 OnlyEmailTextField(

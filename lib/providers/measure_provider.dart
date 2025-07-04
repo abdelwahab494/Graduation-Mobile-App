@@ -188,13 +188,13 @@ class MeasureProvider extends ChangeNotifier {
     }
   }
 
-  // void sendMeasureCommand() {
-  //   if (connection != null && isConnected) {
-  //     connection!.output.add(Uint8List.fromList("MEASURE\n".codeUnits));
-  //     connection!.output.allSent;
-  //     print('✅ Sent: MEASURE');
-  //   }
-  // }
+  void sendMeasureCommand() {
+    if (connection != null && isConnected) {
+      connection!.output.add(Uint8List.fromList("MEASURE\n".codeUnits));
+      connection!.output.allSent;
+      print('✅ Sent: MEASURE');
+    }
+  }
 
   void updateRatingAndColors() {
     if (_glucose <= 54) {

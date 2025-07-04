@@ -6,7 +6,6 @@ import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grad_project/components/custom_card.dart';
 import 'package:grad_project/components/custom_information.dart';
-import 'package:grad_project/noti_service.dart';
 import 'package:grad_project/providers/collect_info_provider.dart';
 import 'package:grad_project/screens/issues/issues.dart';
 import 'package:grad_project/core/colors.dart';
@@ -86,29 +85,31 @@ class _ProfileState extends State<Profile> {
                         ),
                         child: Consumer<CollectInfoProvider>(
                           builder: (context, provider, child) {
-                            return Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                CustomInformation(
-                                  logo: "assets/icons/Heartbeat.svg",
-                                  title: "Heart rate",
-                                  measure: "215bmp",
-                                ),
-                                CustomInformation(
-                                  logo: "assets/icons/Fire.svg",
-                                  title: "Calories",
-                                  measure: "756cal",
-                                ),
-                                CustomInformation(
-                                  logo: "assets/icons/weight.svg",
-                                  title: "Weight",
-                                  measure:
-                                      provider.weight == 0
-                                          ? "Unknown"
-                                          : "${provider.weight}kg",
-                                ),
-                              ],
-                            );
+                            return provider.userHealthData != null
+                                ? Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    CustomInformation(
+                                      logo: "assets/icons/Heartbeat.svg",
+                                      title: "Heart rate",
+                                      measure: "215bmp",
+                                    ),
+                                    CustomInformation(
+                                      logo: "assets/icons/Fire.svg",
+                                      title: "Calories",
+                                      measure: "756cal",
+                                    ),
+                                    CustomInformation(
+                                      logo: "assets/icons/weight.svg",
+                                      title: "BMI",
+                                      measure:
+                                          provider.userHealthData!.bmi
+                                              .toString(),
+                                    ),
+                                  ],
+                                )
+                                : SizedBox.shrink();
                           },
                         ),
                       )
@@ -142,19 +143,6 @@ class _ProfileState extends State<Profile> {
                             ),
                           )
                           : SizedBox.shrink(),
-                      Gap(5),
-                      GestureDetector(
-                        onTap: () {
-                          NotiService().showNotification(
-                            title: "3bwhab",
-                            body: "Hello 3obad",
-                          );
-                        },
-                        child: CustomCard(
-                          title: "Send Notification",
-                          logo: CupertinoIcons.question_diamond,
-                        ),
-                      ),
                       Gap(5),
                       Card(
                         color: AppColors.backGround,
