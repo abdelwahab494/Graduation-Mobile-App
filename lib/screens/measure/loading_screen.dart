@@ -50,7 +50,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
                   animationDuration: 17000,
                   animateFromLastPercent: true,
                   onAnimationEnd: () async {
-                    if (provider.isConnected) {
+                    if (!provider.isConnected) {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (c) => MeasurementPage()),

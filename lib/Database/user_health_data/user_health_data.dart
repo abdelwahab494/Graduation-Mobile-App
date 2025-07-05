@@ -15,6 +15,7 @@ class UserHealthData {
   num income;
   int predictionStatus;
   String? feedback;
+  bool agree;
   DateTime createdAt;
 
   UserHealthData({
@@ -34,6 +35,7 @@ class UserHealthData {
     required this.income,
     required this.predictionStatus,
     this.feedback,
+    required this.agree,
     required this.createdAt,
   });
 
@@ -56,7 +58,8 @@ class UserHealthData {
       income: map['income'] as num,
       predictionStatus: map['prediction_status'] as int,
       feedback: map['feedback'] as String?,
-      createdAt: DateTime.parse(map['created_at'] as String),
+      agree: map['agree'],
+      createdAt: DateTime.parse(map['created_at'] as String), 
     );
   }
 
@@ -78,6 +81,7 @@ class UserHealthData {
       'income': income,
       'prediction_status': predictionStatus,
       'feedback': feedback,
+      'agree' : agree,
       'created_at': createdAt.toIso8601String(),
     };
     if (id != null) {

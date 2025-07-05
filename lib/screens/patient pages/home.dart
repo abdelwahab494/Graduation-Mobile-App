@@ -1,6 +1,7 @@
 import 'package:gap/gap.dart';
 import 'package:flutter/material.dart';
 import 'package:grad_project/screens/measure/loading_screen.dart';
+import 'package:grad_project/screens/measure/measurement_page.dart';
 import 'package:provider/provider.dart';
 import 'package:grad_project/core/colors.dart';
 import 'package:google_fonts/google_fonts.dart';

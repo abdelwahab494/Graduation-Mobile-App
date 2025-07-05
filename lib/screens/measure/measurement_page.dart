@@ -131,7 +131,7 @@ class _MeasurementPageState extends State<MeasurementPage> {
                   CustomBotton(
                     onTap: () {
                       // provider.connectToESP32(context);
-                      provider.sendMeasureCommand();
+                      // provider.sendMeasureCommand();
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (c) => LoadingScreen()),
@@ -139,6 +139,61 @@ class _MeasurementPageState extends State<MeasurementPage> {
                     },
                     text: "Measure Again",
                     width: double.infinity,
+                  ),
+                  Gap(10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(15),
+                          width: 160,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: AppColors.primary,
+                              width: 2,
+                            ),
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          child: Text(
+                            "Cancel",
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.inter(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.primary,
+                            ),
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {},
+                        child: Container(
+                          padding: EdgeInsets.all(15),
+                          width: 160,
+                          decoration: BoxDecoration(
+                            color: AppColors.primary,
+                            borderRadius: BorderRadius.circular(50),
+                            border: Border.all(
+                              color: AppColors.primary,
+                              width: 2,
+                            ),
+                          ),
+                          child: Text(
+                            "Save",
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.inter(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   Gap(35),
                   Text(

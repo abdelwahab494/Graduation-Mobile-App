@@ -42,13 +42,7 @@ class _MeasureBottonState extends State<MeasureBotton>
         padding: EdgeInsets.symmetric(vertical: 15),
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              Color(0xFF36589B),
-              Color(0xFF5B8FE5),
-              Color(0xFF5B8FE5),
-              Color(0xFF5B8FE5),
-              Color(0xFF36589B),
-            ],
+            colors: [Color(0xFF5B8FE5), Color(0xFF5B8FE5), Color(0xFF5B8FE5)],
             begin: Alignment.centerRight,
             end: Alignment.centerLeft,
           ),

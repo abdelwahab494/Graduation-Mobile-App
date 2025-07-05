@@ -27,6 +27,7 @@ class UserHealthDatabase {
       predictionStatus: newData.predictionStatus,
       feedback: newData.feedback,
       createdAt: newData.createdAt,
+      agree: AuthService().getCurrentItemBool("agree"),
     );
     await database.insert(dataWithUserId.toMap());
   }

@@ -22,6 +22,7 @@ class PartnerSignup extends StatefulWidget {
 
 class _PartnerSignupState extends State<PartnerSignup> {
   bool isLoading = false;
+  bool agree = false;
 
   // form key
   final _formKey = GlobalKey<FormState>();
@@ -111,7 +112,7 @@ class _PartnerSignupState extends State<PartnerSignup> {
         email,
         password,
         username,
-        false,
+        agree,
         widget.isPartner,
         patientID,
       );
@@ -277,6 +278,44 @@ class _PartnerSignupState extends State<PartnerSignup> {
                                 hint: "Confirm password",
                                 icon: Icons.lock_outlined,
                               ),
+                              Gap(20),
+                              CheckboxListTile(
+                                checkColor: Colors.white,
+                                activeColor: AppColors.primary,
+                                contentPadding: EdgeInsets.zero,
+                                value: agree,
+                                onChanged: (newValue) {
+                                  setState(() {
+                                    agree = newValue!;
+                                  });
+                                },
+                                title: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "I agree to the ",
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColors.text,
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () => _showDialog(context),
+                                      child: Text(
+                                        "Privacy & Security Policy.",
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                          color: AppColors.primary,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                controlAffinity:
+                                    ListTileControlAffinity.leading,
+                              ),
                             ],
                           ),
                         ),
@@ -369,6 +408,231 @@ class _PartnerSignupState extends State<PartnerSignup> {
           ),
         ),
       ),
+    );
+  }
+
+  Future _showDialog(context) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          scrollable: true,
+          contentPadding: EdgeInsets.all(15),
+          backgroundColor: Colors.white,
+          title: Text(
+            "Privacy & Security Policy.",
+            style: GoogleFonts.poppins(
+              fontWeight: FontWeight.w500,
+              color: AppColors.primary,
+              fontSize: 25,
+            ),
+          ),
+          actions: [
+            Center(
+              child: GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: Container(
+                  padding: EdgeInsets.all(12),
+                  width: 150,
+                  decoration: BoxDecoration(
+                    color: AppColors.primary,
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  child: Text(
+                    "Back",
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.inter(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                height: 250,
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 247, 250, 255),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "We care about your patient's privacy. We kindly ask for your consent to:",
+                        style: GoogleFonts.poppins(
+                          color: AppColors.logo,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Gap(8),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "• ",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.text,
+                                ),
+                              ),
+                              Expanded(
+                                child: Text(
+                                  "Analyze your patient's health data and provide monthly reports.",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.text,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Gap(7),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "• ",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.text,
+                                ),
+                              ),
+                              Expanded(
+                                child: Text(
+                                  "Help you monitor your patient's progress.",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.text,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Gap(7),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "• ",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.text,
+                                ),
+                              ),
+                              Expanded(
+                                child: Text(
+                                  "Send smart notifications based on your patient's condition.",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.text,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Gap(10),
+                      Text(
+                        "We promise:",
+                        style: GoogleFonts.poppins(
+                          color: AppColors.logo,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Gap(8),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "• ",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.text,
+                                ),
+                              ),
+                              Expanded(
+                                child: Text(
+                                  "Your patient’s data will not be shared with third parties.",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.text,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Gap(7),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "• ",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.text,
+                                ),
+                              ),
+                              Expanded(
+                                child: Text(
+                                  "Data will be securely stored using encrypted databases",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.text,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Gap(5),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                child: Text(
+                  "!  With your consent, we may use your\n   patient's anonymized medical data to\n   improve our models, enhancing the\n   accuracy of diagnoses and\n   measurements.",
+                  style: GoogleFonts.poppins(
+                    color: Colors.red,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

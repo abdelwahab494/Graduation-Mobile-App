@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:grad_project/auth/auth_service.dart';
 import 'package:grad_project/database/user_health_data/user_health_data.dart';
 import 'package:grad_project/database/user_health_data/user_health_database.dart';
 import 'package:http/http.dart' as http;
@@ -205,6 +206,7 @@ class CollectInfoProvider extends ChangeNotifier {
         income: values[11],
         predictionStatus: int.tryParse(_result) ?? 0,
         feedback: null,
+        agree: AuthService().getCurrentItemBool("agree"),
         createdAt: DateTime.now(),
       );
 

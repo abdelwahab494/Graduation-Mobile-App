@@ -120,22 +120,20 @@ class NotiService {
       int hour;
       int minute;
       try {
-        // حاول نحلل التوقيت بصيغة 24 ساعة (HH:mm)
         final timeParts = time.split(':');
-        hour = int.parse(timeParts[0]); // الساعات
+        hour = int.parse(timeParts[0]);
         minute = int.parse(
           timeParts[1].split(' ')[0],
-        ); // الدقايق (نتخلص من AM/PM لو موجود)
+        );
       } catch (e) {
-        // لو فشل، جرب صيغة 12 ساعة مع AM/PM
         try {
-          final format = DateFormat('hh:mm a'); // صيغة 12 ساعة (مثل 11:00 AM)
+          final format = DateFormat('hh:mm a');
           final dateTime = format.parse(time);
           hour = dateTime.hour;
           minute = dateTime.minute;
         } catch (e) {
           print('Error parsing time: $time');
-          continue; // لو التوقيت غلط، اتجاهله وكمل
+          continue;
         }
       }
       final now = tz.TZDateTime.now(tz.local);
