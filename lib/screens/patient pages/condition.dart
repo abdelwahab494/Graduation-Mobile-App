@@ -10,6 +10,7 @@ import 'package:grad_project/database/user_health_data/user_health_database.dart
 import 'package:grad_project/screens/user%20info/all_diabetes_history.dart';
 import 'package:grad_project/screens/user%20info/collect_info.dart';
 import 'package:grad_project/screens/user%20info/diabetes_detailes.dart';
+import 'package:intl/intl.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class Condition extends StatefulWidget {
@@ -311,144 +312,136 @@ class _ConditionState extends State<Condition> {
                           },
                         ),
                       ),
-                      Gap(30),
-                      GestureDetector(
-                        onTap:
-                            () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (c) => AllDiabetesHistory(),
-                              ),
-                            ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              !isPartner
-                                  ? "Patient Diabetes History"
-                                  : "Your Patient's Diabetes History",
-                              style: GoogleFonts.poppins(
-                                color: AppColors.text,
-                                fontSize: !isPartner ? 18 : 15,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            Text(
-                              "See all",
-                              style: GoogleFonts.inter(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 14,
-                                color: AppColors.primary,
-                              ),
-                            ),
-                          ],
+                    ],
+                  ),
+              Gap(30),
+              GestureDetector(
+                onTap:
+                    () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (c) => AllDiabetesHistory()),
+                    ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      !isPartner
+                          ? "Patient Diabetes History"
+                          : "Your Patient's Diabetes History",
+                      style: GoogleFonts.poppins(
+                        color: AppColors.text,
+                        fontSize: !isPartner ? 18 : 15,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    Text(
+                      "See all",
+                      style: GoogleFonts.inter(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              StreamBuilder<List<UserHealthData>>(
+                key: _streamKey,
+                stream: db.stream,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 30),
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: AppColors.primary,
                         ),
                       ),
-                      StreamBuilder<List<UserHealthData>>(
-                        key: _streamKey,
-                        stream: db.stream,
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 30),
-                              child: Center(
-                                child: CircularProgressIndicator(
-                                  color: AppColors.primary,
-                                ),
-                              ),
-                            );
-                          }
-                          if (snapshot.hasError) {
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 30),
-                              child: Center(
-                                child: Text(
-                                  'Something went wrong!\n Please check your connection.',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: AppColors.text,
+                    );
+                  }
+                  if (snapshot.hasError) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 30),
+                      child: Center(
+                        child: Text(
+                          'Something went wrong!\n Please check your connection.',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.text,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    );
+                  }
+                  if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return GestureDetector(
+                      onTap:
+                          () => Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (c) => CollectInfo()),
+                          ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 30),
+                        child: Center(
+                          child: Text(
+                            !isPartner
+                                ? "No History yet.\nStart Assessment!"
+                                : 'Your patient has no History yet.\nStart Assessment!',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.text,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                  final reports = snapshot.data!;
+                  return Column(
+                    children: [
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: reports.length <= 4 ? reports.length : 5,
+                        itemBuilder: (BuildContext context, int index) {
+                          final report = reports[index];
+                          return GestureDetector(
+                            onTap:
+                                () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (c) => DiabetesDetailes(report: report),
                                   ),
-                                  textAlign: TextAlign.center,
                                 ),
-                              ),
-                            );
-                          }
-                          if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                            return GestureDetector(
-                              onTap:
-                                  () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (c) => CollectInfo(),
-                                    ),
-                                  ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 30,
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    !isPartner
-                                        ? "No History yet.\nStart Assessment!"
-                                        : 'Your patient has no History yet.\nStart Assessment!',
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: AppColors.text,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            );
-                          }
-                          final reports = snapshot.data!;
-                          return Column(
-                            children: [
-                              ListView.builder(
-                                shrinkWrap: true,
-                                physics: NeverScrollableScrollPhysics(),
-                                itemCount:
-                                    reports.length <= 4 ? reports.length : 5,
-                                itemBuilder: (BuildContext context, int index) {
-                                  final report = reports[index];
-                                  return GestureDetector(
-                                    onTap:
-                                        () => Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder:
-                                                (c) => DiabetesDetailes(
-                                                  report: report,
-                                                ),
-                                          ),
-                                        ),
-                                    child: CustomReport(
-                                      title:
-                                          report.predictionStatus == 0
-                                              ? "Not Diabetes"
-                                              : "Diabetes",
-                                      date: report.createdAt.toString(),
-                                      color:
-                                          report.predictionStatus == 0
-                                              ? Colors.green.shade600
-                                              : Colors.red.shade600,
-                                      picColor:
-                                          report.predictionStatus == 0
-                                              ? Colors.green.shade600
-                                              : Colors.red.shade600,
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
+                            child: CustomReport(
+                              title:
+                                  report.predictionStatus == 0
+                                      ? "Not Diabetes"
+                                      : "Diabetes",
+                              date: DateFormat(
+                                'MMM d, y, h:mm a',
+                              ).format(report.createdAt),
+                              color:
+                                  report.predictionStatus == 0
+                                      ? Colors.green.shade600
+                                      : Colors.red.shade600,
+                              picColor:
+                                  report.predictionStatus == 0
+                                      ? Colors.green.shade600
+                                      : Colors.red.shade600,
+                            ),
                           );
                         },
                       ),
-                      Gap(30),
                     ],
-                  ),
+                  );
+                },
+              ),
+              Gap(30),
             ],
           ),
         ),

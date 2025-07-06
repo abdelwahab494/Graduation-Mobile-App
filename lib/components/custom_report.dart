@@ -35,7 +35,7 @@ class CustomReport extends StatelessWidget {
                 Text(
                   title,
                   style: GoogleFonts.poppins(
-                    fontSize: 15,
+                    fontSize: 17,
                     fontWeight: FontWeight.w600,
                     color: color,
                   ),
@@ -43,9 +43,9 @@ class CustomReport extends StatelessWidget {
                 Text(
                   date,
                   style: GoogleFonts.poppins(
-                    fontSize: 11,
+                    fontSize: 14,
                     fontWeight: FontWeight.w400,
-                    color: Colors.grey,
+                    color: Colors.grey.shade600,
                   ),
                   textAlign: TextAlign.left,
                 ),

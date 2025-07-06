@@ -13,17 +13,27 @@ class Chatbot extends StatefulWidget {
 
   static Future<List<String>> getHealthTips({
     required String age,
-    required String gender,
+    required String highbp,
+    required String highcol,
+    required String heartAttack,
+    required String physActivity,
+    required String genHealth,
+    required String diffWalk,
+    required String bmi,
     required String medicalCondition,
-    required String lifestyle,
   }) async {
     final gemini = Gemini.instance;
-    final prompt = '''
+final prompt = '''
 Based on the following patient information, provide 5 specific and actionable health tips:
 Age: $age
-Gender: $gender
-Medical Condition: $medicalCondition
-Lifestyle: $lifestyle
+$highbp High Blood Pressure
+$highcol High Cholesterol
+$heartAttack Heart Attacks
+$physActivity Physical Activity
+General Health is $genHealth
+$diffWalk Defficulty at walking
+BMI: $bmi
+$medicalCondition
 
 Please provide exactly 5 tips, each starting with a number (1-5) and a brief explanation.
 Format each tip as: "1. [Tip text]"
@@ -247,16 +257,5 @@ class _ChatbotState extends State<Chatbot> {
     setState(() {
       messages = [tipsMessage, ...messages];
     });
-  }
-
-  Future<void> requestHealthTips() async {
-    final tips = await Chatbot.getHealthTips(
-      age: "35",
-      gender: "Male",
-      medicalCondition: "Type 2 Diabetes",
-      lifestyle: "Sedentary, works in office",
-    );
-
-    displayHealthTips(tips);
   }
 }

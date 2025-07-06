@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
@@ -16,6 +17,7 @@ class MeasureProvider extends ChangeNotifier {
   String _rating = "";
   Color _color = AppColors.primary;
   Color _bColor = AppColors.backGround;
+  IconData _icon = CupertinoIcons.question_circle_fill;
 
   BluetoothConnection? get connection => _connection;
   String get espName => _espName;
@@ -25,6 +27,7 @@ class MeasureProvider extends ChangeNotifier {
   String get rating => _rating;
   Color get color => _color;
   Color get bColor => _bColor;
+  IconData get icon => _icon;
 
   set voltage(num value) {
     _voltage = value;
@@ -206,22 +209,27 @@ class MeasureProvider extends ChangeNotifier {
   void updateRatingAndColors() {
     if (_glucose <= 54) {
       _rating = "Severe Low";
+      _icon = Icons.warning_rounded;
       _color = Colors.red.shade700;
       _bColor = Colors.red.shade100;
     } else if (_glucose < 70 && _glucose > 54) {
       _rating = "Low";
+      _icon = CupertinoIcons.arrow_down_circle_fill;
       _color = Colors.orange;
       _bColor = Colors.orange.shade100;
     } else if (_glucose >= 70 && _glucose <= 140) {
       _rating = "Normal";
+      _icon = CupertinoIcons.checkmark_alt_circle_fill;
       _color = Colors.green;
       _bColor = Colors.green.shade100;
     } else if (_glucose > 140 && _glucose < 220) {
       _rating = "High";
+      _icon = CupertinoIcons.arrow_up_circle_fill;
       _color = Colors.orange;
       _bColor = Colors.orange.shade100;
     } else {
       _rating = "Severe High";
+      _icon = Icons.warning_rounded;
       _color = Colors.red.shade700;
       _bColor = Colors.red.shade100;
     }

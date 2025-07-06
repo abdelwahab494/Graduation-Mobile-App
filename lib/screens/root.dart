@@ -33,7 +33,7 @@ class _BaseState extends State<Base> {
           ? Home(onNavigate: _onItemTapped)
           : PartnerHome(onNavigate: _onItemTapped),
       Condition(),
-      AddMedicine(),
+      AddMedicine(onNavigate: _onItemTapped),
       Profile(),
     ];
 

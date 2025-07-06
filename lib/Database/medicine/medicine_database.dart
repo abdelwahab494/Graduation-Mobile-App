@@ -8,18 +8,52 @@ class MedicineDatabase {
 
   // Create
   Future createMedicine(Medicine newMedicine) async {
-    final userId = Supabase.instance.client.auth.currentUser?.id;
-    if (userId == null) throw Exception('No user logged in');
-    final medicineWithUserId = Medicine(
-      userId: userId,
-      name: newMedicine.name,
-      dosage: newMedicine.dosage,
-      frequency: newMedicine.frequency,
-      doseTimes: newMedicine.doseTimes,
-      startDate: newMedicine.startDate,
-      endDate: newMedicine.endDate,
-      mealTiming: newMedicine.mealTiming,
-    );
+    bool isPartner = AuthService().getCurrentItemBool("isPartner");
+    Medicine? medicineWithUserId;
+
+    if (!isPartner) {
+      final userId = Supabase.instance.client.auth.currentUser?.id;
+      if (userId == null) throw Exception('No user logged in');
+      medicineWithUserId = Medicine(
+        userId: userId,
+        name: newMedicine.name,
+        dosage: newMedicine.dosage,
+        frequency: newMedicine.frequency,
+        doseTimes: newMedicine.doseTimes,
+        startDate: newMedicine.startDate,
+        endDate: newMedicine.endDate,
+        mealTiming: newMedicine.mealTiming,
+      );
+    } else {
+      final partnerId = AuthService().getCurrentId();
+      if (partnerId == null) throw Exception('No user logged in');
+
+      // Fetch patient_id from partners table
+      final response =
+          await Supabase.instance.client
+              .from('partners')
+              .select('patient_id')
+              .eq('partner_id', partnerId)
+              .single();
+
+      if (response.isEmpty) {
+        throw Exception('No patient ID found for partner');
+      }
+
+      final patientId = response['patient_id'];
+
+      medicineWithUserId = Medicine(
+        userId: patientId,
+        name: newMedicine.name,
+        dosage: newMedicine.dosage,
+        frequency: newMedicine.frequency,
+        doseTimes: newMedicine.doseTimes,
+        startDate: newMedicine.startDate,
+        endDate: newMedicine.endDate,
+        mealTiming: newMedicine.mealTiming,
+      );
+    }
+
     await database.insert(medicineWithUserId.toMap());
   }
 
@@ -70,8 +104,36 @@ class MedicineDatabase {
 
   // Update
   Future updateMedicine(Medicine oldMedicine, Medicine newMedicine) async {
-    final userId = Supabase.instance.client.auth.currentUser?.id;
-    if (userId == null) throw Exception('No user logged in');
+    bool isPartner = AuthService().getCurrentItemBool("isPartner");
+    String? userId;
+
+    if (!isPartner) {
+      userId = Supabase.instance.client.auth.currentUser?.id;
+      if (userId == null) throw Exception('No user logged in');
+    } else {
+      final partnerId = AuthService().getCurrentId();
+      if (partnerId == null) throw Exception('No user logged in');
+
+      // Fetch patient_id from partners table
+      final response =
+          await Supabase.instance.client
+              .from('partners')
+              .select('patient_id')
+              .eq('partner_id', partnerId)
+              .single();
+
+      if (response.isEmpty) {
+        throw Exception('No patient ID found for partner');
+      }
+
+      userId = response['patient_id'];
+    }
+
+    if (userId == null)
+      throw Exception(
+        'User ID is null',
+      ); // Extra check to ensure userId is not null
+
     await database
         .update(newMedicine.toMap())
         .eq("id", oldMedicine.id!)
@@ -80,8 +142,36 @@ class MedicineDatabase {
 
   // Delete
   Future deleteMedicine(Medicine medicine) async {
-    final userId = Supabase.instance.client.auth.currentUser?.id;
-    if (userId == null) throw Exception('No user logged in');
+    bool isPartner = AuthService().getCurrentItemBool("isPartner");
+    String? userId;
+
+    if (!isPartner) {
+      userId = Supabase.instance.client.auth.currentUser?.id;
+      if (userId == null) throw Exception('No user logged in');
+    } else {
+      final partnerId = AuthService().getCurrentId();
+      if (partnerId == null) throw Exception('No user logged in');
+
+      // Fetch patient_id from partners table
+      final response =
+          await Supabase.instance.client
+              .from('partners')
+              .select('patient_id')
+              .eq('partner_id', partnerId)
+              .single();
+
+      if (response.isEmpty) {
+        throw Exception('No patient ID found for partner');
+      }
+
+      userId = response['patient_id'];
+    }
+
+    if (userId == null)
+      throw Exception(
+        'User ID is null',
+      ); // Extra check to ensure userId is not null
+
     await database.delete().eq("id", medicine.id!).eq('user_id', userId);
   }
 }

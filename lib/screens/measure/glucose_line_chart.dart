@@ -113,8 +113,11 @@ class GlucoseLineChart extends StatelessWidget {
           ),
           minX: 0,
           maxX: 6,
-          minY: minGlucose * 0.9, // هامش صغير تحت القيمة الدنيا
-          maxY: maxGlucose * 1.1, // هامش صغير فوق القيمة القصوى
+          minY: 0,
+          maxY: (maxGlucose + 20).clamp(
+            0,
+            300,
+          ), 
           lineBarsData: [
             LineChartBarData(
               spots: spots,

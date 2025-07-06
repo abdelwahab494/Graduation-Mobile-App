@@ -16,7 +16,8 @@ import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AddMedicine extends StatefulWidget {
-  const AddMedicine({super.key});
+  const AddMedicine({super.key, required this.onNavigate});
+  final Function(int) onNavigate;
 
   @override
   State<AddMedicine> createState() => _AddMedicineState();
@@ -592,7 +593,18 @@ class _AddMedicineState extends State<AddMedicine> {
                             endDate = null;
                             mealTiming = null;
                           });
+                          await ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                editingMedicine != null
+                                    ? 'Medicine Added Successfully.'
+                                    : "Medicine Updated Successfully.",
+                              ),
+                              backgroundColor: Colors.green,
+                            ),
+                          );
                           Navigator.pop(context);
+                          widget.onNavigate(2);
                         },
                       ),
                     ],
@@ -733,21 +745,17 @@ class _AddMedicineState extends State<AddMedicine> {
                                     await NotiService()
                                         .cancelMedicineNotifications(medicine);
                                     await db.deleteMedicine(medicine);
-                                    if (context.mounted) {
-                                      ScaffoldMessenger.of(
-                                        context,
-                                      ).showSnackBar(
-                                        SnackBar(
-                                          content: Text(
-                                            'Medicine deleted successfully',
-                                          ),
-                                          backgroundColor: Colors.green,
+                                    await ScaffoldMessenger.of(
+                                      context,
+                                    ).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          'Medicine deleted successfully',
                                         ),
-                                      );
-                                    }
-                                    // setState(() {
-                                    //   _streamKey.currentState?.dispose();
-                                    // });
+                                        backgroundColor: Colors.green,
+                                      ),
+                                    );
+                                    widget.onNavigate(2);
                                   },
                                 ),
                               ],

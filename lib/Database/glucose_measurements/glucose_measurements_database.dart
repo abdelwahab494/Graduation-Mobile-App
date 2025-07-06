@@ -113,8 +113,130 @@ class GlucoseMeasurementsDatabase {
 
   // Delete
   Future deleteUserHealthData(GlucoseMeasurements data) async {
-    final userId = Supabase.instance.client.auth.currentUser?.id;
-    if (userId == null) throw Exception('No user logged in');
-    await database.delete().eq("id", data.id!).eq('userid', userId);
+    try {
+      final bool isPartner = AuthService().getCurrentItemBool("isPartner");
+      String? userId;
+
+      if (!isPartner) {
+        userId = Supabase.instance.client.auth.currentUser?.id;
+        if (userId == null) throw Exception('No user logged in');
+      } else {
+        final partnerId = AuthService().getCurrentId();
+        if (partnerId == null) throw Exception('No user logged in');
+
+        print('partnerId: $partnerId');
+
+        final response =
+            await Supabase.instance.client
+                .from('partners')
+                .select('patient_id')
+                .eq('partner_id', partnerId)
+                .single();
+
+        print('partners response: $response'); 
+
+        if (response.isEmpty) {
+          throw Exception('No patient ID found for partner');
+        }
+
+        userId = response['patient_id'] as String;
+      }
+
+      await database
+          .delete()
+          .eq('userid', userId)
+          .eq('created_at', data.created_at.toIso8601String());
+    } catch (e) {
+      throw Exception('Failed to delete health data: $e');
+    }
+  }
+
+  // Get number of readings for the last 7 days
+  Future<int> getReadingsCountLast7Days() async {
+    try {
+      final bool isPartner = AuthService().getCurrentItemBool("isPartner");
+      String? userId;
+
+      print('isPartner: $isPartner');
+
+      if (!isPartner) {
+        userId = Supabase.instance.client.auth.currentUser?.id;
+        if (userId == null) throw Exception('No user logged in');
+      } else {
+        final partnerId = AuthService().getCurrentId();
+        if (partnerId == null) throw Exception('No user logged in');
+
+        print('partnerId: $partnerId');
+
+        final response =
+            await Supabase.instance.client
+                .from('partners')
+                .select('patient_id')
+                .eq('partner_id', partnerId)
+                .single();
+
+        print('partners response: $response');
+
+        if (response.isEmpty) {
+          throw Exception('No patient ID found for partner');
+        }
+
+        userId = response['patient_id'] as String;
+      }
+
+      final startDate = DateTime.now().subtract(Duration(days: 7));
+      final response =
+          await database
+              .select()
+              .eq('userid', userId)
+              .gte('created_at', startDate.toIso8601String())
+              .count();
+
+      return response.count;
+    } catch (e) {
+      throw Exception('Failed to fetch readings count: $e');
+    }
+  }
+
+  // Get average glucose for the last 7 days
+  Future<double> getAverageGlucoseLast7Days() async {
+    final bool isPartner = AuthService().getCurrentItemBool("isPartner");
+    String? userId;
+
+    if (!isPartner) {
+      userId = Supabase.instance.client.auth.currentUser?.id;
+      if (userId == null) throw Exception('No user logged in');
+    } else {
+      final partnerId = AuthService().getCurrentId();
+      if (partnerId == null) throw Exception('No user logged in');
+
+      final response =
+          await Supabase.instance.client
+              .from('partners')
+              .select('patient_id')
+              .eq('partner_id', partnerId)
+              .single();
+
+      if (response.isEmpty) {
+        throw Exception('No patient ID found for partner');
+      }
+
+      userId = response['patient_id'] as String;
+    }
+
+    final startDate = DateTime.now().subtract(Duration(days: 7));
+    final response = await database
+        .select('glucose')
+        .eq('userid', userId)
+        .gte('created_at', startDate.toIso8601String());
+
+    if (response.isEmpty) {
+      return 0.0;
+    }
+
+    final total = response
+        .map((row) => (row['glucose'] as num).toDouble())
+        .fold(0.0, (sum, value) => sum + value);
+    return total / response.length;
   }
 }

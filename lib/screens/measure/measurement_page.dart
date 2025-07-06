@@ -44,7 +44,7 @@ class _MeasurementPageState extends State<MeasurementPage> {
           backgroundColor: AppColors.backGround,
           appBar: CustomAppBar(title: ""),
           body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: SingleChildScrollView(
               scrollDirection: Axis.vertical,
               child: Column(
@@ -115,24 +115,31 @@ class _MeasurementPageState extends State<MeasurementPage> {
                             ),
                             borderRadius: BorderRadius.circular(50),
                           ),
-                          child: Text(
-                            provider.rating.toString(),
-                            style: GoogleFonts.poppins(
-                              color: provider.color,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                            ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                provider.icon,
+                                color: provider.color,
+                                size: 18,
+                              ),
+                              Gap(10),
+                              Text(
+                                provider.rating.toString(),
+                                style: GoogleFonts.poppins(
+                                  color: provider.color,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        Container(
-                          height: 100,
-                          width: double.infinity,
-                          child: CustomPaint(painter: WavePainter()),
-                        ),
+                        Gap(10),
                       ],
                     ),
                   ),
-                  Gap(35),
+                  Gap(20),
                   CustomBotton(
                     onTap: () {
                       // provider.connectToESP32(context);
@@ -225,16 +232,7 @@ class _MeasurementPageState extends State<MeasurementPage> {
                       ),
                     ],
                   ),
-                  Gap(35),
-                  Text(
-                    "Glucose Trends",
-                    style: GoogleFonts.poppins(
-                      color: AppColors.text,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  Gap(10),
+                  Gap(30),
                   Container(
                     width: double.infinity,
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -245,13 +243,31 @@ class _MeasurementPageState extends State<MeasurementPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          "7-Day Overview",
-                          style: GoogleFonts.poppins(
-                            color: AppColors.text,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w700,
-                          ),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                color: Color(0xffe6eefb),
+                                borderRadius: BorderRadius.circular(500),
+                              ),
+                              child: Icon(
+                                Icons.trending_up_outlined,
+                                color: AppColors.primary,
+                                size: 22,
+                              ),
+                            ),
+                            Gap(15),
+                            Text(
+                              "Daily Trends",
+                              style: GoogleFonts.poppins(
+                                color: AppColors.text,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ],
                         ),
                         Gap(10),
                         Padding(
@@ -329,35 +345,35 @@ class _MeasurementPageState extends State<MeasurementPage> {
   }
 }
 
-class WavePainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint =
-        Paint()
-          ..color = Colors.blue
-          ..style = PaintingStyle.fill;
+// class WavePainter extends CustomPainter {
+//   @override
+//   void paint(Canvas canvas, Size size) {
+//     final paint =
+//         Paint()
+//           ..color = Colors.blue
+//           ..style = PaintingStyle.fill;
 
-    final path = Path();
-    path.moveTo(0, size.height * 0.5);
-    path.quadraticBezierTo(
-      size.width * 0.25,
-      size.height * 0.7,
-      size.width * 0.5,
-      size.height * 0.6,
-    ); // Higher curve
-    path.quadraticBezierTo(
-      size.width * 0.75,
-      size.height * 0.5,
-      size.width,
-      size.height * 0.6,
-    ); // Higher curve
-    path.lineTo(size.width, size.height);
-    path.lineTo(0, size.height);
-    path.close();
+//     final path = Path();
+//     path.moveTo(0, size.height * 0.5);
+//     path.quadraticBezierTo(
+//       size.width * 0.25,
+//       size.height * 0.7,
+//       size.width * 0.5,
+//       size.height * 0.6,
+//     ); // Higher curve
+//     path.quadraticBezierTo(
+//       size.width * 0.75,
+//       size.height * 0.5,
+//       size.width,
+//       size.height * 0.6,
+//     ); // Higher curve
+//     path.lineTo(size.width, size.height);
+//     path.lineTo(0, size.height);
+//     path.close();
 
-    canvas.drawPath(path, paint);
-  }
+//     canvas.drawPath(path, paint);
+//   }
 
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
-}
+//   @override
+//   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+// }
