@@ -1,11 +1,13 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grad_project/components/custom_app_bar.dart';
 import 'package:grad_project/components/custom_botton.dart';
 import 'package:grad_project/core/colors.dart';
+import 'package:grad_project/database/glucose_measurements/glucose_measurements.dart';
+import 'package:grad_project/database/glucose_measurements/glucose_measurements_database.dart';
 import 'package:grad_project/providers/measure_provider.dart';
+import 'package:grad_project/screens/measure/glucose_line_chart.dart';
 import 'package:grad_project/screens/measure/loading_screen.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +20,7 @@ class MeasurementPage extends StatefulWidget {
 }
 
 class _MeasurementPageState extends State<MeasurementPage> {
+  bool saved = false;
   @override
   void initState() {
     super.initState();
@@ -25,6 +28,7 @@ class _MeasurementPageState extends State<MeasurementPage> {
       context,
       listen: false,
     ).updateRatingAndColors();
+    saved = false;
   }
 
   @override
@@ -32,6 +36,7 @@ class _MeasurementPageState extends State<MeasurementPage> {
     DateTime now = DateTime.now();
     String formattedDateTime =
         DateFormat('EEEE,  hh:mm a').format(now).toString();
+    final width = MediaQuery.of(context).size.width;
 
     return Consumer<MeasureProvider>(
       builder: (context, provider, child) {
@@ -150,7 +155,7 @@ class _MeasurementPageState extends State<MeasurementPage> {
                         },
                         child: Container(
                           padding: EdgeInsets.all(15),
-                          width: 160,
+                          width: width * 0.4,
                           decoration: BoxDecoration(
                             border: Border.all(
                               color: AppColors.primary,
@@ -170,15 +175,40 @@ class _MeasurementPageState extends State<MeasurementPage> {
                         ),
                       ),
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () async {
+                          if (provider.glucose != 0) {
+                            await provider.saveMeasurementToDatabase();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                backgroundColor: Colors.green,
+                                content: Text(
+                                  "Reading Saved Successfully!",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            );
+                          } else {
+                            null;
+                          }
+                        },
                         child: Container(
                           padding: EdgeInsets.all(15),
-                          width: 160,
+                          width: width * 0.4,
                           decoration: BoxDecoration(
-                            color: AppColors.primary,
+                            color:
+                                provider.glucose == 0
+                                    ? Colors.grey
+                                    : AppColors.primary,
                             borderRadius: BorderRadius.circular(50),
                             border: Border.all(
-                              color: AppColors.primary,
+                              color:
+                                  provider.glucose == 0
+                                      ? Colors.grey
+                                      : AppColors.primary,
                               width: 2,
                             ),
                           ),
@@ -224,30 +254,65 @@ class _MeasurementPageState extends State<MeasurementPage> {
                           ),
                         ),
                         Gap(10),
-                        SizedBox(
-                          height: 200,
-                          child: LineChart(
-                            LineChartData(
-                              borderData: FlBorderData(show: false),
-                              lineBarsData: [
-                                LineChartBarData(
-                                  spots: const [
-                                    FlSpot(0, 130),
-                                    FlSpot(1, 120),
-                                    FlSpot(2, 125),
-                                    FlSpot(3, 140),
-                                    FlSpot(4, 115),
-                                    FlSpot(5, 125),
-                                    FlSpot(6, 120),
-                                  ],
-                                  isCurved: true,
-                                  color: AppColors.primary,
-                                  barWidth: 3,
-                                  isStrokeCapRound: true,
-                                  dotData: FlDotData(show: true),
-                                ),
-                              ],
-                            ),
+                        Padding(
+                          padding: const EdgeInsets.all(1),
+                          child: StreamBuilder<List<GlucoseMeasurements>>(
+                            stream: GlucoseMeasurementsDatabase().stream,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 20,
+                                    ),
+                                    child: CircularProgressIndicator(
+                                      color: AppColors.primary,
+                                    ),
+                                  ),
+                                );
+                              } else if (snapshot.hasError) {
+                                return Center(
+                                  child: Padding(
+                                    padding: EdgeInsetsGeometry.symmetric(
+                                      vertical: 20,
+                                    ),
+                                    child: Text(
+                                      'Something went wrong!\n Please check your connection.',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColors.text,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                );
+                              } else if (!snapshot.hasData ||
+                                  snapshot.data!.isEmpty) {
+                                return Center(
+                                  child: Padding(
+                                    padding: EdgeInsetsGeometry.symmetric(
+                                      vertical: 20,
+                                    ),
+                                    child: Text(
+                                      'No saved Readings yet.',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColors.text,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                );
+                              }
+
+                              final measurements = snapshot.data!;
+                              return GlucoseLineChart(
+                                measurements: measurements,
+                              );
+                            },
                           ),
                         ),
                       ],

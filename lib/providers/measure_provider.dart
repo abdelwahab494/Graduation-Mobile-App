@@ -1,7 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
+import 'package:grad_project/auth/auth_service.dart';
 import 'package:grad_project/core/colors.dart';
+import 'package:grad_project/database/glucose_measurements/glucose_measurements.dart';
+import 'package:grad_project/database/glucose_measurements/glucose_measurements_database.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class MeasureProvider extends ChangeNotifier {
@@ -84,7 +87,7 @@ class MeasureProvider extends ChangeNotifier {
           ),
         ),
       );
-      await Future.delayed(Duration(seconds: 5), () {
+      await Future.delayed(Duration(seconds: 4), () {
         Navigator.pop(context);
       });
       return;
@@ -96,22 +99,23 @@ class MeasureProvider extends ChangeNotifier {
     );
 
     if (espDevice.address.isEmpty) {
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   SnackBar(
-      //     backgroundColor: const Color.fromARGB(220, 255, 17, 0),
-      //     content: Text(
-      //       "Error: \nConnection Failed!\nPlease Make sure your Glucose Device is on.",
-      //       style: TextStyle(
-      //         color: Colors.white,
-      //         fontSize: 16,
-      //         fontWeight: FontWeight.w600,
-      //       ),
-      //     ),
-      //   ),
-      // );
-      // await Future.delayed(Duration(seconds: 5), () {
-      //   Navigator.pop(context);
-      // });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: const Color.fromARGB(220, 255, 17, 0),
+          content: Text(
+            "Error: \nConnection Failed!\nPlease Make sure your Glucose Device is on.",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          duration: Duration(seconds: 3),
+        ),
+      );
+      await Future.delayed(Duration(seconds: 4), () {
+        Navigator.pop(context);
+      });
       return;
     }
 
@@ -140,22 +144,23 @@ class MeasureProvider extends ChangeNotifier {
             _glucose = parsedGlucose;
             notifyListeners();
           } catch (e) {
-            // ScaffoldMessenger.of(context).showSnackBar(
-            //   SnackBar(
-            //     backgroundColor: const Color.fromARGB(220, 255, 17, 0),
-            //     content: Text(
-            //       "Error: \nInvalid Readings! \nPlease try again.",
-            //       style: TextStyle(
-            //         color: Colors.white,
-            //         fontSize: 16,
-            //         fontWeight: FontWeight.w600,
-            //       ),
-            //     ),
-            //   ),
-            // );
-            // await Future.delayed(Duration(seconds: 5), () {
-            //   Navigator.pop(context);
-            // });
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                backgroundColor: const Color.fromARGB(220, 255, 17, 0),
+                content: Text(
+                  "Error: \nInvalid Readings! \nPlease try again.",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                duration: Duration(seconds: 3),
+              ),
+            );
+            await Future.delayed(Duration(seconds: 4), () {
+              Navigator.pop(context);
+            });
             return;
           }
         }
@@ -168,22 +173,24 @@ class MeasureProvider extends ChangeNotifier {
         // }
       });
     } catch (e) {
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   SnackBar(
-      //     backgroundColor: const Color.fromARGB(220, 255, 17, 0),
-      //     content: Text(
-      //       "Error: \nConnection Failed!\nPlease Try Again.",
-      //       style: TextStyle(
-      //         color: Colors.white,
-      //         fontSize: 16,
-      //         fontWeight: FontWeight.w600,
-      //       ),
-      //     ),
-      //   ),
-      // );
-      // await Future.delayed(Duration(seconds: 5), () {
-      //   Navigator.pop(context);
-      // });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: const Color.fromARGB(220, 255, 17, 0),
+          content: Text(
+            "Error: \nConnection Failed!\nPlease Try Again.",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          duration: Duration(seconds: 3),
+          showCloseIcon: true,
+        ),
+      );
+      await Future.delayed(Duration(seconds: 4), () {
+        Navigator.pop(context);
+      });
       return;
     }
   }
@@ -218,5 +225,22 @@ class MeasureProvider extends ChangeNotifier {
       _color = Colors.red.shade700;
       _bColor = Colors.red.shade100;
     }
+  }
+
+  Future<void> saveMeasurementToDatabase() async {
+    final userId = AuthService().getCurrentId();
+    if (userId == null) throw Exception('No user logged in');
+
+    final measurement = GlucoseMeasurements(
+      userid: userId,
+      created_at: DateTime.now(),
+      glucose: _glucose.toDouble(),
+      voltage: _voltage.toDouble(),
+      agree: AuthService().getCurrentItemBool("agree"),
+      feedback: null,
+    );
+
+    final db = GlucoseMeasurementsDatabase();
+    await db.createUserHealthData(measurement);
   }
 }
