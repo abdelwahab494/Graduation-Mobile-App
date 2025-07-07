@@ -70,12 +70,12 @@ class _DiabetesDetailesState extends State<DiabetesDetailes> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Text(
-                  widget.report.predictionStatus == 0
-                      ? "Not Diabetes"
-                      : "Diabetes",
+                  widget.report.predictionStatus <= 25.0
+                      ? "Not Diabetes    ${widget.report.predictionStatus}%"
+                      : "Diabetes    ${widget.report.predictionStatus}%",
                   style: GoogleFonts.poppins(
                     color:
-                        widget.report.predictionStatus == 0
+                        widget.report.predictionStatus <= 25.0
                             ? Colors.green.shade600
                             : Colors.red.shade600,
                     fontSize: 30,
@@ -94,7 +94,7 @@ class _DiabetesDetailesState extends State<DiabetesDetailes> {
                     crossAxisCount: 2,
                     mainAxisSpacing: 10,
                     crossAxisSpacing: 10,
-                    childAspectRatio: 1.4,
+                    childAspectRatio: 1.3,
                   ),
                   itemCount: 12,
                   itemBuilder: (BuildContext context, int index) {

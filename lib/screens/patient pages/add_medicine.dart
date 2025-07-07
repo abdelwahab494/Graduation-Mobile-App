@@ -689,7 +689,7 @@ class _AddMedicineState extends State<AddMedicine> {
           return Scaffold(
             backgroundColor: AppColors.backGround,
             body: ListView.builder(
-              padding: EdgeInsets.all(16),
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 5),
               itemCount: medicines.length,
               itemBuilder: (context, index) {
                 final medicine = medicines[index];

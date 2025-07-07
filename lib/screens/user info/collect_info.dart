@@ -236,7 +236,7 @@ class _CollectInfoState extends State<CollectInfo> {
 
                         Navigator.pop(context);
 
-                        if (provider.result.toLowerCase().contains("error")) {
+                        if (provider.result <= -1) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
@@ -257,8 +257,9 @@ class _CollectInfoState extends State<CollectInfo> {
                           context,
                           MaterialPageRoute(
                             builder:
-                                (c) =>
-                                    DiabetesPrediction(result: provider.result),
+                                (c) => DiabetesPrediction(
+                                  result: provider.result,
+                                ),
                           ),
                         );
                       },

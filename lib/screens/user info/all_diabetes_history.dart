@@ -89,41 +89,45 @@ class _AllDiabetesHistoryState extends State<AllDiabetesHistory> {
               );
             }
             final reports = snapshot.data!;
-            return Column(
-              children: [
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: reports.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    final report = reports[index];
-                    return GestureDetector(
-                      onTap:
-                          () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (c) => DiabetesDetailes(report: report),
+            return SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Column(
+                children: [
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: reports.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final report = reports[index];
+                      return GestureDetector(
+                        onTap:
+                            () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (c) => DiabetesDetailes(report: report),
+                              ),
                             ),
-                          ),
-                      child: CustomReport(
-                        title:
-                            report.predictionStatus == 0
-                                ? "Not Diabetes"
-                                : "Diabetes",
-                        date: report.createdAt.toString(),
-                        color:
-                            report.predictionStatus == 0
-                                ? Colors.green.shade600
-                                : Colors.red.shade600,
-                        picColor:
-                            report.predictionStatus == 0
-                                ? Colors.green.shade600
-                                : Colors.red.shade600,
-                      ),
-                    );
-                  },
-                ),
-              ],
+                        child: CustomReport(
+                          title:
+                              report.predictionStatus <= 25.0
+                                  ? "Not Diabetes"
+                                  : "Diabetes",
+                          date: report.createdAt.toString(),
+                          color:
+                              report.predictionStatus <= 25.0
+                                  ? Colors.green.shade600
+                                  : Colors.red.shade600,
+                          picColor:
+                              report.predictionStatus <= 25.0
+                                  ? Colors.green.shade600
+                                  : Colors.red.shade600,
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
             );
           },
         ),

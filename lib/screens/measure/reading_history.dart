@@ -19,7 +19,6 @@ class ReadingHistory extends StatelessWidget {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-
     final db = GlucoseMeasurementsDatabase();
     return Scaffold(
       backgroundColor: AppColors.backGround,
@@ -550,16 +549,6 @@ class ReadingHistory extends StatelessWidget {
                                               duration: Duration(seconds: 2),
                                             ),
                                           );
-                                          // Future.delayed(
-                                          //   Duration(seconds: 3),
-                                          //   () => Navigator.pushReplacement(
-                                          //     context,
-                                          //     MaterialPageRoute(
-                                          //       builder:
-                                          //           (c) => ReadingHistory(),
-                                          //     ),
-                                          //   ),
-                                          // );
                                           Navigator.pushReplacement(
                                             context,
                                             MaterialPageRoute(

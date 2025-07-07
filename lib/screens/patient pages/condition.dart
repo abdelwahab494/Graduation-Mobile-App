@@ -135,7 +135,7 @@ class _ConditionState extends State<Condition> {
                           ),
                         ],
                       ),
-                      const Gap(10),
+                      const Gap(5),
                       Skeletonizer(
                         enabled: isLoading,
                         child: GridView.builder(
@@ -147,7 +147,7 @@ class _ConditionState extends State<Condition> {
                                 crossAxisCount: 3,
                                 mainAxisSpacing: 10,
                                 crossAxisSpacing: 10,
-                                childAspectRatio: 0.95,
+                                childAspectRatio: 0.88,
                               ),
                           itemCount: 12,
                           itemBuilder: (BuildContext context, int index) {
@@ -289,11 +289,13 @@ class _ConditionState extends State<Condition> {
                                       ),
                                     ),
                                   ),
-                                  Text(
-                                    title,
-                                    style: GoogleFonts.poppins(
-                                      color: Colors.grey,
-                                      fontSize: 12,
+                                  FittedBox(
+                                    child: Text(
+                                      title,
+                                      style: GoogleFonts.poppins(
+                                        color: Colors.grey,
+                                        fontSize: 12,
+                                      ),
                                     ),
                                   ),
                                   const Gap(5),
@@ -402,7 +404,9 @@ class _ConditionState extends State<Condition> {
                   final reports = snapshot.data!;
                   return Column(
                     children: [
+                      Gap(15),
                       ListView.builder(
+                        padding: EdgeInsets.zero,
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
                         itemCount: reports.length <= 4 ? reports.length : 5,
@@ -419,18 +423,18 @@ class _ConditionState extends State<Condition> {
                                 ),
                             child: CustomReport(
                               title:
-                                  report.predictionStatus == 0
+                                  report.predictionStatus <= 25.0
                                       ? "Not Diabetes"
                                       : "Diabetes",
                               date: DateFormat(
                                 'MMM d, y, h:mm a',
                               ).format(report.createdAt),
                               color:
-                                  report.predictionStatus == 0
+                                  report.predictionStatus <= 25.0
                                       ? Colors.green.shade600
                                       : Colors.red.shade600,
                               picColor:
-                                  report.predictionStatus == 0
+                                  report.predictionStatus <= 25.0
                                       ? Colors.green.shade600
                                       : Colors.red.shade600,
                             ),

@@ -11,7 +11,7 @@ import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
 
 class DiabetesPrediction extends StatelessWidget {
   const DiabetesPrediction({super.key, required this.result});
-  final result;
+  final int result;
 
   @override
   Widget build(BuildContext context) {
@@ -39,11 +39,11 @@ class DiabetesPrediction extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(
-                      result == "0"
+                      result <= 25.0
                           ? "No Diabetes\nDetected"
                           : "Diabetes \nDetected",
                       style: GoogleFonts.poppins(
-                        color: result == "0" ? AppColors.primary : Colors.red,
+                        color: result <= 25.0 ? Colors.green : Colors.red,
                         fontSize: 35,
                         fontWeight: FontWeight.bold,
                       ),
@@ -56,7 +56,7 @@ class DiabetesPrediction extends StatelessWidget {
                       progressStrokeWidth: 10,
                       backStrokeWidth: 10,
                       backColor: Colors.transparent,
-                      valueNotifier: ValueNotifier(86),
+                      valueNotifier: ValueNotifier(result.toDouble()),
                       animationDuration: 2,
                       fullProgressColor: AppColors.primary,
                       progressColors: [AppColors.primary],
@@ -111,7 +111,7 @@ class DiabetesPrediction extends StatelessWidget {
                 width: double.infinity,
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                 decoration: BoxDecoration(
-                  color: isLight ? Colors.grey.shade200 : Colors.grey.shade600,
+                  color: isLight ? Colors.grey.shade200 : Colors.grey.shade800,
                   borderRadius: BorderRadius.circular(5),
                 ),
                 child: Column(
@@ -167,9 +167,7 @@ class DiabetesPrediction extends StatelessWidget {
                           feedbackController.text,
                         );
 
-                        if (!collectInfoProvider.result.toLowerCase().contains(
-                          "error",
-                        )) {
+                        if (collectInfoProvider.result > -1) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(

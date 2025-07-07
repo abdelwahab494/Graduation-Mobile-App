@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:grad_project/auth/auth_service.dart';
 import 'package:grad_project/providers/theme_provider.dart';
 import 'package:grad_project/core/colors.dart';
-import 'package:grad_project/screens/partner%20pages/partner_home.dart';
 import 'package:grad_project/screens/patient%20pages/add_medicine.dart';
 import 'package:grad_project/screens/patient%20pages/home.dart';
 import 'package:grad_project/screens/patient%20pages/profile.dart';
@@ -27,11 +25,8 @@ class _BaseState extends State<Base> {
 
   @override
   Widget build(BuildContext context) {
-    final bool isPartner = AuthService().getCurrentItemBool("isPartner");
     final List<Widget> _pages = [
-      !isPartner
-          ? Home(onNavigate: _onItemTapped)
-          : PartnerHome(onNavigate: _onItemTapped),
+      Home(onNavigate: _onItemTapped),
       Condition(),
       AddMedicine(onNavigate: _onItemTapped),
       Profile(),

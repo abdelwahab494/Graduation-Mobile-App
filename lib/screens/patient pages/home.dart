@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:gap/gap.dart';
 import 'package:flutter/material.dart';
+import 'package:grad_project/components/dashboard.dart';
 import 'package:grad_project/database/glucose_measurements/glucose_measurements.dart';
 import 'package:grad_project/database/glucose_measurements/glucose_measurements_database.dart';
 import 'package:grad_project/database/user_health_data/user_health_data.dart';
@@ -384,6 +385,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isPartner = authService.getCurrentItemBool("isPartner");
     final db = GlucoseMeasurementsDatabase();
     // get current username
     final currentusername = authService.getCurrentItemString("name");
@@ -405,7 +407,10 @@ class _HomeState extends State<Home> {
             ),
             Gap(25),
             Container(
-              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 25),
+              padding:
+                  !isPartner
+                      ? EdgeInsets.symmetric(vertical: 20, horizontal: 25)
+                      : EdgeInsets.zero,
               width: double.infinity,
               decoration: BoxDecoration(
                 color: AppColors.backGround,
@@ -416,223 +421,261 @@ class _HomeState extends State<Home> {
               ),
               child: Column(
                 children: [
-                  // CustomSearchBar(searchController: searchController),
-                  Gap(20),
-                  HomeButtons(onNavigate: widget.onNavigate),
-                  Gap(30),
-                  GestureDetector(
-                    onTap:
-                        () => Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (c) => LoadingScreen()),
-                        ),
-                    child: MeasureBotton(),
-                  ),
-                  Gap(30),
-                  _buildHealthTipsSection(),
-                  Gap(20),
-                  // HealthArticales(articales: articales),
-                  GestureDetector(
-                    onTap:
-                        () => Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (c) => ReadingHistory()),
-                        ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          !isPartner
-                              ? "Recent Glucose Readings"
-                              : "Your Patient's Glucose Readings",
-                          style: GoogleFonts.poppins(
-                            color: AppColors.text,
-                            fontSize: !isPartner ? 16 : 14,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        Text(
-                          "See all",
-                          style: GoogleFonts.inter(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14,
-                            color: AppColors.primary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  StreamBuilder<List<GlucoseMeasurements>>(
-                    key: _streamKey,
-                    stream: db.stream,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 30),
-                          child: Center(
-                            child: Column(
-                              children: [
-                                CircularProgressIndicator(
-                                  color: AppColors.primary,
-                                ),
-                                Gap(150),
-                              ],
-                            ),
-                          ),
-                        );
-                      }
-                      if (snapshot.hasError) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 30),
-                          child: Center(
-                            child: Text(
-                              'Something went wrong!\n Please check your connection.',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.text,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        );
-                      }
-                      if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 30),
-                          child: Center(
-                            child: Text(
-                              'No History yet.',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.text,
-                              ),
-                            ),
-                          ),
-                        );
-                      }
-                      final measurements = snapshot.data!;
-                      return Column(
+                  isPartner
+                      ? SizedBox.shrink()
+                      : Column(
                         children: [
-                          ListView.builder(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemCount:
-                                isPartner
-                                    ? measurements.length
-                                    : (measurements.length <= 4
-                                        ? measurements.length
-                                        : 5),
-                            itemBuilder: (BuildContext context, int index) {
-                              final measurement = measurements[index];
-                              Color color;
-                              Color bcolor;
-                              IconData icon;
-                              if (measurement.glucose <= 54) {
-                                icon = Icons.warning_rounded;
-                                color = Colors.red.shade700;
-                                bcolor = Colors.red.shade100;
-                              } else if (measurement.glucose < 70 &&
-                                  measurement.glucose > 54) {
-                                icon = CupertinoIcons.arrow_down_circle_fill;
-                                color = Colors.orange;
-                                bcolor = Colors.orange.shade100;
-                              } else if (measurement.glucose >= 70 &&
-                                  measurement.glucose <= 140) {
-                                icon = CupertinoIcons.checkmark_alt_circle_fill;
-                                color = Colors.green;
-                                bcolor = Colors.green.shade100;
-                              } else if (measurement.glucose > 140 &&
-                                  measurement.glucose < 220) {
-                                icon = CupertinoIcons.arrow_up_circle_fill;
-                                color = Colors.orange;
-                                bcolor = Colors.orange.shade100;
-                              } else {
-                                icon = Icons.warning_rounded;
-                                color = Colors.red.shade700;
-                                bcolor = Colors.red.shade100;
-                              }
-                              return Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 15,
-                                  vertical: 15,
-                                ),
-                                margin: EdgeInsets.symmetric(vertical: 6),
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.grey.shade300,
-                                    width: 1,
+                          // CustomSearchBar(searchController: searchController),
+                          Gap(20),
+                          HomeButtons(onNavigate: widget.onNavigate),
+                          Gap(30),
+                          GestureDetector(
+                            onTap:
+                                () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (c) => LoadingScreen(),
                                   ),
-                                  borderRadius: BorderRadius.circular(5),
                                 ),
-                                child: Row(
+                            child: MeasureBotton(),
+                          ),
+                          Gap(30),
+                          _buildHealthTipsSection(),
+                          // HealthArticales(articales: articales),
+                        ],
+                      ),
+                  Gap(15),
+                  !isPartner
+                      ? GestureDetector(
+                        onTap:
+                            () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (c) => ReadingHistory(),
+                              ),
+                            ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              !isPartner
+                                  ? "Recent Glucose Readings"
+                                  : "Your Patient's Glucose Readings",
+                              style: GoogleFonts.poppins(
+                                color: AppColors.text,
+                                fontSize: !isPartner ? 16 : 14,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            Text(
+                              "See all",
+                              style: GoogleFonts.inter(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                                color: AppColors.primary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                      : SizedBox.shrink(),
+                  !isPartner
+                      ? StreamBuilder<List<GlucoseMeasurements>>(
+                        key: _streamKey,
+                        stream: db.stream,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 30),
+                              child: Center(
+                                child: Column(
                                   children: [
-                                    Container(
-                                      padding: const EdgeInsets.all(8),
-                                      decoration: BoxDecoration(
-                                        color: bcolor,
-                                        borderRadius: BorderRadius.circular(
-                                          500,
-                                        ),
-                                      ),
-                                      child: Icon(icon, color: color, size: 35),
+                                    CircularProgressIndicator(
+                                      color: AppColors.primary,
                                     ),
-                                    Gap(20),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                    Gap(300),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }
+                          if (snapshot.hasError) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 30),
+                              child: Center(
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      'Something went wrong!\n Please check your connection.',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColors.text,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    Gap(300),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }
+                          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 30),
+                              child: Center(
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      'No History yet.',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColors.text,
+                                      ),
+                                    ),
+                                    Gap(300),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }
+                          final measurements = snapshot.data!;
+                          return Column(
+                            children: [
+                              Gap(15),
+                              ListView.builder(
+                                padding: EdgeInsets.zero,
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount:
+                                    isPartner
+                                        ? measurements.length
+                                        : (measurements.length <= 4
+                                            ? measurements.length
+                                            : 5),
+                                itemBuilder: (BuildContext context, int index) {
+                                  final measurement = measurements[index];
+                                  Color color;
+                                  Color bcolor;
+                                  IconData icon;
+                                  if (measurement.glucose <= 54) {
+                                    icon = Icons.warning_rounded;
+                                    color = Colors.red.shade700;
+                                    bcolor = Colors.red.shade100;
+                                  } else if (measurement.glucose < 70 &&
+                                      measurement.glucose > 54) {
+                                    icon =
+                                        CupertinoIcons.arrow_down_circle_fill;
+                                    color = Colors.orange;
+                                    bcolor = Colors.orange.shade100;
+                                  } else if (measurement.glucose >= 70 &&
+                                      measurement.glucose <= 140) {
+                                    icon =
+                                        CupertinoIcons
+                                            .checkmark_alt_circle_fill;
+                                    color = Colors.green;
+                                    bcolor = Colors.green.shade100;
+                                  } else if (measurement.glucose > 140 &&
+                                      measurement.glucose < 220) {
+                                    icon = CupertinoIcons.arrow_up_circle_fill;
+                                    color = Colors.orange;
+                                    bcolor = Colors.orange.shade100;
+                                  } else {
+                                    icon = Icons.warning_rounded;
+                                    color = Colors.red.shade700;
+                                    bcolor = Colors.red.shade100;
+                                  }
+                                  return Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 15,
+                                      vertical: 15,
+                                    ),
+                                    margin: EdgeInsets.only(bottom: 12),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: Colors.grey.shade300,
+                                        width: 1,
+                                      ),
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    child: Row(
                                       children: [
-                                        Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.end,
-                                          children: [
-                                            Text(
-                                              measurement.glucose.toString(),
-                                              style: GoogleFonts.poppins(
-                                                color: color,
-                                                fontSize: 25,
-                                                fontWeight: FontWeight.bold,
-                                              ),
+                                        Container(
+                                          padding: const EdgeInsets.all(8),
+                                          decoration: BoxDecoration(
+                                            color: bcolor,
+                                            borderRadius: BorderRadius.circular(
+                                              500,
                                             ),
-                                            Gap(5),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                bottom: 4,
-                                              ),
-                                              child: Text(
-                                                "mg/dl",
-                                                style: GoogleFonts.poppins(
-                                                  color: Colors.grey.shade600,
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w600,
+                                          ),
+                                          child: Icon(
+                                            icon,
+                                            color: color,
+                                            size: 35,
+                                          ),
+                                        ),
+                                        Gap(20),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.end,
+                                              children: [
+                                                Text(
+                                                  measurement.glucose
+                                                      .toString(),
+                                                  style: GoogleFonts.poppins(
+                                                    color: color,
+                                                    fontSize: 25,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                                 ),
+                                                Gap(5),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                        bottom: 4,
+                                                      ),
+                                                  child: Text(
+                                                    "mg/dl",
+                                                    style: GoogleFonts.poppins(
+                                                      color:
+                                                          Colors.grey.shade600,
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Text(
+                                              DateFormat(
+                                                'MMM d, y, h:mm a',
+                                              ).format(measurement.created_at),
+                                              style: GoogleFonts.poppins(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w400,
+                                                color: Colors.grey.shade600,
                                               ),
+                                              textAlign: TextAlign.left,
                                             ),
                                           ],
                                         ),
-                                        Text(
-                                          DateFormat(
-                                            'MMM d, y, h:mm a',
-                                          ).format(measurement.created_at),
-                                          style: GoogleFonts.poppins(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w400,
-                                            color: Colors.grey.shade600,
-                                          ),
-                                          textAlign: TextAlign.left,
-                                        ),
                                       ],
                                     ),
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
-                        ],
-                      );
-                    },
-                  ),
+                                  );
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      )
+                      : Dashboard(onNavigate: widget.onNavigate),
                   Gap(30),
                 ],
               ),
@@ -640,7 +683,7 @@ class _HomeState extends State<Home> {
           ],
         ),
       ),
-      floatingActionButton: ChatBotton(),
+      floatingActionButton: !isPartner ? ChatBotton() : SizedBox.shrink(),
     );
   }
 }
