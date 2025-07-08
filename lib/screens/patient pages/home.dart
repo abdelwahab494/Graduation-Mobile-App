@@ -7,6 +7,7 @@ import 'package:grad_project/database/glucose_measurements/glucose_measurements_
 import 'package:grad_project/database/user_health_data/user_health_data.dart';
 import 'package:grad_project/database/user_health_data/user_health_database.dart';
 import 'package:grad_project/screens/measure/loading_screen.dart';
+import 'package:grad_project/screens/measure/measurement_page.dart';
 import 'package:grad_project/screens/measure/reading_history.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -434,7 +435,7 @@ class _HomeState extends State<Home> {
                                 () => Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (c) => LoadingScreen(),
+                                    builder: (c) => MeasurementPage(),
                                   ),
                                 ),
                             child: MeasureBotton(),

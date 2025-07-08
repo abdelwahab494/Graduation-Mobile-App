@@ -7,17 +7,19 @@ import 'package:grad_project/core/colors.dart';
 import 'package:grad_project/database/glucose_measurements/glucose_measurements.dart';
 import 'package:grad_project/database/glucose_measurements/glucose_measurements_database.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class MeasureProvider extends ChangeNotifier {
   BluetoothConnection? _connection;
   String _espName = "ESP32_GlucoseMonitor";
-  num _voltage = 0;
-  num _glucose = 0;
+  num _voltage = 0.43;
+  num _glucose = 136;
   bool _isConnected = false;
   String _rating = "";
   Color _color = AppColors.primary;
   Color _bColor = AppColors.backGround;
   IconData _icon = CupertinoIcons.question_circle_fill;
+  String _feedbackResult = "";
 
   BluetoothConnection? get connection => _connection;
   String get espName => _espName;
@@ -28,6 +30,7 @@ class MeasureProvider extends ChangeNotifier {
   Color get color => _color;
   Color get bColor => _bColor;
   IconData get icon => _icon;
+  String get feedbackResult => _feedbackResult;
 
   set voltage(num value) {
     _voltage = value;
@@ -250,5 +253,40 @@ class MeasureProvider extends ChangeNotifier {
 
     final db = GlucoseMeasurementsDatabase();
     await db.createUserHealthData(measurement);
+  }
+
+  Future<void> submitFeedback(String feedback) async {
+    try {
+      final userId = Supabase.instance.client.auth.currentUser?.id;
+      if (userId == null) {
+        _feedbackResult = "Error: User not authenticated";
+        notifyListeners();
+        return;
+      }
+
+      // Get the latest record for the user to update
+      final response =
+          await Supabase.instance.client
+              .from('glucose_measurements')
+              .select('created_at')
+              .eq('userid', userId)
+              .order('created_at', ascending: false)
+              .limit(1)
+              .single();
+
+      final createdAt = response['created_at'];
+
+      // Update the feedback for the latest record
+      await Supabase.instance.client
+          .from('glucose_measurements')
+          .update({'feedback': feedback})
+          .eq('userid', userId)
+          .eq('created_at', createdAt);
+
+      _feedbackResult = "Feedback submitted successfully";
+    } catch (e) {
+      _feedbackResult = "Error submitting feedback: $e";
+    }
+    notifyListeners();
   }
 }

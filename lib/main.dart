@@ -75,13 +75,13 @@ Future<void> main() async {
   await requestNotificationPermission();
 
   // تهيئة Gemini
-  Gemini.init(apiKey: "AIzaSyD9k7u5umJGhZr0CIQ_1pNWn-oOqOsls3Y");
+  Gemini.init(apiKey: "");
 
   // تهيئة Supabase
   await Supabase.initialize(
     anonKey:
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF5d2Nyb253em54bHF5b2JpYXhxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcyNDQ1MjgsImV4cCI6MjA2MjgyMDUyOH0.b9YnN0ZvFOyPF7t5w0Fr9dsG7MAaUxoGA9ORUNb_wJk",
-    url: "https://qywcronwznxlqyobiaxq.supabase.co",
+        "",
+    url: "",
   );
 
   runApp(

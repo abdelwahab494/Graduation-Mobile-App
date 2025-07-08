@@ -3,6 +3,7 @@ import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grad_project/components/custom_app_bar.dart';
 import 'package:grad_project/components/custom_botton.dart';
+import 'package:grad_project/components/feedback.dart';
 import 'package:grad_project/core/colors.dart';
 import 'package:grad_project/database/glucose_measurements/glucose_measurements.dart';
 import 'package:grad_project/database/glucose_measurements/glucose_measurements_database.dart';
@@ -21,6 +22,9 @@ class MeasurementPage extends StatefulWidget {
 
 class _MeasurementPageState extends State<MeasurementPage> {
   bool saved = false;
+  bool showFeedback = true;
+  final TextEditingController feedbackController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -183,7 +187,7 @@ class _MeasurementPageState extends State<MeasurementPage> {
                       ),
                       GestureDetector(
                         onTap: () async {
-                          if (provider.glucose != 0) {
+                          if (provider.glucose != 0 && saved == false) {
                             await provider.saveMeasurementToDatabase();
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
@@ -198,6 +202,9 @@ class _MeasurementPageState extends State<MeasurementPage> {
                                 ),
                               ),
                             );
+                            setState(() {
+                              saved = true;
+                            });
                           } else {
                             null;
                           }
@@ -209,18 +216,20 @@ class _MeasurementPageState extends State<MeasurementPage> {
                             color:
                                 provider.glucose == 0
                                     ? Colors.grey
-                                    : AppColors.primary,
+                                    : (saved ? Colors.grey : AppColors.primary),
                             borderRadius: BorderRadius.circular(50),
                             border: Border.all(
                               color:
                                   provider.glucose == 0
                                       ? Colors.grey
-                                      : AppColors.primary,
+                                      : (saved
+                                          ? Colors.grey
+                                          : AppColors.primary),
                               width: 2,
                             ),
                           ),
                           child: Text(
-                            "Save",
+                            saved ? "Saved" : "Save",
                             textAlign: TextAlign.center,
                             style: GoogleFonts.inter(
                               fontSize: 16,
@@ -233,6 +242,63 @@ class _MeasurementPageState extends State<MeasurementPage> {
                     ],
                   ),
                   Gap(30),
+                  saved
+                      ? (showFeedback
+                          ? Column(
+                            children: [
+                              FeedbackContainer(
+                                onTap: () {
+                                  provider.submitFeedback(
+                                    feedbackController.text,
+                                  );
+
+                                  if (provider.feedbackResult.contains(
+                                    "Error",
+                                  )) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          "Error Submitting Feedback!\nPlease try again.",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        backgroundColor: Colors.green,
+                                      ),
+                                    );
+                                    return;
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          provider.feedbackResult,
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        backgroundColor: Colors.green,
+                                      ),
+                                    );
+                                    return;
+                                  }
+                                },
+                                controller: feedbackController,
+                                provider: provider,
+                                onTap2: () {
+                                  setState(() => showFeedback = false);
+                                  feedbackController.clear();
+                                },
+                                cancel: true,
+                              ),
+                              Gap(25),
+                            ],
+                          )
+                          : SizedBox.shrink())
+                      : SizedBox.shrink(),
                   Container(
                     width: double.infinity,
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),

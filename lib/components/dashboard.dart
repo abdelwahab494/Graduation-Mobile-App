@@ -6,6 +6,7 @@ import 'package:grad_project/auth/auth_service.dart';
 import 'package:grad_project/core/colors.dart';
 import 'package:grad_project/database/glucose_measurements/glucose_measurements.dart';
 import 'package:grad_project/database/glucose_measurements/glucose_measurements_database.dart';
+import 'package:grad_project/noti_service.dart';
 import 'package:grad_project/screens/measure/glucose_line_chart.dart';
 import 'package:intl/intl.dart';
 
@@ -429,6 +430,15 @@ class Dashboard extends StatelessWidget {
                           physics: NeverScrollableScrollPhysics(),
                           itemCount: measurements.length,
                           itemBuilder: (BuildContext context, int index) {
+                            if (isPartner) {
+                              if (measurements[0].glucose <= 54 ||
+                                  measurements[0].glucose >= 220) {
+                                NotiService().showNotification(
+                                  title: "Warning!!",
+                                  body: "Your patient is in Danger",
+                                );
+                              }
+                            }
                             final measurement = measurements[index];
                             Color color;
                             Color bcolor;
