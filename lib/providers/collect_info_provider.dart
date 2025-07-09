@@ -227,7 +227,7 @@ class CollectInfoProvider extends ChangeNotifier {
       }
 
       final userHealthData = UserHealthData(
-        userId: userId, // هنا userId مضمون إنه String
+        userId: userId, 
         highbp: values[0],
         highcol: values[1],
         bmi: values[2],

@@ -32,20 +32,34 @@ class HealthTipsProvider with ChangeNotifier {
     notifyListeners();
 
     try {
-      final tips = await Chatbot.getHealthTips(
-        age: data["Age"][userdata!.age.toInt() - 1],
-        highbp: userdata.highbp == 0 ? "Don't Have" : "Have",
-        highcol: userdata.highcol == 0 ? "Don't Have" : "Have",
-        bmi: userdata.bmi.toString(),
-        heartAttack: userdata.heartattack == 0 ? "Don't Have" : "Have",
-        physActivity: userdata.physactivity == 0 ? "Doesn't Do" : "Doing",
-        genHealth: data["Gen Health"][userdata.genhealth.toInt() - 1],
-        diffWalk: userdata.diffwalk == 0 ? "Don't Have" : "Have",
-        medicalCondition:
-            userdata.predictionStatus == 0 ? "Not Diabetes" : "Diabetes",
-      );
+      int retryCount = 0;
+      const maxRetries = 3;
 
-      _healthTips = tips;
+      while (retryCount < maxRetries) {
+        try {
+          final tips = await Chatbot.getHealthTips(
+            age: data["Age"][userdata!.age.toInt() - 1],
+            highbp: userdata.highbp == 0 ? "Don't Have" : "Have",
+            highcol: userdata.highcol == 0 ? "Don't Have" : "Have",
+            bmi: userdata.bmi.toString(),
+            heartAttack: userdata.heartattack == 0 ? "Don't Have" : "Have",
+            physActivity: userdata.physactivity == 0 ? "Doesn't Do" : "Doing",
+            genHealth: data["Gen Health"][userdata.genhealth.toInt() - 1],
+            diffWalk: userdata.diffwalk == 0 ? "Don't Have" : "Have",
+            medicalCondition:
+                userdata.predictionStatus == 0 ? "Not Diabetes" : "Diabetes",
+          );
+          _healthTips = tips;
+          break; 
+        } catch (e) {
+          retryCount++;
+          if (retryCount == maxRetries) throw e;
+          await Future.delayed(
+            Duration(seconds: 2),
+          );
+        }
+      }
+
       _isLoadingTips = false;
       notifyListeners();
     } catch (e) {

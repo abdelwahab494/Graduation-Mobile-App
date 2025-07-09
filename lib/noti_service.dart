@@ -119,23 +119,35 @@ class NotiService {
     for (var time in medicine.doseTimes) {
       int hour;
       int minute;
+      bool isPM = false;
+
       try {
         final timeParts = time.split(':');
+        final minuteParts = timeParts[1].split(' ');
         hour = int.parse(timeParts[0]);
-        minute = int.parse(
-          timeParts[1].split(' ')[0],
-        );
+        minute = int.parse(minuteParts[0]);
+        // Check if time is PM
+        isPM = minuteParts[1].toUpperCase().contains('PM');
       } catch (e) {
         try {
           final format = DateFormat('hh:mm a');
           final dateTime = format.parse(time);
           hour = dateTime.hour;
           minute = dateTime.minute;
+          isPM = time.toUpperCase().contains('PM');
         } catch (e) {
           print('Error parsing time: $time');
           continue;
         }
       }
+
+      // Convert to 24-hour format if PM
+      if (isPM && hour != 12) {
+        hour += 12;
+      } else if (!isPM && hour == 12) {
+        hour = 0; // Handle 12 AM case
+      }
+
       final now = tz.TZDateTime.now(tz.local);
       var scheduledDate = tz.TZDateTime(
         tz.local,
@@ -153,10 +165,8 @@ class NotiService {
         "Time to take your medicine it's $time",
         scheduledDate,
         notificationDetails(),
-
         androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-
-        // make notification repear daily at same time
+        // make notification repeat daily at same time
         matchDateTimeComponents: DateTimeComponents.time,
       );
     }
